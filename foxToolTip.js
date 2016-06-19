@@ -79,29 +79,34 @@
 	};
 
 	function windowResized() {
-		windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-		windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+		//windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+		//windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+		windowWidth = document.documentElement.clientWidth || window.innerWidth || document.body.clientWidth;
+		windowHeight = document.documentElement.clientHeight || window.innerHeight || document.body.clientHeight;
 		aspectRatio = windowWidth / windowHeight;
 	};
 
 	function getMouseCoordinates (event) {
 
 		if (typeof d3 !== 'undefined') {
-			mouseX = d3.event.pageX;
-			mouseY = d3.event.pageY;
-		} else if (event.pageX) {
+			mouseX = d3.event.clientX;	//d3.event.pageX;
+			mouseY = d3.event.clientX;	//d3.event.pageY;
+/*		} else if (event.pageX) {
 			mouseX = event.pageX;
 			mouseY = event.pageY;
-		} else {
-			var doc = document.documentElement;
-			var body = document.body;
-			mouseX = event.clientX + (doc.scrollLeft || body.scrollLeft || 0) - (doc.clientLeft || body.clientLeft || 0);
-			mouseY = event.clientY + (doc.scrollTop || body.scrollTop || 0) - (doc.clientTop || body.clientTop || 0);
+*/		} else {
+			//var doc = document.documentElement;
+			//var body = document.body;
+			mouseX = event.clientX //+ (doc.scrollLeft || body.scrollLeft || 0) - (doc.clientLeft || body.clientLeft || 0);
+			mouseY = event.clientY //+ (doc.scrollTop || body.scrollTop || 0) - (doc.clientTop || body.clientTop || 0);
 		};
 	};
 
-	function getElementCoordinates (element) {
+	function getElementCoordinates (element, client) {
+		client = (typeof client == 'undefined') ? true : false;
 		var clientRect = {};
+		var top;
+		var left;
 
 		var target = tips[tipsIndex.indexOf(element.id)];
 		
@@ -111,16 +116,22 @@
 			clientRect.right = mouseX + 20;
 			clientRect.bottom = mouseY + 20;
 		} else clientRect = element.getBoundingClientRect();
+		if (client !== false) {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+			var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft;
+			var clientTop = document.documentElement.clientTop || document.body.clientTop;
+			var clientLeft = document.documentElement.clientLeft || document.body.clientLeft;
+			top = Math.round(clientRect.top + scrollTop - clientTop);
+			left = Math.round(clientRect.left + scrollLeft - clientLeft);
 
-		var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-		var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft;
-		var clientTop = document.documentElement.clientTop || document.body.clientTop;
-		var clientLeft = document.documentElement.clientLeft || document.body.clientLeft;
-		var top = Math.round(clientRect.top + scrollTop - clientTop);
-		var left = Math.round(clientRect.left + scrollLeft - clientLeft);
+		} else {
+			top = clientRect.top;
+			left = clientRect.left;
+		}
 		var height = clientRect.bottom - clientRect.top;
 		var width = clientRect.right - clientRect.left;
 		return {top: top, left: left, height: height, width: width};
+		//return {top: clientRect.top, left: clientRect.left, height: height, width: width};
 	};
 
 	function getRule (rule) {
@@ -155,8 +166,6 @@
 	function sizeTip (target) {
 		var p, h, w;
 		
-		//beforeRule.width = '';
-		//ttDiv.style.width = 'auto';
 		p = ttDiv.offsetWidth + ttDiv.offsetHeight;
 		ttDiv.style.width = '';
 		h = 1 / ((aspectRatio + 1) / p);
@@ -174,13 +183,14 @@
 		var arrowAdjust;
 
 		var adjustVertical = function (top) {
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
 			var topAdjust = top;
 			var arrowAdjust = ttDiv.offsetHeight / 2;
 
-			if (top < 0) { 
+			if (top - scrollTop < 0) { 
 				topAdjust = 0;
 				arrowAdjust = Math.max((target.arrowSize()) + target.borderRadius(), top + (ttDiv.offsetHeight / 2));
-			} else if (top + ttDiv.offsetHeight > windowHeight) {
+			} else if (top - scrollTop + ttDiv.offsetHeight > windowHeight) {
 				topAdjust = windowHeight - ttDiv.offsetHeight;
 				arrowAdjust = Math.min(ttDiv.offsetHeight - target.borderRadius() - target.arrowSize(), (ttDiv.offsetHeight / 2) +  top - topAdjust);
 			};
@@ -189,13 +199,14 @@
 		};
 
 		var adjustHorizontal = function (left) {
+			var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft;
 			var leftAdjust = left;
 			var arrowAdjust = ttDiv.offsetWidth / 2;
 
-			if (left < 0) { 
+			if (left  - scrollLeft < 0) { 
 				leftAdjust = 0;
 				arrowAdjust = Math.max((target.arrowSize()) + target.borderRadius(), left + (ttDiv.offsetWidth / 2));
-			} else if (left + ttDiv.offsetWidth > windowWidth) {
+			} else if (left - scrollLeft + ttDiv.offsetWidth > windowWidth) {
 				leftAdjust = windowWidth - ttDiv.offsetWidth;
 				arrowAdjust = Math.min(ttDiv.offsetWidth - target.borderRadius() - target.arrowSize(), (ttDiv.offsetWidth / 2) +  left - leftAdjust);
 			};
@@ -277,7 +288,7 @@
 
 	function optimumOrientation  (targetElement, target) {
 
-		var elementCoordinates = getElementCoordinates(targetElement);
+		var elementCoordinates = getElementCoordinates(targetElement, false);
 		var elementCenterH = elementCoordinates.left + (elementCoordinates.width / 2);
 		var elementCenterV = elementCoordinates.top + (elementCoordinates.height / 2);
 		
