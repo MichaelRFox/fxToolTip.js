@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta charset="UTF-8"> 
+		<style>
+			text {
+				font-family: verdana, sans-serif
+			}
+			H1 {
+				text-align: center;
+				font-family: verdana, sans-serf;
+				font-size: 2em;
+			}
+			H2 {
+				text-align: center;
+				font-family: verdana, sans-serif;
+				font-size: 1.25em;
+				font-weight: normal;
+				font-style: italic;
+			}
+			.target {
+				background-color: LightBlue;
+			}
+			#intro {
+				position: relative;
+				left: 20%;
+				width: 60%;
+				font-family: verdana, sans-serif;
+				text-align: justify;
+			}
+			.tip {
+				position: relative;
+				font-family: verdana;
+				font-size: 1em;
+			}
+			.tipTitle {
+				display: table;
+				font-family: verdana, sans-serif;
+				font-size: 1.25em;
+
+				margin: 0 auto;
+			}
+
+			#bottomLeft {
+				position: fixed;
+				bottom: 0;
+			}
+
+			#bottomRight {
+				position: fixed;
+				bottom: 0;
+				right: 0;
+			}
+
+			#topLeft {
+				position: fixed;
+				top: 0;
+			}
+
+			#topRight {
+				position: fixed;
+				top: 0;
+				right: 0;
+			}
+
+			table, th, tr, td {
+				font-family: verdana;
+				border: 1px solid black;
+				border-collapse: collapse;
+			}
+			th {
+				font-weight: bold;
+			}
+
+			img {
+				float: right;
+			}
+
+		</style>
+	</head>
+	<body>
+		<script type = 'text/javascript' src="foxToolTip.v1.7.js"></script>
+		
+		<div>
+			<span id='topLeft' class='target'>Text on the top left</span>
+			<span id='topRight' class='target'> Text on the top right</span>
+		</div>
+		<div>
+			<span id='bottomLeft' class='target'>Text on the bottom left</span>
+			<span id='bottomRight' class='target'> Text on the bottom right</span>
+		</div>
+		<H1>foxToolTip.js</H1>
+		<H2>© Michael R. Fox</H2>
+		
+		<div id='intro'>
+			<p>foxToolTip.js is a small, simple library designed to show tooltips on hover over any DOM element.  It uses a combination of JavaScript and css styles to provide flexibility and ease of implementation.  It has no dependencies and should work on any modern browser (i.e., not Internet Explorer 8.0 and earlier). foxToolTip.js supports method chaining and has special code to detect and integrate with <a href='https://github.com/d3'>d3.js</a>.</p>
+
+			<img id='fox5' src=tiger.svg alt='tiger' width='300px' height='300px'></img>
+
+			<p>On this page you will see several demonstrations (shaded in <span class='target'>light blue</span>) of foxToolTip.js in action.  Hover over each of them to see some foxToolTip.js features.</p>
+			<ul>
+				<li>Auto Positioning</li>
+				<p>foxToolTip.js features autopositioning, which evaluates the size of the tooltip, the position of the target element, and the available document viewport space to position the tooltip at the optimim position.  Try hovering over the text in the corners to see this in action.  foxToolTip.js will also adjust to center the arrow over the target, eventhough the tooltip itself can't be.  Try hovering over the text in the upper left corner to see a demonstration of this</p>
+				<li>Mouse Tracking</li>
+				<p>foxToolTip.js can position the tooltip relative to the target element or the cursor.  Try hovering over the picture of the tiger to see the tooltip position relative to the cursor and follow it as it moves over the target element.</p>
+				
+				<li>Transitions</li>
+				<p>foxToolTip.js allows you to set a transition delay and duration to show and hide the tooltip.
+					<span id='fox1' class='target'>This</span> demonstrates a 1 second delay and 0.4 second transition
+				</p>
+				<li>Content</li>
+				<p>You can put and valid html content into a tooltip.  
+					<span id = 'fox2' class='target'>This</span> is a demonstration of embedding an image in a tooltip
+					 And <span id = 'fox3' class = 'target'>this</span> is a demonstration of 
+					embedding a table in a toolTip.  <span id ='fox4' class = 'target'>This</span> tooltip displays 
+					inline svg
+				</p>
+				<li>Style</li>
+				<p>Each tooltip can be individually styled, to include foreground and background color, opacity, font size and family, margins, border radius, and drop shadow.  <span class='target' id='fox6'>Here</span> is an example of some of the things you can do.</p>	
+			</ul>
+		<script type = 'text/javascript'>
+
+			onload = function () {
+				
+				var shortText = 'Lorem ipsum dolor sit amet';
+				var mediumText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam';
+				var longText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
+				
+				var table = "<table id = 'table' width='100%'><tr><th>id</th><th>name</th><th>address</th></tr><tr><td>1</td><td>Bill Smith</td><td>17 Cherry Lane</td></tr><tr><td>2</td><td>Ed Walker</td><td>427 Oak Lane</td></tr></table>"
+				var svg = "<svg width='250' height='250'><rect x='50' y='50' rx='20' ry='20' width='150' height='150'  style='fill:lightblue;stroke:black;stroke-width:5' /></svg>"
+				
+				foxToolTip.create('fox1', mediumText)
+					.font('tahoma', '1.2em')
+					.transitionVisible(1, 0.4)
+					.transitionHidden(0, 0.4)
+					.cursor('help');
+
+				foxToolTip.create('fox2', "<img src=tiger.svg alt='tiger' width='300px' height='300px'></img>"  + '<p>' + longText + '</p>')
+					.arrowSize('1.5em')
+					.cursor('pointer')
+					.padding('5px 3em 2em')
+					.minWidth(300);
+
+				foxToolTip.create('fox3', "<span class='tipTitle'>Table in a Tooltip</span>" + table)
+					.backgroundColor('beige')
+					.foregroundColor('darkBlue')
+					.minWidth('300px');
+
+				foxToolTip.create('fox4', "<span class='tipTitle'>Inline SVG</span>" + svg)
+					.minWidth(250)
+					.boxShadow('none');
+				
+				foxToolTip.create('fox5', "<span class='tipTitle'>Image Target</span><p>Any element can have a tooltip, and you can individually style elements within the tooltip either <em>inline</em>, or with css selectors</p>")
+					.trackMouse(true);
+				
+				foxToolTip.create('fox6', "<span class='tipTitle' style='color=indigo'>Styling Options</span>You can style each tooltip individually.<ul><li>background color: lavendar</li><li>foreground color: indigo</li><li>opacity: 0.8</li><li>border radius: 16 px</li><li>drop shadow: 12 px, indigo, opacity 0.5</li></ul>")
+					.backgroundColor('Lavender')
+					.foregroundColor('Indigo')
+					.backgroundOpacity(0.8)
+					.borderRadius(16)
+					.boxShadow(12, 'Indigo', 0.5)
+					.backgroundOpacity(0.8);
+
+				foxToolTip.create('topLeft', "<span class='tipTitle'>Arrow Tracking</span><p>This tooltip will display relative to the cursor and follow it as you move over the target element.</p><p>Notice as you move left towards the edge of the page how the arrow adjust to center on the cursor.</p>")
+					.orientation('bottom')
+					.trackMouse(true);
+
+				var autoPositionText = "<span class='tipTitle'>Auto Positioning</span><p>This tooltip will position itself at the optimum position relative to the target element.</p>"
+				foxToolTip.create('topRight', autoPositionText);
+				foxToolTip.create('bottomLeft', autoPositionText);
+				foxToolTip.create('bottomRight', autoPositionText);
+
+			};
+		</script>
+	</body>
+</html>
