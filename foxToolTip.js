@@ -15,6 +15,7 @@
 	var mouseX;
 	var mouseY;
 	var timer;
+	var MutationObserver;
 	var set = false;
 		
 	function mouseOver (event) {
@@ -149,11 +150,18 @@
 		return null;
 	};
 
+	function hexToRgb(hex) {
+		var rgb = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+		return [parseInt(rgb[1], 16), parseInt(rgb[2], 16), parseInt(rgb[3], 16)];
+	};
+	
 	function parseColor(input) {
 	    var rgb;
 	    pseudoDiv.style.color = input;
 		rgb = getComputedStyle(pseudoDiv, null).color;
-		rgb = rgb.match(/\d+/g);
+		if (rgb.indexOf('#') !== -1) { 
+			rgb = hexToRgb(rgb);
+		} else rgb = rgb.match(/\d+/g);
 		return 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
 	};
 
@@ -374,7 +382,8 @@
 		pseudoDiv.style.position = 'absolute';
 		pseudoDiv.style.display = 'inline-block';
 		document.body.insertBefore(pseudoDiv, document.body.firstChild);
-
+		
+		//MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
 		set = true;
 	};
 	
@@ -455,7 +464,7 @@
 			backgroundColor: 'midnightBlue',
 			backgroundOpacity: 1,
 			padding: '5px 10px',
-			borderRadius: 6,
+			borderRadius: 12,
 			boxShadow: '8px 8px 8px 0 rgba(0,0,0, 0.5)',
 			transitionVisible: 'opacity 0.4s 0s',
 			transitionHidden: 'opacity 0.4s 0s',
