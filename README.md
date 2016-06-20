@@ -297,7 +297,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 
 ### <a id=".borderRadius">.borderRadius (borderRadius)</a>
 * **borderRadius** (string || number) - any valid css size (e.g., "1em" || "16px").  If a number is passed, it is assumed to be in pixels.
-* **default** - "6px"
+* **default** - "12px"
 * **returns** - if the borderRadius argument is passed, the .borderRadius() method returns the [foxToolTip object](#The-foxToolTip-object).  If the .borderRadius() method is called with no arguments, the .borderRadius() method returns the current borderRadius setting.
 * **description** - Setting the borderRadius via the .borderRadius() method, sets the borderRadius option contained within the [foxToolTip object](#The-foxToolTip-object) which is injected into the .foxToolTip style's ruleset upon hover over the target element. The borderRadius option sets a uniform borderRadius for the tooltip corners.
 
