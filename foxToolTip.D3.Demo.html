@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta charset="utf-8">
+		<title>foxToolTip d3.js demo</title>
+		
+		<style>
+			
+			body {
+				margin: 0;
+				padding: 0;
+			}
+
+			.node {
+			  cursor: pointer;
+			  position: relative;
+			}
+
+			.node circle {
+			  fill: #fff;	
+			  stroke-width: 0.1em;	
+			}
+			
+			.node text {
+			  font: 1em verdana, sans-serif;
+			  text-align: right;
+			}
+
+			.link {
+			  fill: none;
+			  stroke: #ccc;	
+			  stroke-width: 0.5em;	
+			}
+
+			.toolTipTitle {
+				font-family: Tahoma;
+				font-size: 1.25em;
+				text-align: center;
+			}
+
+			.toolTipText {
+				font-family: Tahoma;
+				font-size: 1em;
+				text-align: left;
+			}
+
+		    html {overflow: hidden};	
+
+		</style>
+	</head>
+
+	<body>
+
+		<script type = 'text/javascript' src="foxToolTip.js"></script>
+		<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		<script>
+
+ 			if(window.attachEvent) {
+ 				window.attachEvent('onresize', resize);
+ 				window.attachEvent('onkeyup', function (e) {
+ 					if (e.keyCode == 80) savePNG();
+ 				});
+			} else {
+				window.addEventListener('resize', resize);
+				window.addEventListener('keyup', function (e) {
+ 					if (e.keyCode == 80) savePNG();
+				});
+			};
+
+			function jsonDepth (obj) {
+				var depth = 0;
+				if (obj.children) {
+					obj.children.forEach(function (d) {
+						var tmpDepth = jsonDepth(d)
+						if (tmpDepth > depth) {
+							depth = tmpDepth
+						};
+					});
+				};
+				return 1 + depth;
+			};
+			
+			function jsonDepthold (obj) {
+    			treeDepth = 1;
+    			if (obj.children) {
+        			obj.children.forEach(function (d) {
+            			var tmpDepth = jsonDepth(d);
+            			if (tmpDepth > treeDepth) treeDepth = tmpDepth;
+        			});
+    			};
+    			return ++treeDepth;
+			};
+
+            function collapse (d) {
+                if (d.children) {
+                    d._children = d.children;
+                    d._children.forEach(collapse);
+                    d.children = null;
+                };
+            };
+			
+			function click(d) {
+				if (d.children) {
+					d._children = d.children;
+					d.children = null;
+				} else {
+					d.children = d._children;
+					d._children = null;
+				};
+				update(d);
+			};
+
+		    function defaultFontSize() { 
+		        element = document.body;
+		        var size = window.getComputedStyle(element, null).getPropertyValue('font-size');
+		        if (size == 0 || size == '') { size = 16; };
+		        return parseInt(size);
+		    };
+			
+			function wrap(text, width, spacing) {
+			    text.each(function () {
+			        var text = d3.select(this);
+			        var words = text.text().split(/\s+/).reverse();
+			        var word;
+			        var line = [];
+			        var lineNumber = 0;
+			        var lineHeight = typeof spacing == 'undefined' ? 1.1 : spacing;
+			        var x = text.attr("x");
+			        var dy = parseFloat(text.attr("dy"));
+			        var tspan = text.text(null)
+			                        .append("tspan")
+			                        .attr("x", x)
+			                        .attr("dy", dy + "em");
+			        
+			        while (word = words.pop()) {
+			            line.push(word);
+			            tspan.text(line.join(" "));
+			            if (tspan.node().getComputedTextLength() > width) {
+			                line.pop();
+			                tspan.text(line.join(" "));
+			                line = [word];
+			                tspan = text.append("tspan")
+			                            .attr("x", x)
+			                            .attr('dy', lineHeight + 'em')
+			                            .text(word);
+			                 lineNumber++;
+			            };
+			        };
+			     var firstLineAdjust = dy - (lineNumber * lineHeight) / 2;
+			     text[0][0].childNodes[0].setAttribute('dy', (firstLineAdjust) + 'em');
+			    });
+			};
+
+			function resize() {
+				screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+				screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+				width = screenWidth - margin.right - margin.left;
+				height = screenHeight - margin.top - margin.bottom;
+				/*charSize = defaultFontSize();*/
+				tree.size([height, width]);
+				svg
+					.attr("width", width + margin.right + margin.left)
+					.attr("height", height + margin.top + margin.bottom);
+				svgGroup
+					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+				root.x0 = height / 2;
+				depth = (width / treeDepth);
+				nodeSize = depth / 20;
+				fontSize = nodeSize * 1.2;
+				linkSize = nodeSize / 2;
+				update(root);					
+			};
+
+			function update(source) {
+				var nodes = tree.nodes(root).reverse(),
+					links = tree.links(nodes);
+
+				nodes.forEach(function(d) { d.y = d.depth * depth });
+
+				var node = svgGroup.selectAll("g.node")
+					.data(nodes, function(d) { return d.id || (d.id = ++i); });
+
+				var nodeEnter = node.enter().append("g")
+					.attr("class", "node")
+					.attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+					.on("click", click);
+
+				nodeEnter.append("circle")
+					.attr("r", 1e-6)
+					.style('fill', function (d) { return d._children ? 'lightsteelblue' : '#fff' })
+					.style('stroke', 'lightsteelblue');
+
+				var nodeText = nodeEnter.append("text")
+					.attr('id', function (d) { return 'JCAtextNode' + d.id; })
+					.attr("x",  -nodeSize + 'px')
+					.attr("dy", ".35em")
+					.attr("text-anchor", "end")
+					.text(function(d) { return d.name; })
+						.style("fill-opacity", 1e-6)
+						.style('font-size', fontSize + 'px')
+						.call(wrap, depth - (nodeSize * treeDepth / 2));
+				
+				nodeText.each (function (d) {
+					if (d.toolTip !== '' && typeof d.toolTip !== 'undefined') {
+						var content = "<p class='toolTipTitle'>" + d.name +"</p><p class='toolTipText'>" + d.toolTip + '</p>';
+						foxToolTip.create('JCAtextNode' + d.id, content)
+							.backgroundColor('midnightBlue')
+							.backgroundOpacity(0.9)
+							.foregroundColor('linen')
+							.transitionVisible(0.5, 0.4)
+							.transitionHidden(0, 0.4)
+							.padding('0px 10px')
+							.borderRadius(16)
+							.arrowSize(16);
+					};
+				});
+
+				var nodeUpdate = node.transition()
+					.duration(duration)
+					.attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+
+				nodeUpdate.select("circle")
+					.attr("r", nodeSize + 'px')
+					.style('fill', function (d) { return d._children ? 'lightsteelblue' : '#fff' })
+					.style('stroke', 'lightsteelblue');
+				
+				nodeUpdate.select("text")
+					.style('font-size', fontSize + 'px')
+					.style("fill-opacity", 1);
+
+				var nodeExit = node.exit().transition()
+					.duration(duration)
+					.attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+					.remove();
+
+				nodeExit.select("circle")
+					.attr("r", 1e-6);
+
+				nodeExit.select("text")
+					.style("fill-opacity", 1e-6);
+
+				var link = svgGroup.selectAll("path.link")
+					.data(links, function(d) { return d.target.id; });
+
+				link.enter().insert("path", "g")
+					.attr("class", "link")
+					.attr("d", function(d) {
+						var o = {x: source.x0, y: source.y0};
+						return diagonal({source: o, target: o});
+					});
+
+				var linkUpdate = link.transition()
+					.style('stroke-width', linkSize + 'px')
+					.duration(duration)
+					.attr("d", diagonal);
+
+				link.exit().transition()
+					.duration(duration)
+					.attr("d", function(d) {
+						var o = {x: source.x, y: source.y};
+						return diagonal({source: o, target: o});
+					})
+					.remove();
+
+				nodes.forEach(function(d) {
+					d.x0 = d.x;
+					d.y0 = d.y;
+				});
+			};
+
+			var screenWidth;
+			var screenHeight;
+
+			var margin = {top: 20, right: 50, bottom: 20, left: 100};
+			var width;
+			var height;
+
+			var i = 0;
+			var duration = 750;
+			var root;
+			var treeDepth;
+			var depth;
+			var fontSize;
+			var nodeSize;
+			var linkSize;
+			var charSize;
+
+			var tree = d3.layout.tree();
+
+			var diagonal = d3.svg.diagonal()
+				.projection(function(d) { return [d.y, d.x]; });
+
+			var svg = d3.select('body').append("svg").attr('id', 'svg');
+
+			var svgGroup = svg.append("g");
+			
+			d3.json("flare.json", function(error, root) {
+				if (error) throw error;
+				treeDepth = jsonDepth(root) - 1;
+				root.y0 = 0;
+	            root.children.forEach(collapse);
+	            resize();
+				update(root);
+			});
+		</script>
+	</body>
+</html>
