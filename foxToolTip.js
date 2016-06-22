@@ -1,5 +1,14 @@
+/* The MIT License (MIT)
+
+Copyright (c) 2016 Michael R. Fox
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
 (function () {
-	
 	var tips = [];
 	var tipsIndex = [];
 	var windowWidth;
@@ -15,7 +24,7 @@
 	var mouseX;
 	var mouseY;
 	var timer;
-	var MutationObserver;
+	var mutationObserver;
 	var set = false;
 		
 	function mouseOver (event) {
@@ -78,10 +87,41 @@
 		timer = window.setTimeout(function() { beforeRule.visibility = 'hidden'; }, transitionDuration * 1000);
 		beforeRule.opacity = 0;
 	};
-
+/*
+	function targetRemoved (event) {
+		var targetElement = this;
+		var index = tipsIndex.indexOf(targetElement.id);
+		if (index !== -1) {
+			console.log('tip count before (ie): ', tips.length);
+			tips[index].remove();
+			console.log('tip count after (ie): ', tips.length);
+		};
+	};
+*/	
+	function mutationHandler (mutations) {
+		mutations.forEach (function (mutationRecord) {
+			var index;
+			if (typeof d3 !== 'undefined') {
+				for (var i = 0; i < mutationRecord.removedNodes.length; i++) {
+					for (var j = 0; j < mutationRecord.removedNodes[i].childNodes.length; j++) {
+						index = tipsIndex.indexOf(mutationRecord.removedNodes[i].childNodes[j].id);
+						if (index !== -1) {	
+							tips[index].remove(); 
+						};
+					};
+				};
+			} else { 
+				for (var i = 0; i < mutationRecord.removedNodes.length; i++) {
+					index = tipsIndex.indexOf(mutationRecord.removedNodes[i].id);
+					if (index !== -1) {	
+						tips[index].remove(); 
+					};
+				};
+			};
+		});
+	};
+	
 	function windowResized() {
-		//windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-		//windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 		windowWidth = document.documentElement.clientWidth || window.innerWidth || document.body.clientWidth;
 		windowHeight = document.documentElement.clientHeight || window.innerHeight || document.body.clientHeight;
 		aspectRatio = windowWidth / windowHeight;
@@ -90,24 +130,16 @@
 	function getMouseCoordinates (event) {
 
 		if (typeof d3 !== 'undefined') {
-			mouseX = d3.event.clientX;	//d3.event.pageX;
-			mouseY = d3.event.clientX;	//d3.event.pageY;
-/*		} else if (event.pageX) {
-			mouseX = event.pageX;
-			mouseY = event.pageY;
-*/		} else {
-			//var doc = document.documentElement;
-			//var body = document.body;
-			mouseX = event.clientX //+ (doc.scrollLeft || body.scrollLeft || 0) - (doc.clientLeft || body.clientLeft || 0);
-			mouseY = event.clientY //+ (doc.scrollTop || body.scrollTop || 0) - (doc.clientTop || body.clientTop || 0);
+			mouseX = d3.event.clientX;
+			mouseY = d3.event.clientX;
+		} else {
+			mouseX = event.clientX;
+			mouseY = event.clientY;
 		};
 	};
 
-	function getElementCoordinates (element, client) {
-		client = (typeof client == 'undefined') ? true : false;
+	function getElementCoordinates (element) {
 		var clientRect = {};
-		var top;
-		var left;
 
 		var target = tips[tipsIndex.indexOf(element.id)];
 		
@@ -117,22 +149,11 @@
 			clientRect.right = mouseX + 20;
 			clientRect.bottom = mouseY + 20;
 		} else clientRect = element.getBoundingClientRect();
-		if (client !== false) {
-			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-			var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft;
-			var clientTop = document.documentElement.clientTop || document.body.clientTop;
-			var clientLeft = document.documentElement.clientLeft || document.body.clientLeft;
-			top = Math.round(clientRect.top + scrollTop - clientTop);
-			left = Math.round(clientRect.left + scrollLeft - clientLeft);
 
-		} else {
-			top = clientRect.top;
-			left = clientRect.left;
-		}
 		var height = clientRect.bottom - clientRect.top;
 		var width = clientRect.right - clientRect.left;
-		return {top: top, left: left, height: height, width: width};
-		//return {top: clientRect.top, left: clientRect.left, height: height, width: width};
+
+		return {top: clientRect.top, left: clientRect.left, height: height, width: width};
 	};
 
 	function getRule (rule) {
@@ -191,14 +212,13 @@
 		var arrowAdjust;
 
 		var adjustVertical = function (top) {
-			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
 			var topAdjust = top;
 			var arrowAdjust = ttDiv.offsetHeight / 2;
 
-			if (top - scrollTop < 0) { 
+			if (top < 0) { 
 				topAdjust = 0;
 				arrowAdjust = Math.max((target.arrowSize()) + target.borderRadius(), top + (ttDiv.offsetHeight / 2));
-			} else if (top - scrollTop + ttDiv.offsetHeight > windowHeight) {
+			} else if (top + ttDiv.offsetHeight > windowHeight) {
 				topAdjust = windowHeight - ttDiv.offsetHeight;
 				arrowAdjust = Math.min(ttDiv.offsetHeight - target.borderRadius() - target.arrowSize(), (ttDiv.offsetHeight / 2) +  top - topAdjust);
 			};
@@ -207,14 +227,13 @@
 		};
 
 		var adjustHorizontal = function (left) {
-			var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft;
 			var leftAdjust = left;
 			var arrowAdjust = ttDiv.offsetWidth / 2;
 
-			if (left  - scrollLeft < 0) { 
+			if (left < 0) { 
 				leftAdjust = 0;
 				arrowAdjust = Math.max((target.arrowSize()) + target.borderRadius(), left + (ttDiv.offsetWidth / 2));
-			} else if (left - scrollLeft + ttDiv.offsetWidth > windowWidth) {
+			} else if (left + ttDiv.offsetWidth > windowWidth) {
 				leftAdjust = windowWidth - ttDiv.offsetWidth;
 				arrowAdjust = Math.min(ttDiv.offsetWidth - target.borderRadius() - target.arrowSize(), (ttDiv.offsetWidth / 2) +  left - leftAdjust);
 			};
@@ -296,7 +315,7 @@
 
 	function optimumOrientation  (targetElement, target) {
 
-		var elementCoordinates = getElementCoordinates(targetElement, false);
+		var elementCoordinates = getElementCoordinates(targetElement);
 		var elementCenterH = elementCoordinates.left + (elementCoordinates.width / 2);
 		var elementCenterV = elementCoordinates.top + (elementCoordinates.height / 2);
 		
@@ -361,11 +380,11 @@
 		rules = sheet.cssRules ? sheet.cssRules: sheet.rules;
 		
 		if (sheet.insertRule) {
-			sheet.insertRule('.foxToolTip {opacity: 0;width: 120px;position: absolute;visibility: hidden;z-index: 1;pointer-events: none;display: inline-block;}', rules.length);
+			sheet.insertRule('.foxToolTip {opacity: 0;position: fixed;visibility: hidden;z-index: 1;pointer-events: none;display: inline-block;}', rules.length);
 			sheet.insertRule('.foxToolTip::after{content: "";position: absolute;border-style: solid;pointer-events: none;}', rules.length);
 			sheet.insertRule('.foxToolTipTarget {cursor: help;}', rules.length);
 		} else {
-			sheet.addRule('.foxToolTip', '{opacity: 0;width: 120px;position: absolute;visibility: hidden;z-index: 1;pointer-events: none;display: inline-block;}', rules.length);
+			sheet.addRule('.foxToolTip', '{opacity: 0;position: absolute;visibility: hidden;z-index: 1;pointer-events: none;display: inline-block;}', rules.length);
 			sheet.addRule('.foxToolTip::after', '{content: "";position: absolute;border-style: solid;pointer-events: none;}', rules.length);
 			sheet.addRule('.foxToolTipTarget', '{cursor: help;}', rules.length);
 		};
@@ -383,7 +402,8 @@
 		pseudoDiv.style.display = 'inline-block';
 		document.body.insertBefore(pseudoDiv, document.body.firstChild);
 		
-		//MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+		mutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+		
 		set = true;
 	};
 	
@@ -412,6 +432,8 @@
 		
 		sheet = undefined;
 		rules = undefined;
+		
+		//observer.disconnect();
 		
 		set = false;
 	};
@@ -449,6 +471,8 @@
 	tip = function (elementId, content) {
 		var thisToolTip = this;
 		var targetElement;
+		var observer;
+		
 		var options = {
 			content: '',
 			orientation: '',	// 'right',
@@ -707,8 +731,17 @@
 					targetElement.onmouseout = null;
 				};
 			};
+			
+			if (typeof mutationObserver !== 'undefined') {
+				observer.disconnect;
+			} else if (targetElement.removeEventListener) {
+					targetElement.removeEventListener('DOMNodeRemoved', targetRemoved);
+			} else {
+				targetElement.onDOMNodeRemoved = null;
+			};
+		
 			var tipIndex = tipsIndex.indexOf(elementId);
-
+			
 			tips.splice(tipIndex, 1);
 			tipsIndex.splice(tipIndex, 1);
 			if (tips.length == 0) { closeDown(); };
@@ -726,15 +759,31 @@
 			targetElement.className += ' foxToolTipTarget';
 
 			if(targetElement.addEventListener) {
-				targetElement.addEventListener('mouseover', mouseOver, true);
-				targetElement.addEventListener('mouseout', mouseOut, true);
-				targetElement.addEventListener('mousemove', mouseMove, true);
+				targetElement.addEventListener('mouseover', mouseOver, false);
+				targetElement.addEventListener('mouseout', mouseOut, false);
+				targetElement.addEventListener('mousemove', mouseMove, false);
 			} else {
 				targetElement.onmouseover = mouseOver;
 				targetElement.onmouseout = mouseOut;
 				targetElement.onmousemove = mouseMove;
 			};
 		};
+		if (typeof d3 !== 'undefined') {
+			var parent = targetElement[0].parentNode;
+			var config = {childList: true, subtree: true};
+		} else {
+			var parent = targetElement.parentNode;
+			var config = {childList: true, subtree: false};
+		};
+
+		if (typeof mutationObserver !== 'undefined') {
+			observer = new mutationObserver(mutationHandler);
+			observer.observe(parent, config);
+/*		} else if (targetElement.addEventListener) { 
+			parent.addEventListener('DOMNodeRemoved', targetRemoved, false)
+		} else {
+			targetElement.onDOMNodeRemoved = targetRemoved;
+*/		};
 		
 		options.content = content;
 
@@ -743,19 +792,25 @@
 
 	foxToolTip = {
 		create: function (elementId, content) {
-			if (!set) setUp();
-			var newTip = new tip(elementId, content);
-			tips.push(newTip);
-			tipsIndex.push(elementId);
-			return tips[tips.length - 1];
+			var index;
+			if (document.getElementById(elementId) == null) { return; };
+			index = tipsIndex.indexOf(elementId)
+			if ( index == -1) {
+				if (!set) setUp();
+				var newTip = new tip(elementId, content);
+				tips.push(newTip);
+				tipsIndex.push(elementId);
+				return tips[tips.length - 1];
+			} else {
+				return tips[index];
+			};
 		},
 
 		remove: function (elementId) {
+			var index;
 			
-			var target;
-			
-			target = tips[tipsIndex.indexOf(elementId)];
-			target.remove();
+			index = tipsIndex.indexOf(elementId);
+			if (index !== -1) tips[index].remove();
 		}
 	};
 
