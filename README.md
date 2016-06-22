@@ -1,7 +1,5 @@
 # <a id="top">foxToolTip.js</a>
 
----
-© Michael R. Fox
 
 ---
 foxToolTip.js is a small, simple library designed to show tooltips on hover over any DOM element.  It uses a combination of JavaScript and css styles to provide flexibility and ease of implementation.  It has no dependencies and should work on any modern browser (i.e., not Internet Explorer 8.0 and earlier).
@@ -13,6 +11,7 @@ foxToolTip.js supports method chaining and has special code to detect and integr
 * [The foxToolTip object](#The-foxToolTip-object)
 * [Working with D3.js](#working-with-D3)
 * [The Tooltip Content](#tooltip-content)
+* [License](#license)
 
 ---
 ## <a id="usage">Usage</a>
@@ -22,14 +21,14 @@ foxToolTip.js exposes two methods: create and remove.
 * **elementId** (string) - the unique id of your target DOM element
 * **content** (string) - any valid html
 * **returns** - a [foxToolTip object](#The-foxToolTip-object)
-* **description** - The create method is the only method you need to invoke to instantiate a tooltip with all of the predefined defaults.  It returns a [foxToolTip object](#The-foxToolTip-object) which you may save as a variable to dynamically alter its options, or you may use method chaining to set desired options at the time the tooltip is created.
+* **description** - The create method is the only method you need to invoke to instantiate a tooltip with all of the predefined defaults.  It returns a [foxToolTip object](#The-foxToolTip-object) which you may save as a variable to dynamically alter its options, or you may use method chaining to set desired options at the time the tooltip is created.  If you attempt to create a tooltip on a target element that already has a tooltip associated with it, the .create() method will not create a new tooltip, but return the [foxToolTip object](#The-foxToolTip-object) associated with that target element.
 
 ### <a id ="foxToolTip.remove">foxToolTip.remove (elementId)</a> 
 * **elementId** (string) - the unique id of the target DOM element whose tooltip you want to remove.
 * **returns** - null
-* **description** - removes all of the event listeners and the associated [foxToolTip object](#The-foxToolTip-object) object from the stack.  If this is the only [foxToolTip object](#The-foxToolTip-object) on the stack, the .remove() method will remove all of the [foxToolTip object](#The-foxToolTip-object) css rules from the stylesheet and set the library back to its un-instantiated state.  This method is especially useful for projects (like many [d3.js](https://github.com/d3) projects) that create and remove elements.
+* **description** - removes all of the event listeners and the associated [foxToolTip object](#The-foxToolTip-object) object from the stack.  If this is the only [foxToolTip object](#The-foxToolTip-object) on the stack, the .remove() method will remove all of the [foxToolTip object](#The-foxToolTip-object) css rules from the stylesheet and set the library back to its un-instantiated state.  Generally, this method is not required, since foxToolTip.js automatically detects the removal of target elements, and performs corresponsing tooltip removal automatically.  Limitation: foxToolTip.js uses mutationObservers to detect the removal of target elements from the DOM.  Internet Explorer prior to verson 11 does not support mutationObservers.  However, foxToolTip.js does keep track of all tooltips, and will prevent you from inadvertantly adding a duplicate tooltip that you thought had been automatically removed.
 
-[◄top](#top)
+[:house: top](#top)
 
 ---
 ## <a id="how-it-works">How it Works</a>
@@ -50,7 +49,7 @@ Lastly, the [foxToolTip.create()](#foxToolTip.create) method adds event listener
 
 Upon each call of the [foxToolTip.create()](#foxToolTip.create) method, a unique [foxToolTip object](#The-foxToolTip-object) is created which contains all of the options necesary to style, position, and hide the tooltip.  foxToolTip.js maintains an internal stack of all of the [foxToolTip objects](#The-foxToolTip-object).  When the cursor hovers over a target element, foxToolTip.js determines which [foxToolTip object](#The-foxToolTip-object) is associated with that element, and alters the .foxToolTip, .foxToolTip::after, and .foxToolTipTarget style rules according to the options set for that tooltip.  This allows for unique tooltips to be created, removed, and dynamically styled.  
 
-[◄top](#top)
+[:house: top](#top)
 
 ---
 ## <a id ="The-foxToolTip-object">The foxToolTip object</a>
@@ -79,13 +78,14 @@ Upon creation, the [foxToolTip.create()](#foxToolTip.create) method returns a f[
 * [.minWidth](#.minWidth)
 * [.remove](#.remove)
 
-[◄top](#top)
+[:house: top](#top)
 
 ### <a id=".content">.content (content)</a>
 * **content** (string) - any valid html
 * **default** - ""
 * **returns** - if the content argument is passed, the .content() method returns the [foxToolTip object](#The-foxToolTip-object).  If the .content() method is called with no arguments, the .content() method returns the current content string.
 * **description** - although the content of the tooltip is set with the [foxToolTip.create()](#foxToolTip.create) method, you may use the .content() method on the [foxToolTip object](#The-foxToolTip-object) to dynamically alter the content of the tooltip at runtime.
+
 ``` javascript
 function changeContent (toolTip) {
 	tooltip.content("Ut enim ad minim veniam");
@@ -97,20 +97,20 @@ var myTooltip = foxToolTip.create("myElement", "Loreiem Ipsum");
 changeContent(myToolTip);
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".orientation">.orientation (orientation)</a>
 * **orientation** (string) - "right" | "left" | "top" | "bottom"
 * **default** - ""
 * **returns** - if the orientation argument is passed, the .orientation() method returns the [foxToolTip object](#The-foxToolTip-object).  If the .orientation() method is called with no arguments, the .orientation() method returns the current orientation setting.
-* **description** - You may set the location of the tooltip relative to the target element (or cursor if the [.mousePoint](#.mousePoint) method is called with true as the argument).  If the orientation is set, autopositioning is disabled (see the [.autoPosition](#.autoPosition) method)
+* **description** - You may set the location of the tooltip relative to the target element (or cursor if the [.mousePoint](#.mousePoint) method is called with true as the argument).  If the orientation is set, autopositioning is disabled (see the [.autoPosition](#.autoPosition) method).
 
 ``` javascript
 foxToolTip.create("myElement", "Loreiem Ipsum")
   .orientation("left");
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".preferredOrientation">.preferredOrientation (orientation)</a>
 * **orientation** (string)  - "right" | "left" | "top" | "bottom" | "none"
@@ -123,7 +123,7 @@ var myTooltip = foxToolTip.create("myElement", "Loreiem Ipsum")
 	.preferredOrientation("left");
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".autoPosition">.autoPosition (autoPostion)</a>
 * **autoposition** (boolean) - true || false
@@ -136,7 +136,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 	.autoPosition(false);
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".autoSize">.autoSize (autoSize)</a>
 * **autoSize** (boolean) - true || false
@@ -149,7 +149,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 	.autoSize(false);
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".mousePoint">.mousePoint(mousePoint)</a>
 * **mousePoint** (boolean) - true || false
@@ -162,7 +162,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 	.mousePoint(true);
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 
 ### <a id=".trackMouse">.trackMouse (trackMouse)</a>
@@ -176,7 +176,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 	.trackMouse(true);
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".cursor">.cursor (cursor)</a>
 * **cursor** (string) - "" || “alias” || “all-scroll” || “auto” || “cell” || “context-menu” || “col-resize” || “copy” || “crosshair” || “default” || “e-resize” || “ew-resize” || “help” || “move” || “n-resize” || “ne-resize” || “nesw-resize” || “ns-resize” || “nw-resize” || “nwse-resize” || “no-drop” || “none” || “not-allowed” || “pointer” || “progress” || “row-resize” || “s-resize” || “se-resize” || “sw-resize” || “text” || “URL” || “vertical-text” || “w-resize” || “wait” || “zoom-in” || “zoom-out” || “initial” || “inherit”
@@ -189,7 +189,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 	.cursor("pointer");
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".font">.font(family, size)</a>
 * **family** (string) - any valid css font-family (e.g., "tahoma, sans-serif")
@@ -221,7 +221,7 @@ In the following example the phrase, "Lorem ipsum" will be displayed with the H1
 </body>
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".foregroundColor">.foregroundColor (color)</a>
 * **color** (string) - any valid css color such as hex, rgb, or a named css color
@@ -254,7 +254,7 @@ In the following example the phrase, "Lorem ipsum" will be displayed with the H1
 </body>
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
           
 ### <a id=".backgroundColor">.backgroundColor(color) </a>
 * **color** (string) - any valid css color such as hex, rgb, or a named css color
@@ -267,7 +267,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 	.backgroundColor("rgb(20, 40,128)");
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".backgroundOpacity">.backgroundOpacity(opacity)</a>
 * **opacity** (number) - [0...1]
@@ -280,7 +280,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 	.backgroundOpacity(0.5);
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".padding">.padding (padding)</a>
 * **padding** (string) - a string representing 1 to 4 any valid css sizes (e.g., "1em" || "16px"). If no unit of measurement is given it is assumed to be in pixels.
@@ -293,7 +293,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 	.padding("2em 5px 1em 5px");
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".borderRadius">.borderRadius (borderRadius)</a>
 * **borderRadius** (string || number) - any valid css size (e.g., "1em" || "16px").  If a number is passed, it is assumed to be in pixels.
@@ -306,7 +306,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 	.borderRadius("1em");
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".boxShadow">.boxShadow (size, color, opacity)</a>
 * **size** (string || number) - any valid css size (e.g., "1em" || "16px") or "none".  If a number is passed, it is assumed to be in pixels.  If "none" is passed as a single argument, no boxShadow is shown
@@ -314,14 +314,14 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 * **opacity** (number) - [0...1]
 * **defaults** - size: "8px", color: "rgb(0,0,0)", opacity: 0.5;
 * **returns** - if arguments are passed, the .boxShadow() method returns the [foxToolTip object](#The-foxToolTip-object).  If the .boxShadow() method is called with no arguments, the .boxShadow() method returns the current boxShadow setting as a css box-shadow shorthand string (e.g. "8px 8px 8px 0 rgba(0,0,0,0.5)").
-* **description** - Setting the boxShadow size, color, and opacity via the .boxShadow() method, sets the boxShadow option contained within the [foxToolTip object](#The-foxToolTip-object) which is injected into the .foxToolTip style's ruleset upon hover over the target element. The boxShadow option sets a box shadow offsets to the lower right of the tooltip..
+* **description** - Setting the boxShadow size, color, and opacity via the .boxShadow() method, sets the boxShadow option contained within the [foxToolTip object](#The-foxToolTip-object) which is injected into the .foxToolTip style's ruleset upon hover over the target element. The boxShadow option sets a box shadow offsets to the lower right of the tooltip.
 
 ``` javascript
 foxToolTip.create("myElement", "Loreiem Ipsum")
 	.boxShadow("1em", "#0000FF", 0.5);
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".transitionVisible">.transitionVisible (delay, duration)</a>
 * **delay** (number) - any valid number in seconds
@@ -335,7 +335,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 	.transitionVisible(0, 0.6);
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".transitionHidden">.transitionHidden (delay, duration)</a>
 * **delay** (number) - any valid number in seconds
@@ -349,7 +349,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 	.transitionHidden(0, 0.2);
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".arrowSize">.arrowSize (size)</a>
 * **arrowSize** (string || number) - any valid css size (e.g., "1em" || "16px").  If a number is passed, it is assumed to be in pixels.
@@ -362,7 +362,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 	.arrowSize("1.2em");
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".width">.width (width)</a>
 * **width** (string || number) - any valid css size (e.g., "1em" || "16px").  If a number is passed, it is assumed to be in pixels.
@@ -375,7 +375,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 	.width("500px");
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".minWidth">.minWidth (minWidth)</a>
 * **minWidth** (string || number) - any valid css size (e.g., "1em" || "16px").  If a number is passed, it is assumed to be in pixels.
@@ -388,13 +388,14 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 	.minWidth("100px");
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".remove">.remove () </a>
 * **arguments** - none
 * **defaults** - none
 * **returns** - null
-* **description** - similar to the [foxToolTip.remove()](#foxToolTip.remove) method, the .remove() method of a [foxToolTip object](#The-foxToolTip-object) removes all of the event listeners and the associated [foxToolTip object](#The-foxToolTip-object) object from the stack.  Unlike the [foxToolTip.remove()](#foxToolTip.remove) method, the .remove() method of a [foxToolTip object](#The-foxToolTip-object), the .remove() method will not remove all of the [foxToolTip object](#The-foxToolTip-object) css rules from the stylesheet and set the library back to its un-instantiated state if it was the only [foxToolTip object](#The-foxToolTip-object) on the stack.
+* **description** - similar to the [foxToolTip.remove()](#foxToolTip.remove) method, the .remove() method of a [foxToolTip object](#The-foxToolTip-object) removes all of the event listeners and the associated [foxToolTip object](#The-foxToolTip-object) object from the stack.  If this is the only [foxToolTip object](#The-foxToolTip-object) on the stack, the .remove() method will remove all of the [foxToolTip object](#The-foxToolTip-object) css rules from the stylesheet and set the library back to its un-instantiated state.  Generally, this method is not required, since foxToolTip.js automatically detects the removal of target elements, and performs corresponsing tooltip removal automatically.
+Limitation: foxToolTip.js uses mutationObservers to detect the removal of target elements from the DOM.  Internet Explorer prior to verson 11 does not support mutationObservers.  However, foxToolTip.js does keep track of all tooltips, and will prevent you from inadvertantly adding a duplicate tooltip that you thought had been automatically removed.
 
 ```javascript
 var myToolTip = foxToolTip.create("myElement", "Loreiem Ipsum");
@@ -404,7 +405,7 @@ var myToolTip = foxToolTip.create("myElement", "Loreiem Ipsum");
 myToolTip.remove();
 ```
 
-[◄The foxToolTip object](#The-foxToolTip-object)
+[:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ----
 ## <a id="working-with-D3">Working with D3.js</a>
@@ -446,19 +447,7 @@ nodeEnter.append("circle")
 	};
 ```
 
-Likewise, frequently D3 applications remove objects from the DOM.  Using the .each() method of the D3 selector makes removing the associated tooltips easy.
-
-```javascript
-var nodeExit = node.exit().transition()
-	.duration(500)
-	.style("opacity", 0)
-	.remove()
-	.each ( function (d) {
-		foxToolTip.remove("node" + d.id); 
-});
-```
-
-[◄top](#top)
+[:house: top](#top)
 
 ---
 ## <a id="tooltip-content">Tooltip Content</a>
@@ -500,5 +489,19 @@ foxToolTip.create("myElement", svg)
 	.trackMouse(true);
 ```
 
-[◄top](#top)
+[:house: top](#top)
+
+# <a id='license'>License</a>
+
+**The MIT License (MIT)**
+
+Copyright (c) 2016 Michael R. Fox
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+[:house: top](#top)
 
