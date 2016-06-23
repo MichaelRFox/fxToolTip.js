@@ -1,12 +1,20 @@
-/* The MIT License (MIT)
-
-Copyright (c) 2016 Michael R. Fox
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/** 
+* @file foxToolTip.js
+* @version 1.0.11
+* @author Michael R Fox
+* @copyright (c) 2016 Michael R. Fox
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 
+* Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, 
+* distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the 
+* following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY  
+* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 (function () {
 	var tips = [];
@@ -24,7 +32,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	var mouseX;
 	var mouseY;
 	var timer;
-	var mutationObserver;
+	var targetTimer;
+	var targetTimerInterval = 500;
 	var set = false;
 		
 	function mouseOver (event) {
@@ -87,36 +96,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		timer = window.setTimeout(function() { beforeRule.visibility = 'hidden'; }, transitionDuration * 1000);
 		beforeRule.opacity = 0;
 	};
-/*
-	function targetRemoved (event) {
-		var targetElement = this;
-		var index = tipsIndex.indexOf(targetElement.id);
-		if (index !== -1) {
-			console.log('tip count before (ie): ', tips.length);
-			tips[index].remove();
-			console.log('tip count after (ie): ', tips.length);
-		};
-	};
-*/	
-	function mutationHandler (mutations) {
-		mutations.forEach (function (mutationRecord) {
-			var index;
-			if (typeof d3 !== 'undefined') {
-				for (var i = 0; i < mutationRecord.removedNodes.length; i++) {
-					for (var j = 0; j < mutationRecord.removedNodes[i].childNodes.length; j++) {
-						index = tipsIndex.indexOf(mutationRecord.removedNodes[i].childNodes[j].id);
-						if (index !== -1) {	
-							tips[index].remove(); 
-						};
-					};
-				};
-			} else { 
-				for (var i = 0; i < mutationRecord.removedNodes.length; i++) {
-					index = tipsIndex.indexOf(mutationRecord.removedNodes[i].id);
-					if (index !== -1) {	
-						tips[index].remove(); 
-					};
-				};
+	
+	function detectTargetRemoval() {
+		tipsIndex.forEach(function (tip, i) {
+			if (document.getElementById(tip) == null) {
+				tips[i].remove();
 			};
 		});
 	};
@@ -139,17 +123,23 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	};
 
 	function getElementCoordinates (element) {
+		var cursorBuffer = 15;
 		var clientRect = {};
 
 		var target = tips[tipsIndex.indexOf(element.id)];
 		
 		if (target.mousePoint() == true) {
-			clientRect.left = mouseX - 20;
-			clientRect.top = mouseY - 20;
-			clientRect.right = mouseX + 20;
-			clientRect.bottom = mouseY + 20;
-		} else clientRect = element.getBoundingClientRect();
-
+			clientRect.left = mouseX - cursorBuffer;
+			clientRect.top = mouseY - cursorBuffer;
+			clientRect.right = mouseX + cursorBuffer;
+			clientRect.bottom = mouseY + cursorBuffer;
+		} else {
+			clientRect = element.getBoundingClientRect();
+			clientRect.left -= cursorBuffer;
+			clientRect.top -= cursorBuffer;
+			clientRect.right += cursorBuffer;
+			clientRect.bottom += cursorBuffer;
+		};
 		var height = clientRect.bottom - clientRect.top;
 		var width = clientRect.right - clientRect.left;
 
@@ -348,10 +338,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 			bottomValue += elementCoordinates.width;
 		};
 
-		if (leftValue >= rightValue && leftValue >= topValue && leftValue >= bottomValue) { return 'left'; };
-		if (rightValue >= leftValue && rightValue >= topValue && rightValue >= bottomValue) { return 'right'; };
-		if (topValue >= rightValue && topValue >= leftValue && topValue >= bottomValue) { return 'top'; };
-		return 'bottom';
+		var maxValue = Math.max(leftValue, rightValue, topValue, bottomValue);
+		switch (true) {
+			case leftValue == maxValue: return 'left';
+			case rightValue == maxValue: return 'right';
+			case topValue == maxValue: return 'top';
+			case bottomValue == maxValue: return 'bottom';
+		};
+
 	};
 
 	function setUp() {
@@ -384,7 +378,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 			sheet.insertRule('.foxToolTip::after{content: "";position: absolute;border-style: solid;pointer-events: none;}', rules.length);
 			sheet.insertRule('.foxToolTipTarget {cursor: help;}', rules.length);
 		} else {
-			sheet.addRule('.foxToolTip', '{opacity: 0;position: absolute;visibility: hidden;z-index: 1;pointer-events: none;display: inline-block;}', rules.length);
+			sheet.addRule('.foxToolTip', '{opacity: 0;position: fixed;visibility: hidden;z-index: 1;pointer-events: none;display: inline-block;}', rules.length);
 			sheet.addRule('.foxToolTip::after', '{content: "";position: absolute;border-style: solid;pointer-events: none;}', rules.length);
 			sheet.addRule('.foxToolTipTarget', '{cursor: help;}', rules.length);
 		};
@@ -402,7 +396,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		pseudoDiv.style.display = 'inline-block';
 		document.body.insertBefore(pseudoDiv, document.body.firstChild);
 		
-		mutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+		targetTimer = window.setInterval(detectTargetRemoval, targetTimerInterval);
 		
 		set = true;
 	};
@@ -432,8 +426,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		
 		sheet = undefined;
 		rules = undefined;
-		
-		//observer.disconnect();
 		
 		set = false;
 	};
@@ -471,11 +463,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	tip = function (elementId, content) {
 		var thisToolTip = this;
 		var targetElement;
-		var observer;
 		
 		var options = {
 			content: '',
-			orientation: '',	// 'right',
+			orientation: '',
 			preferredOrientation: 'right',
 			autoPosition: true,
 			autoSize: true,
@@ -711,6 +702,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		};
 
 		thisToolTip.remove = function () {
+
+			window.clearInterval(targetTimer);
 			
 			if (typeof d3 !== 'undefined') {
 				targetElement
@@ -731,20 +724,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 					targetElement.onmouseout = null;
 				};
 			};
-			
-			if (typeof mutationObserver !== 'undefined') {
-				observer.disconnect;
-			} else if (targetElement.removeEventListener) {
-					targetElement.removeEventListener('DOMNodeRemoved', targetRemoved);
-			} else {
-				targetElement.onDOMNodeRemoved = null;
-			};
 		
 			var tipIndex = tipsIndex.indexOf(elementId);
 			
 			tips.splice(tipIndex, 1);
 			tipsIndex.splice(tipIndex, 1);
-			if (tips.length == 0) { closeDown(); };
+			console.log(elementId + ' removed');
+			if (tips.length == 0) {
+				closeDown(); 
+			} else targetTimer = window.setInterval(detectTargetRemoval, targetTimerInterval);
 		};
 		
 		/* constructor */
@@ -775,15 +763,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 			var parent = targetElement.parentNode;
 			var config = {childList: true, subtree: false};
 		};
-
-		if (typeof mutationObserver !== 'undefined') {
-			observer = new mutationObserver(mutationHandler);
-			observer.observe(parent, config);
-/*		} else if (targetElement.addEventListener) { 
-			parent.addEventListener('DOMNodeRemoved', targetRemoved, false)
-		} else {
-			targetElement.onDOMNodeRemoved = targetRemoved;
-*/		};
 		
 		options.content = content;
 
@@ -792,18 +771,17 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 	foxToolTip = {
 		create: function (elementId, content) {
-			var index;
 			if (document.getElementById(elementId) == null) { return; };
+			if (!set) setUp();
+			var index;
 			index = tipsIndex.indexOf(elementId)
-			if ( index == -1) {
-				if (!set) setUp();
-				var newTip = new tip(elementId, content);
-				tips.push(newTip);
-				tipsIndex.push(elementId);
-				return tips[tips.length - 1];
-			} else {
-				return tips[index];
+			if (index !== -1) {
+				tips[index].remove();
 			};
+			var newTip = new tip(elementId, content);
+			tips.push(newTip);
+			tipsIndex.push(elementId);
+			return tips[tips.length - 1];
 		},
 
 		remove: function (elementId) {
