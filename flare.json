@@ -203,7 +203,7 @@
      "name": "methods",
      "children": [
       {"name": "add", "toolTip": 593},
-      {"name": "and", "toolTip": "Expression operator that computes the logical "and" of sub-expression clauses."
+      {"name": "and", "toolTip": "Expression operator that computes the logical and of sub-expression clauses."
 },
       {"name": "average", "toolTip": "Aggregate operator for computing the average of a set of values."
 },
