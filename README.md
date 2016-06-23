@@ -66,7 +66,6 @@ Upon creation, the [foxToolTip.create()](#foxToolTip.create) method returns a f[
 * [.font](#.font)
 * [.foregroundColor](#.foregroundColor)
 * [.backgroundColor](#.backgroundColor)
-* [.backgroundColor](#.backgroundColor)
 * [.backgroundOpacity](#.backgroundOpacity)
 * [.padding](#.padding)
 * [.borderRadius](#.borderRadius)
