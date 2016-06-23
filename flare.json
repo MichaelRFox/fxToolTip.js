@@ -2,7 +2,7 @@
  "name": "flare",
  "children": [
   {
-   "name": "analytics",
+   "name": "analytics", "toolTip": "The flare.analytics package provides classes for analytics.",
    "children": [
     {
      "name": "cluster", "toolTip": "The flare.analytics.cluster package provides classes for clustering data into groups.",
