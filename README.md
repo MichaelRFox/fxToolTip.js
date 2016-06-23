@@ -21,12 +21,12 @@ foxToolTip.js exposes two methods: create and remove.
 * **elementId** (string) - the unique id of your target DOM element
 * **content** (string) - any valid html
 * **returns** - a [foxToolTip object](#The-foxToolTip-object)
-* **description** - The create method is the only method you need to invoke to instantiate a tooltip with all of the predefined defaults.  It returns a [foxToolTip object](#The-foxToolTip-object) which you may save as a variable to dynamically alter its options, or you may use method chaining to set desired options at the time the tooltip is created.  If you attempt to create a tooltip on a target element that already has a tooltip associated with it, the .create() method will not create a new tooltip, but return the [foxToolTip object](#The-foxToolTip-object) associated with that target element.
+* **description** - The create method is the only method you need to invoke to instantiate a tooltip with all of the predefined defaults.  It returns a [foxToolTip object](#The-foxToolTip-object) which you may save as a variable to dynamically alter its options, or you may use method chaining to set desired options at the time the tooltip is created.  If you attempt to create a tooltip on a target element that already has a tooltip associated with it, the .create() method will delete the old tooltip before returning the new [foxToolTip object](#The-foxToolTip-object).
 
 ### <a id ="foxToolTip.remove">foxToolTip.remove (elementId)</a> 
 * **elementId** (string) - the unique id of the target DOM element whose tooltip you want to remove.
 * **returns** - null
-* **description** - removes all of the event listeners and the associated [foxToolTip object](#The-foxToolTip-object) object from the stack.  If this is the only [foxToolTip object](#The-foxToolTip-object) on the stack, the .remove() method will remove all of the [foxToolTip object](#The-foxToolTip-object) css rules from the stylesheet and set the library back to its un-instantiated state.  Generally, this method is not required, since foxToolTip.js automatically detects the removal of target elements, and performs corresponsing tooltip removal automatically.  Limitation: foxToolTip.js uses mutationObservers to detect the removal of target elements from the DOM.  Internet Explorer prior to verson 11 does not support mutationObservers.  However, foxToolTip.js does keep track of all tooltips, and will prevent you from inadvertantly adding a duplicate tooltip that you thought had been automatically removed.
+* **description** - removes all of the event listeners and the associated [foxToolTip object](#The-foxToolTip-object) object from the stack.  If this is the only [foxToolTip object](#The-foxToolTip-object) on the stack, the .remove() method will remove all of the [foxToolTip object](#The-foxToolTip-object) css rules from the stylesheet and set the library back to its un-instantiated state.  Generally, this method is not required, since foxToolTip.js automatically detects the removal of target elements, and performs corresponsing tooltip removal automatically.
 
 [:house: top](#top)
 
@@ -295,7 +295,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 [:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".borderRadius">.borderRadius (borderRadius)</a>
-* **borderRadius** (string || number) - any valid css size (e.g., "1em" || "16px").  If a number is passed, it is assumed to be in pixels.
+* **borderRadius** (string || number) - any valid css size (e.g., "1em" || "16px") except percentage.  If a number is passed, it is assumed to be in pixels.
 * **default** - "12px"
 * **returns** - if the borderRadius argument is passed, the .borderRadius() method returns the [foxToolTip object](#The-foxToolTip-object).  If the .borderRadius() method is called with no arguments, the .borderRadius() method returns the current borderRadius setting.
 * **description** - Setting the borderRadius via the .borderRadius() method, sets the borderRadius option contained within the [foxToolTip object](#The-foxToolTip-object) which is injected into the .foxToolTip style's ruleset upon hover over the target element. The borderRadius option sets a uniform borderRadius for the tooltip corners.
@@ -308,7 +308,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 [:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".boxShadow">.boxShadow (size, color, opacity)</a>
-* **size** (string || number) - any valid css size (e.g., "1em" || "16px") or "none".  If a number is passed, it is assumed to be in pixels.  If "none" is passed as a single argument, no boxShadow is shown
+* **size** (string || number) - any valid css size (e.g., "1em" || "16px")  except percentage, or "none".  If a number is passed, it is assumed to be in pixels.  If "none" is passed as a single argument, no boxShadow is shown
 * **color** (string) - any valid css color such as hex, rgb, or a named css color
 * **opacity** (number) - [0...1]
 * **defaults** - size: "8px", color: "rgb(0,0,0)", opacity: 0.5;
@@ -329,6 +329,8 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 * **returns** - if arguments are passed, the .transitionVisible() method returns the [foxToolTip object](#The-foxToolTip-object).  If the .transitionVisible() method is called with no arguments, the .transitionVisible() method returns the current transitionVisible setting as a css transition shorthand string (e.g. "opacity 0.4s 0s").
 * **description** - Setting the transitionVisible delay and duration via the .transitionVisible() method, sets the transitionVisible option contained within the [foxToolTip object](#The-foxToolTip-object) which is injected into the .foxToolTip style's ruleset upon hover over the target element. The transitionVisible option sets the transition effect upon hover over the target element.
 
+*note*:  Internet Explorer 9 does not support CSS transitions.
+
 ``` javascript
 foxToolTip.create("myElement", "Loreiem Ipsum")
 	.transitionVisible(0, 0.6);
@@ -342,6 +344,8 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 * **defaults** - delay: 0, duration: 0.4;
 * **returns** - if arguments are passed, the .transitionHidden() method returns the [foxToolTip object](#The-foxToolTip-object).  If the .transitionHidden() method is called with no arguments, the .transitionHidden() method returns the current transitionHidden setting as a css transition shorthand string (e.g. "opacity 0.4s 0s").
 * **description** - Setting the transitionHidden delay and duration via the .transitionHidden() method, sets the transitionHidden option contained within the [foxToolTip object](#The-foxToolTip-object) which is injected into the .foxToolTip style's ruleset upon target element mouseout . The transitionHidden option sets the transition effect upon target element mouseout.
+
+*note*:  Internet Explorer 9 does not support CSS transitions.
 
 ``` javascript
 foxToolTip.create("myElement", "Loreiem Ipsum")
@@ -394,7 +398,6 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 * **defaults** - none
 * **returns** - null
 * **description** - similar to the [foxToolTip.remove()](#foxToolTip.remove) method, the .remove() method of a [foxToolTip object](#The-foxToolTip-object) removes all of the event listeners and the associated [foxToolTip object](#The-foxToolTip-object) object from the stack.  If this is the only [foxToolTip object](#The-foxToolTip-object) on the stack, the .remove() method will remove all of the [foxToolTip object](#The-foxToolTip-object) css rules from the stylesheet and set the library back to its un-instantiated state.  Generally, this method is not required, since foxToolTip.js automatically detects the removal of target elements, and performs corresponsing tooltip removal automatically.
-Limitation: foxToolTip.js uses mutationObservers to detect the removal of target elements from the DOM.  Internet Explorer prior to verson 11 does not support mutationObservers.  However, foxToolTip.js does keep track of all tooltips, and will prevent you from inadvertantly adding a duplicate tooltip that you thought had been automatically removed.
 
 ```javascript
 var myToolTip = foxToolTip.create("myElement", "Loreiem Ipsum");
