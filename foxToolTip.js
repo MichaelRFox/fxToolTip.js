@@ -135,10 +135,6 @@
 			clientRect.bottom = mouseY + cursorBuffer;
 		} else {
 			clientRect = element.getBoundingClientRect();
-			clientRect.left -= cursorBuffer;
-			clientRect.top -= cursorBuffer;
-			clientRect.right += cursorBuffer;
-			clientRect.bottom += cursorBuffer;
 		};
 		var height = clientRect.bottom - clientRect.top;
 		var width = clientRect.right - clientRect.left;
@@ -729,7 +725,7 @@
 			
 			tips.splice(tipIndex, 1);
 			tipsIndex.splice(tipIndex, 1);
-			console.log(elementId + ' removed');
+
 			if (tips.length == 0) {
 				closeDown(); 
 			} else targetTimer = window.setInterval(detectTargetRemoval, targetTimerInterval);
