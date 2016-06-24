@@ -161,7 +161,7 @@
       {"name": "update", "toolTip": "Create a new Query with the given update clauses."},
       {"name": "variance", "toolTip": "Creates a new Variance query operator that computes the population variance."},
       {"name": "where", "toolTip": "Create a new Query with the given filter expression."},
-      {"name": "xor", "toolTip": "	Creates a new Xor (exclusive or) query operator."},
+      {"name": "xor", "toolTip": "Creates a new Xor (exclusive or) query operator."},
       {"name": "_", "toolTip": "Returns a new Literal operator."}
      ]
     },
