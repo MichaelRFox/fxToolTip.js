@@ -153,8 +153,8 @@
 			};
 
 			function resize() {
-				screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-				screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+				screenWidth = document.documentElement.clientWidth || window.innerWidth || document.body.clientWidth;
+				screenHeight = document.documentElement.clientHeight || window.innerHeight || document.body.clientHeight;
 				width = screenWidth - margin.right - margin.left;
 				height = screenHeight - margin.top - margin.bottom;
 				/*charSize = defaultFontSize();*/
@@ -295,8 +295,9 @@
 
 			var svgGroup = svg.append("g");
 			
-			d3.json("flare.json", function(error, root) {
+			d3.json("flare.json", function(error, json) {
 				if (error) throw error;
+				root = json;
 				treeDepth = jsonDepth(root) - 1;
 				root.y0 = 0;
 	            root.children.forEach(collapse);
