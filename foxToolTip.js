@@ -2,19 +2,17 @@
 * @file foxToolTip.js
 * @version 1.0.11
 * @author Michael R Fox
+* 
 * @copyright (c) 2016 Michael R. Fox
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 
-* Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, 
-* distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the 
-* following conditions:
+* @license MIT
+* 
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 *
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 *
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY  
-* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
-* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+* 
+* @description foxToolTip.js is a small, simple library designed to show tooltips on hover over any DOM element.  It uses a combination of JavaScript and css styles to provide flexibility and ease of implementation.  It has no dependencies and should work on any modern browser (i.e., not Internet Explorer 8.0 and earlier).
 */
 (function () {
 	var tips = [];
@@ -36,6 +34,11 @@
 	var targetTimerInterval = 500;
 	var set = false;
 		
+	/** @function mouseOver
+	 * @param event {window.event}
+	 * @returns {null}
+	 * @description The mouseOver function dispatches 'onmouseover' events from all registered target elements. This function identifies the target element using the 'this' keyword (note: we don't use the Microsoft unique attachEvent because the this keyword refers to the window object, not the targte element).  It then cancels any existing tooltip transition, sets the global mouse coodinates, sets the options for the target element, and shows the tooltip by setting the foxToolTip div's opacity.
+	 */
 	function mouseOver (event) {
 		var targetElement = this;
 		var target;
