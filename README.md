@@ -6,6 +6,8 @@ foxToolTip.js is a small, simple library designed to show tooltips on hover over
 
 foxToolTip.js supports method chaining and has special code to detect and integrate with [d3.js](https://github.com/d3).
 
+Find a simple demo foxToolTip.js at my [foxToolTip.js demo bl.ock](http://bl.ocks.org/MichaelRFox/raw/8725b438cf26be9287ece9a7b90624d0/).
+
 * [Usage](#usage)
 * [How it Works](#how-it-works)
 * [The foxToolTip object](#The-foxToolTip-object)
@@ -449,7 +451,7 @@ nodeEnter.append("circle")
 	};
 ```
 
-You can find a demo of integrating foxToolTip.js with D3.js at my [D3.js demo bl.ock](http://bl.ocks.org/MichaelRFox/59cdc1c3478fb0362448cf87fdab30d0).
+You can find a demo of integrating foxToolTip.js with D3.js at my [D3.js demo bl.ock](http://bl.ocks.org/MichaelRFox/raw/59cdc1c3478fb0362448cf87fdab30d0/).
 
 [:house: top](#top)
 
