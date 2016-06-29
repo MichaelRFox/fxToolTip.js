@@ -4,9 +4,9 @@
 ---
 foxToolTip.js is a small, simple library designed to show tooltips on hover over any DOM element.  It uses a combination of JavaScript and css styles to provide flexibility and ease of implementation.  It has no dependencies and should work on any modern browser (i.e., not Internet Explorer 8.0 and earlier).
 
-foxToolTip.js supports method chaining and has special code to detect and integrate with [d3.js](https://github.com/d3).
+foxToolTip.js supports method chaining and has special code to detect and integrate with [d3.js](https://d3js.org/).
 
-Find a simple demo foxToolTip.js at my [foxToolTip.js demo bl.ock](http://bl.ocks.org/MichaelRFox/raw/8725b438cf26be9287ece9a7b90624d0/).
+Find a simple demo foxToolTip.js at my [foxToolTip.js demo bl.ock](http://bl.ocks.org/MichaelRFox/8725b438cf26be9287ece9a7b90624d0/).
 
 * [Usage](#usage)
 * [How it Works](#how-it-works)
@@ -414,7 +414,7 @@ myToolTip.remove();
 ----
 ## <a id="working-with-D3">Working with D3.js</a>
 
-[d3.js](https://github.com/d3) has a few peculiarities (especially with respect to D3 selectors, that foxToolTip.js accommodates.  In typical D3 coding, one generally won't save a unique var for each tooltip, as D3's chaining methods are generally used to create svg and other objects. This is easily accommodated by using the .each() method to create tooltips.  Note that each element that will have a tooltip associated with it must have a unique id. The following code illustrates one convenient way to do this:
+[d3.js](https://d3js.org/) has a few peculiarities (especially with respect to D3 selectors, that foxToolTip.js accommodates.  In typical D3 coding, one generally won't save a unique var for each tooltip, as D3's chaining methods are generally used to create svg and other objects. This is easily accommodated by using the .each() method to create tooltips.  Note that each element that will have a tooltip associated with it must have a unique id. The following code illustrates one convenient way to do this:
 
 ```javascript
 var svg = d3.select("body").append("svg").attr("id", "svg")
@@ -451,7 +451,7 @@ nodeEnter.append("circle")
 	};
 ```
 
-You can find a demo of integrating foxToolTip.js with D3.js at my [D3.js demo bl.ock](http://bl.ocks.org/MichaelRFox/raw/59cdc1c3478fb0362448cf87fdab30d0/).
+You can find a demo of integrating foxToolTip.js with D3.js at my [D3.js demo bl.ock](http://bl.ocks.org/MichaelRFox/59cdc1c3478fb0362448cf87fdab30d0/).
 
 [:house: top](#top)
 
