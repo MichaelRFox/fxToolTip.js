@@ -449,6 +449,8 @@ nodeEnter.append("circle")
 	};
 ```
 
+You can find a demo of integrating foxToolTip.js with D3.js at my [D3.js demo bl.ock](http://bl.ocks.org/MichaelRFox/59cdc1c3478fb0362448cf87fdab30d0).
+
 [:house: top](#top)
 
 ---
