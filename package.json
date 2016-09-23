@@ -1,0 +1,30 @@
+{
+  "name": "fox.tooltip.js",
+  "version": "1.0.11",
+  "description": "A tooltip library for javascript",
+  "main": "foxToolTip.js",
+  "scripts": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "rollupBuild": "rollup -c",
+    "lint": "eslint .src/**/*.js",
+    "minify": "uglifyjs ./dist/foxToolTip.js -o ./dist/foxToolTip.min.js -c -v",
+    "build": "rollupBuild && minify",
+    "publish": "jsdoc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MichaelRFox/foxToolTip.js.git"
+  },
+  "keywords": [
+    "tooltip"
+  ],
+  "author": "Michael R. Fox",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MichaelRFox/foxToolTip.js/issues"
+  },
+  "homepage": "https://github.com/MichaelRFox/foxToolTip.js#readme"
+}
