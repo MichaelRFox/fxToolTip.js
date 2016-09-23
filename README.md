@@ -1,7 +1,13 @@
 # <a id="top">foxToolTip.js</a>
 
+---
+## Installation
+``` html
+npm install fox.tooltip.js
+```
 
 ---
+##Overview
 foxToolTip.js is a small, simple library designed to show tooltips on hover over any DOM element.  It uses a combination of JavaScript and css styles to provide flexibility and ease of implementation.  It has no dependencies and should work on any modern browser (i.e., not Internet Explorer 8.0 and earlier).
 
 foxToolTip.js supports method chaining and has special code to detect and integrate with [d3.js](https://d3js.org/).
