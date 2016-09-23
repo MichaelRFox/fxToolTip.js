@@ -1,6 +1,6 @@
 /** 
 * @file foxToolTip.js
-* @version 1.0.11
+* @version 1.0.12
 * @author Michael R Fox
 * @copyright (c) 2016 Michael R. Fox
 *
