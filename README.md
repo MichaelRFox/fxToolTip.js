@@ -92,7 +92,7 @@ var myTooltip = foxToolTip.create("myElement", "Loreiem Ipsum");
 	.
 	.
 	.
-tooltip.content("Ut enim ad minim veniam");
+myTooltip.content("Ut enim ad minim veniam");
 ```
 
 [:arrow_up: The foxToolTip object](#The-foxToolTip-object)
