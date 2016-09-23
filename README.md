@@ -88,14 +88,11 @@ Upon creation, the [foxToolTip.create()](#foxToolTip.create) method returns a f[
 * **description** - although the content of the tooltip is set with the [foxToolTip.create()](#foxToolTip.create) method, you may use the .content() method on the [foxToolTip object](#The-foxToolTip-object) to dynamically alter the content of the tooltip at runtime.
 
 ``` javascript
-function changeContent (toolTip) {
-	tooltip.content("Ut enim ad minim veniam");
-};
 var myTooltip = foxToolTip.create("myElement", "Loreiem Ipsum");
 	.
 	.
 	.
-changeContent(myToolTip);
+tooltip.content("Ut enim ad minim veniam");
 ```
 
 [:arrow_up: The foxToolTip object](#The-foxToolTip-object)
