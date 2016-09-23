@@ -55,7 +55,7 @@ Upon each call of the [foxToolTip.create()](#foxToolTip.create) method, a unique
 
 ---
 ## <a id ="The-foxToolTip-object">The foxToolTip object</a>
-Upon creation, the [foxToolTip.create()](#foxToolTip.create) method returns a f[foxToolTip object](#The-foxToolTip-object) which exposes methods you can use to change the default behavior.
+Upon creation, the [foxToolTip.create()](#foxToolTip.create) method returns a [foxToolTip object](#The-foxToolTip-object) which exposes methods you can use to change the default behavior.
 
 * [.content](#.content)
 * [.orientation](#.orientation)
