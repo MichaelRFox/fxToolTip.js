@@ -9,10 +9,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "rollupBuild": "rollup -c",
-    "lint": "eslint .src/**/*.js",
+    "lint": "eslint .src/*.js",
     "minify": "uglifyjs ./dist/foxToolTip.js -o ./dist/foxToolTip.min.js -c -v",
     "build": "rollupBuild && minify",
     "publish": "jsdoc"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^3.5.0",
+    "uglify-js": "^2.6.2",
+    "jsdoc": "^3.4.0",
+    "rollup": "^0.36"
   },
   "repository": {
     "type": "git",
