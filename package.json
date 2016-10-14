@@ -1,6 +1,6 @@
 {
   "name": "fox.tooltip.js",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "A tooltip library for javascript",
   "main": "foxToolTip.js",
   "scripts": {
