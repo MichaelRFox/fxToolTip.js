@@ -4,26 +4,28 @@
   "description": "A tooltip library for javascript",
   "main": "foxToolTip.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "tape './test/**/*-test.js'",
     "rollupBuild": "rollup -c",
     "lint": "eslint .src/*.js",
     "minify": "uglifyjs ./dist/foxToolTip.js -o ./dist/foxToolTip.min.js -c -v",
-    "build": "rollupBuild && minify",
+    "build": "npm run rollupBuild && npm run minify",
     "docs": "jsdoc"
   },
   "dependencies": {},
   "devDependencies": {
-    "eslint": "^3.5.0",
-    "uglify-js": "^2.6.2",
-    "jsdoc": "^3.4.0",
-    "rollup": "^0.36"
+    "eslint": "^3.6.1",
+    "uglify-js": "^2.7.3",
+    "jsdoc": "^3.4.1",
+    "tape": "^4.6.1",
+    "rollup": "^0.36.1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MichaelRFox/foxToolTip.js.git"
   },
   "keywords": [
-    "tooltip"
+    "tooltip",
+    "d3.js"
   ],
   "author": "Michael R. Fox",
   "license": "MIT",

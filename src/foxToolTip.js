@@ -56,7 +56,7 @@
 		applyOptions(target);
 		if (target.autoSize()) { sizeTip(target); };
 		beforeRule.width = target.width() + 'px';
-		if (target.autoPosition() == true) {
+		if (target.autoPosition()) { // == true) {
 			target.orientation(optimumOrientation(targetElement, target), true);
 		};
 		orient(targetElement, target);
@@ -68,13 +68,14 @@
 		var target;
 		
 		target = tips[tipsIndex.indexOf(targetElement.id)];
-		if (target.trackMouse() == false) { return; };
+		if (!target.trackMouse()) { return; }; // == false) { return; };
 		
 		event = event || window.event;
 
 		getMouseCoordinates(event);
 
-		if (target.autoPosition() == true) { target.orientation(optimumOrientation(targetElement, target), true); };
+		if (target.autoPosition()) { target.orientation(optimumOrientation(targetElement, target), true); };
+//		if (target.autoPosition() == true) { target.orientation(optimumOrientation(targetElement, target), true); };
 		orient(targetElement, target);
 	};
 
@@ -128,7 +129,7 @@
 
 		var target = tips[tipsIndex.indexOf(element.id)];
 		
-		if (target.mousePoint() == true) {
+		if (target.mousePoint()) {// == true) {
 			clientRect.left = mouseX - cursorBuffer;
 			clientRect.top = mouseY - cursorBuffer;
 			clientRect.right = mouseX + cursorBuffer;
@@ -199,7 +200,7 @@
 		var left;
 		var verticalAdjust;
 		var horizontalAdjust;
-		var arrowAdjust;
+		//var arrowAdjust;
 
 		var adjustVertical = function (top) {
 			var topAdjust = top;
@@ -349,7 +350,8 @@
 	};
 
 	function setUp() {
-		if (set == true) { return; };
+		//if (set == true) { return; };
+		if (set) { return; };
 		
 		if (window.addEventListener) {
 			window.addEventListener('resize', windowResized);
@@ -358,8 +360,8 @@
 		} else {
 			window.onresize = windowResized;
 		};
-
 		windowResized();
+
 		if (document.styleSheets.length == 0) {
 			var head = document.getElementsByTagName("head")[0];
 			sheet = document.createElement("style")
@@ -367,7 +369,7 @@
 			sheet.rel = 'stylesheet';
 			sheet.media = 'screen';
 			sheet.title = 'foxToolTip';
-			sheet = head.appendChild(sheet);
+			sheet = head.appendChild(sheet).sheet;
 		};
 		
 		sheet = document.styleSheets[0];
@@ -432,8 +434,8 @@
 	
 	function applyOptions  (target) {
 		
-		var boxShadowString;
-		var rgbCore;
+		//var boxShadowString;
+		//var rgbCore;
 		var transitionString;
 
 		beforeRule.fontFamily = target.font().family;
@@ -518,7 +520,8 @@
 			if (typeof autoPosition == 'undefined') { return options.autoPosition; };
 			
 			options.autoPosition = autoPosition;
-			if (autoPosition == false && options.position == '') options.position = 'right';
+			//if (autoPosition == false && options.position == '') options.position = 'right';
+			if (autoPosition && options.position == '') options.position = 'right';
 			
 			return thisToolTip;
 		};
@@ -599,7 +602,7 @@
 			switch (padding.length) {
 				case 0: {
 					return options.padding;
-					break;
+					//break;
 				};
 				case 1: {
 					size0 = parseSize(padding[0]);
@@ -756,6 +759,7 @@
 				targetElement.onmousemove = mouseMove;
 			};
 		};
+/*
 		if (typeof d3 !== 'undefined') {
 			var parent = targetElement[0].parentNode;
 			var config = {childList: true, subtree: true};
@@ -763,7 +767,7 @@
 			var parent = targetElement.parentNode;
 			var config = {childList: true, subtree: false};
 		};
-		
+*/		
 		options.content = content;
 
 		return (thisToolTip);

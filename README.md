@@ -4,11 +4,19 @@
 ## Installation
 ``` html
 npm install fox.tooltip.js
+
+-or-
+
+npm install -g fox.tooltip.js   //install globally
 ```
 
 ---
 ##Overview
 foxToolTip.js is a small, simple library designed to show tooltips on hover over any DOM element.  It uses a combination of JavaScript and css styles to provide flexibility and ease of implementation.  It has no dependencies and should work on any modern browser (i.e., not Internet Explorer 8.0 and earlier).
+
+foxToolTip.js will automatically size and position tootips [default behavior] to ensure they are displayed in the viewport. Tooltips can be positioned relative to their target DOM element [default behavior] or track the cursor.
+
+Tooltips can be styled in a wide variety of ways, and can contain any valid html (text, tables, images, svg, etc.).
 
 foxToolTip.js supports method chaining and has special code to detect and integrate with [d3.js](https://d3js.org/).
 
@@ -91,7 +99,7 @@ Upon creation, the [foxToolTip.create()](#foxToolTip.create) method returns a [f
 * **content** (string) - any valid html
 * **default** - ""
 * **returns** - if the content argument is passed, the .content() method returns the [foxToolTip object](#The-foxToolTip-object).  If the .content() method is called with no arguments, the .content() method returns the current content string.
-* **description** - although the content of the tooltip is set with the [foxToolTip.create()](#foxToolTip.create) method, you may use the .content() method on the [foxToolTip object](#The-foxToolTip-object) to dynamically alter the content of the tooltip at runtime.
+* **description** - although the content of the tooltip is set with the [foxToolTip.create()](#foxToolTip.create) method, you may use the .content() method on the [foxToolTip object](#The-foxToolTip-object) to dynamically alter the content of the tooltip at runtime.  The content argument can be any valid html (text, tables, images, svg, etc.).  See [Tooltip Content](#tooltip-content) for more detail.
 
 ``` javascript
 var myTooltip = foxToolTip.create("myElement", "Loreiem Ipsum");
@@ -130,7 +138,7 @@ var myTooltip = foxToolTip.create("myElement", "Loreiem Ipsum")
 [:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".autoPosition">.autoPosition (autoPostion)</a>
-* **autoposition** (boolean) - true || false
+* **autoposition** (boolean) - true | false
 * **default** - true
 * **returns** - if the autoPosition argument is passed, the .autoPosition() method returns the [foxToolTip object](#The-foxToolTip-object).  If the .autoPosition() method is called with no arguments, the .autoPosition() method returns the current autoPosition setting.
 * **description** - If set to true, the .autoPosition() method enables autopositioning of the tooltip.  Autopositioning evaluates the available screen space on all four sides of the target element (or cursor if the [.mousePoint](#.mousePoint) method is called with true as the argument) and the height and width of the tooltip and positions the tooltip at the orientation with the most room.  If the preferred orientation is not set to "none", and that location has sufficient room to display the tooltip, then the preferred location is used.
@@ -143,7 +151,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 [:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".autoSize">.autoSize (autoSize)</a>
-* **autoSize** (boolean) - true || false
+* **autoSize** (boolean) - true | false
 * **default** -  true
 * **returns** - if the autoSize argument is passed, the .autoSize() method returns the [foxToolTip object](#The-foxToolTip-object).  If the .autoSize() method is called with no arguments, the .autoSize() method returns the current autoSize setting.
 * **description** - If set to true, the .autoSize() method enables autosizing of the tooltip.  Autosizing evaluates the content of the tooltip and attempts to scale the width and height of the tooltip to conform to the aspect ratio of the document viewport.  Autosizing to the document viewport aspect ratio is intended to present an appealing appearance and maximize the probability that the tooltip will be displayable on the screen.  If the content includes non-text elements like tables or images, it may be necessary to set the minimum width of the tooltip using the [.minWidth](#.minWidth) method.  *Note*: autosizing does not actually set the tooltip height.  It sets the width, so that when the tooltip div element auto-scales the height for overflow, the desired aspect ratio is achieved.
@@ -156,7 +164,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 [:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".mousePoint">.mousePoint(mousePoint)</a>
-* **mousePoint** (boolean) - true || false
+* **mousePoint** (boolean) - true | false
 * **default** - false
 * **returns** - if the mousePoint argument is passed, the .mousePoint() method returns the [foxToolTip object](#The-foxToolTip-object).  If the .mousePoint() method is called with no arguments, the .mousePoint() method returns the current mousePoint setting.
 * **description** - if set to true, the .mousePoint() method causes the tooltip to be displayed relative to the cursor position instead of the target element.  If set to false the tooltip will be displayed relative to the target element.  In this case, the tooltip will attempt to center relative to one of the four sides of the target element (depending on the autoposition setting).  If, due to document viewport limitations, the tooltip can't center itself, it will adjust the tooltip left, right, up, or down as appropriate, but offset the tooltip pointer to keep it centered on the element.
@@ -168,9 +176,8 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 
 [:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
-
 ### <a id=".trackMouse">.trackMouse (trackMouse)</a>
-* **trackMouse** (boolean) - true || false
+* **trackMouse** (boolean) - true | false
 * **default** - false
 * **returns** - if the trackMouse argument is passed, the .trackMouse() method returns the [foxToolTip object](#The-foxToolTip-object).  If the .trackMouse() method is called with no arguments, the .trackMouse() method returns the current trackMouse setting.
 * **description** - if set to true, the .trackMouse() method causes the tooltip to follow the cursor as it moves over the target element. If autopositioning is set to true, the tooltip will continue to adjust it orientation to ensure that it can be displayed within the document viewport.  The tooltip will also continuously offset the tooltip pointer, as required, to keep it centered relative to the cursor. When true is passed to the .trackMouse() method, the mousePoint option to will automatically be set to true as well.
@@ -183,7 +190,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 [:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".cursor">.cursor (cursor)</a>
-* **cursor** (string) - "" || “alias” || “all-scroll” || “auto” || “cell” || “context-menu” || “col-resize” || “copy” || “crosshair” || “default” || “e-resize” || “ew-resize” || “help” || “move” || “n-resize” || “ne-resize” || “nesw-resize” || “ns-resize” || “nw-resize” || “nwse-resize” || “no-drop” || “none” || “not-allowed” || “pointer” || “progress” || “row-resize” || “s-resize” || “se-resize” || “sw-resize” || “text” || “URL” || “vertical-text” || “w-resize” || “wait” || “zoom-in” || “zoom-out” || “initial” || “inherit”
+* **cursor** (string) - "" | “alias” | “all-scroll” | “auto” | “cell” | “context-menu” | “col-resize” | “copy” | “crosshair” | “default” | “e-resize” | “ew-resize” | “help” | “move” | “n-resize” | “ne-resize” | “nesw-resize” | “ns-resize” | “nw-resize” | “nwse-resize” | “no-drop” | “none” | “not-allowed” | “pointer” | “progress” | “row-resize” | “s-resize” | “se-resize” | “sw-resize” | “text” | “URL” | “vertical-text” | “w-resize” | “wait” | “zoom-in” | “zoom-out” | “initial” | “inherit”
 * **default** - "help"
 * **returns** - if the cursor argument is passed, the .cursor() method returns the [foxToolTip object](#The-foxToolTip-object).  If the .cursor() method is called with no arguments, the .cursor() method returns the current cursor setting.
 * **description** - The .cursor() method allows programmtic control of the cursor appearance as the mouse hovers over the target element.  If an empty string ("") is passed to the .cursor() method, the cursor displayed while hovering over the target element defaults to whatever style (inline, css, etc.) was otherwise defined.
@@ -197,7 +204,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 
 ### <a id=".font">.font(family, size)</a>
 * **family** (string) - any valid css font-family (e.g., "tahoma, sans-serif")
-* **size** (string || number) - any valid css font-size (e.g., "1em" || "16px").  If a number is passed, it is assumed to be in pixels.
+* **size** (string | number) - any valid css font-size (e.g., "1em" | "16px").  If a number is passed, it is assumed to be in pixels.
 * defaults - "tahoma", 16
 * **returns** - if the family and size arguments are passed, the .font() method returns the [foxToolTip object](#The-foxToolTip-object).  If the .font() method is called with no arguments, the .font() method returns the current font setting as an object (e.g., {family:"tahoma, sans-serf", size:16).
 * **description** - Setting the font family and size via the .font() method, sets the font-family and font-size options contained within the [foxToolTip object](#The-foxToolTip-object) which is injected into the .foxToolTip style's ruleset upon hover over the target element. These options set defaults for text within the tooltip, but can be customized through inline or css selector styles, contained in the content that is passed to the [foxToolTip.create()](#foxToolTipCreate) method.
@@ -287,7 +294,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 [:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".padding">.padding (padding)</a>
-* **padding** (string) - a string representing 1 to 4 any valid css sizes (e.g., "1em" || "16px"). If no unit of measurement is given it is assumed to be in pixels.
+* **padding** (string) - a string representing 1 to 4 any valid css sizes (e.g., "1em" | "16px"). If no unit of measurement is given it is assumed to be in pixels.
 * **default** - "5px 10px"
 * **returns** - if the argument(s) are passed, the .padding() method returns the [foxToolTip object](#The-foxToolTip-object).  If the .padding() method is called with no arguments, the .padding() method returns the current padding setting formatted as a single css shorthand string (e.g. "5px 10px").
 * **description** - Setting the tooltip padding via the .padding() method, sets the padding option contained within the [foxToolTip object](#The-foxToolTip-object) which is injected into the .foxToolTip style's ruleset upon hover over the target element. The padding option establishes the padding for the tooltip.  If the padding argument contains only one measurement, uniform padding is applied to all sides of the tooltip.  If the padding argument contains two measurements, the first measure is applied to the top and bottom, and the second to the left and right.  If the padding argument contains three measurements, the first is applied to the top, the second to the left and right, and the third to the bottom.  If the padding argument contains four measurements, they are applied to the top, left, bottom, right respectively.  
@@ -300,7 +307,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 [:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".borderRadius">.borderRadius (borderRadius)</a>
-* **borderRadius** (string || number) - any valid css size (e.g., "1em" || "16px") except percentage.  If a number is passed, it is assumed to be in pixels.
+* **borderRadius** (string | number) - any valid css size (e.g., "1em" | "16px") except percentage.  If a number is passed, it is assumed to be in pixels.
 * **default** - "12px"
 * **returns** - if the borderRadius argument is passed, the .borderRadius() method returns the [foxToolTip object](#The-foxToolTip-object).  If the .borderRadius() method is called with no arguments, the .borderRadius() method returns the current borderRadius setting.
 * **description** - Setting the borderRadius via the .borderRadius() method, sets the borderRadius option contained within the [foxToolTip object](#The-foxToolTip-object) which is injected into the .foxToolTip style's ruleset upon hover over the target element. The borderRadius option sets a uniform borderRadius for the tooltip corners.
@@ -313,7 +320,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 [:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".boxShadow">.boxShadow (size, color, opacity)</a>
-* **size** (string || number) - any valid css size (e.g., "1em" || "16px")  except percentage, or "none".  If a number is passed, it is assumed to be in pixels.  If "none" is passed as a single argument, no boxShadow is shown
+* **size** (string | number) - any valid css size (e.g., "1em" | "16px")  except percentage, or "none".  If a number is passed, it is assumed to be in pixels.  If "none" is passed as a single argument, no boxShadow is shown
 * **color** (string) - any valid css color such as hex, rgb, or a named css color
 * **opacity** (number) - [0...1]
 * **defaults** - size: "8px", color: "rgb(0,0,0)", opacity: 0.5;
@@ -360,7 +367,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 [:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".arrowSize">.arrowSize (size)</a>
-* **arrowSize** (string || number) - any valid css size (e.g., "1em" || "16px").  If a number is passed, it is assumed to be in pixels.
+* **arrowSize** (string | number) - any valid css size (e.g., "1em" | "16px").  If a number is passed, it is assumed to be in pixels.
 * **default** - "12px"
 * **returns** - if the size argument is passed, the .arrowSize() method returns the [foxToolTip object](#The-foxToolTip-object).  If the .arrowSize() method is called with no arguments, the .arrowSize() method returns the current arrowSize setting.
 * **description** - Setting the arrowSize via the .arrowSize() method, sets the arrowSize option contained within the [foxToolTip object](#The-foxToolTip-object) which is injected into the .foxToolTip style's ruleset upon hover over the target element. The arrowSize option sets the size of the tooltip's arrow.
@@ -373,7 +380,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 [:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".width">.width (width)</a>
-* **width** (string || number) - any valid css size (e.g., "1em" || "16px").  If a number is passed, it is assumed to be in pixels.
+* **width** (string | number) - any valid css size (e.g., "1em" | "16px").  If a number is passed, it is assumed to be in pixels.
 * **default** - "auto"
 * **returns** - if the width argument is passed, the .width() method returns the [foxToolTip object](#The-foxToolTip-object).  If the .width() method is called with no arguments, the .width() method returns the current width setting.
 * **description** - Setting the width via the .width() method, sets the width option contained within the [foxToolTip object](#The-foxToolTip-object) which is injected into the .foxToolTip style's ruleset upon hover over the target element. The width option sets the width of the tooltip upon hover over the target element.  However if the [.autoSize()](#.autoSize) method is set to true, the width setting will be ignored.
@@ -386,7 +393,7 @@ foxToolTip.create("myElement", "Loreiem Ipsum")
 [:arrow_up: The foxToolTip object](#The-foxToolTip-object)
 
 ### <a id=".minWidth">.minWidth (minWidth)</a>
-* **minWidth** (string || number) - any valid css size (e.g., "1em" || "16px").  If a number is passed, it is assumed to be in pixels.
+* **minWidth** (string | number) - any valid css size (e.g., "1em" | "16px").  If a number is passed, it is assumed to be in pixels.
 * **default** - "80px"
 * **returns** - if the minWidth argument is passed, the .minWidth() method returns the [foxToolTip object](#The-foxToolTip-object).  If the .minWidth() method is called with no arguments, the .minWidth() method returns the current minWidth setting.
 * **description** - Setting the minWidth via the .minWidth() method, sets the minWidth option contained within the [foxToolTip object](#The-foxToolTip-object) which is injected into the .foxToolTip style's ruleset upon hover over the target element. The minWidth option sets the minimum width of the tooltip upon hover over the target element.  The .minWidth() method is useful to ensure that non-text content elements such as tables are correctly displayed in the tooltip when using autosizing.

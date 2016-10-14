@@ -1,7 +1,6 @@
-
 export default {
-  entry: 'src/foxToolTip.v1.0.12.js',
+  entry: 'src/foxToolTip.js',
   format: 'cjs',
   dest: 'dist/foxToolTip.js',
-  useStrict: false,
+  useStrict: false
 };
