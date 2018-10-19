@@ -1,27 +1,40 @@
 {
-  "name": "fox.tooltip.js",
+  "name": "fx.tooltip.js",
   "version": "1.0.13",
   "description": "A tooltip library for javascript",
-  "main": "foxToolTip.js",
+  "main": "src/index.js",
+  "directories": {
+    "test": "test",
+    "dist": "dist",
+    "demos": "demos",
+    "src": "src"
+  },
   "scripts": {
     "test": "tape './test/**/*-test.js'",
-    "rollupBuild": "rollup -c",
+    "rollupBuild": "rollup -c rollup.config.js",
     "lint": "eslint .src/*.js",
-    "minify": "uglifyjs ./dist/foxToolTip.js -o ./dist/foxToolTip.min.js -c -v",
+    "minify": "uglifyjs ./dist/iife/fxToolTip.js -o ./dist/iife/fxToolTip.min.js  -c -m -v",
     "build": "npm run rollupBuild && npm run minify",
     "docs": "jsdoc"
   },
   "dependencies": {},
   "devDependencies": {
-    "eslint": "^3.6.1",
-    "uglify-js": "^2.7.3",
+    "babel-cli": "^6.24.1",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",
+    "babel-preset-env": "^1.4.0",
+    "babel-preset-es2015": "^6.24.1",
+    "eslint": "^3.19.0",
+    "html-minifier": "^3.2.2",
     "jsdoc": "^3.4.1",
+    "rollup": "^0.41.6",
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-node-resolve": "^3.0.0",
     "tape": "^4.6.1",
-    "rollup": "^0.36.1"
+    "uglify-js": "^2.7.3"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MichaelRFox/foxToolTip.js.git"
+    "url": "git+https://github.com/MichaelRFox/fxToolTip.git"
   },
   "keywords": [
     "tooltip",
@@ -30,7 +43,7 @@
   "author": "Michael R. Fox",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/MichaelRFox/foxToolTip.js/issues"
+    "url": "https://github.com/MichaelRFox/fxToolTip.js/issues"
   },
-  "homepage": "https://github.com/MichaelRFox/foxToolTip.js#readme"
+  "homepage": "https://github.com/MichaelRFox/fxToolTip.js#readme"
 }

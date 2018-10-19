@@ -52,7 +52,7 @@
 
 	<body>
 
-		<script type = 'text/javascript' src="../../dist/foxToolTip.min.js"></script>
+		<script type = 'text/javascript' src="../../dist/iife/fxToolTip.js"></script>
 		<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 		<script>
 
@@ -204,7 +204,7 @@
 				nodeText.each (function (d) {
 					if (d.toolTip !== '' && typeof d.toolTip !== 'undefined') {
 						var content = "<p class='toolTipTitle'>" + d.name +"</p><p class='toolTipText'>" + d.toolTip + '</p>';
-						foxToolTip.create('JCAtextNode' + d.id, content)
+						fxToolTip.create('JCAtextNode' + d.id, content)
 							.backgroundColor('midnightBlue')
 							.backgroundOpacity(0.9)
 							.foregroundColor('linen')
