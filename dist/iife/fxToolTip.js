@@ -990,7 +990,7 @@ function remove(elementId) {
 }
 
 function getTipByElementId(elementId) {
-	var index = tipIndex.indexOf(elementId);
+	var index = tipsIndex.indexOf(elementId);
 	if (index !== -1) {
 		return tips[index];
 	} else {

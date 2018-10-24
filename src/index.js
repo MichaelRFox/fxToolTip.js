@@ -42,7 +42,7 @@ function remove (elementId) {
 };
 
 function getTipByElementId(elementId) {
-	let index = tipIndex.indexOf(elementId);
+	let index = tipsIndex.indexOf(elementId);
 	if (index !== -1) {
 		return tips[index];
 	} else {
