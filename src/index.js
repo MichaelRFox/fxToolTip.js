@@ -41,4 +41,13 @@ function remove (elementId) {
 	if (index !== -1) tips[index].remove();
 };
 
-export default {create, remove};
+function getTipByElementId(elementId) {
+	let index = tipIndex.indexOf(elementId);
+	if (index !== -1) {
+		return tips[index];
+	} else {
+		return (undefined);
+	};
+};
+
+export default {create, remove, getTipByElementId};

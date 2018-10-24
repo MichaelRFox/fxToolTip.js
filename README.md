@@ -31,7 +31,7 @@ Find a simple demo fxToolTip.js at my [fxToolTip.js demo bl.ock](http://bl.ocks.
 
 ---
 ## <a id="usage">Usage</a>
-fxToolTip.js exposes two methods: create and remove.
+fxToolTip.js exposes three methods: create remove, and getTipByElementId.
 
 ### <a id ="fxToolTip.create">fxToolTip.create (elementId, content)</a>
 * **elementId** (string) - the unique id of your target DOM element
@@ -43,6 +43,11 @@ fxToolTip.js exposes two methods: create and remove.
 * **elementId** (string) - the unique id of the target DOM element whose tooltip you want to remove.
 * **returns** - null
 * **description** - removes all of the event listeners and the associated [fxToolTip object](#The-fxToolTip-object) object from the stack.  If this is the only [fxToolTip object](#The-fxToolTip-object) on the stack, the .remove() method will remove all of the [fxToolTip object](#The-fxToolTip-object) css rules from the stylesheet and set the library back to its un-instantiated state.  Generally, this method is not required, since fxToolTip.js automatically detects the removal of target elements, and performs corresponsing tooltip removal automatically.
+
+### <a id="fxToolTip.getTipByElementId">fxToolTip.getTipByElementId(elementId)</a>
+* **elementId** (string) - the unique id of the target DOM element whose tooltip you want to retrieve.
+* **returns** - if the tip exists, returns a [fxToolTip object](#The-fxToolTip-object). Otherwise, undefined.
+* **description** - retrieves the [fxToolTip object](#The-fxToolTip-object) associated with the DOM element thta has the unique id provided by the argument, *elementId*. If there is no [fxToolTip object](#The-fxToolTip-object) associated with the id, returns undefined.
 
 [:house: top](#top)
 

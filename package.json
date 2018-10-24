@@ -1,6 +1,6 @@
 {
   "name": "fx.tooltip.js",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "A tooltip library for javascript",
   "main": "src/index.js",
   "directories": {
@@ -30,11 +30,11 @@
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-node-resolve": "^3.0.0",
     "tape": "^4.6.1",
-    "uglify-js": "^2.7.3"
+    "uglify-js": "^2.8.29"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MichaelRFox/fxToolTip.git"
+    "url": "git+https://github.com/MichaelRFox/fxToolTip.js.git"
   },
   "keywords": [
     "tooltip",

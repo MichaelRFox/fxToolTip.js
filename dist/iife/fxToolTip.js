@@ -340,7 +340,7 @@ function sizeTip(target) {
 	var itterations = 0;
 	var newDelta = oldDelta;
 
-	console.log('aspect ratio: ', aspectRatio);
+	//console.log('aspect ratio: ', aspectRatio);
 	while (newDelta > 0.1 && itterations < 10) {
 		perimeter = ttDiv.offsetWidth + ttDiv.offsetHeight;
 		height = 1 / ((aspectRatio + 1) / perimeter);
@@ -358,23 +358,10 @@ function sizeTip(target) {
 			oldDelta = newDelta;
 			itterations++;
 		}
-		console.log('Itteration #', itterations, ' aspect: ', ttDiv.offsetWidth / ttDiv.offsetHeight);
+		//console.log('Itteration #', itterations, ' aspect: ', ttDiv.offsetWidth / ttDiv.offsetHeight);
 	}
 }
 
-/*
-
-export function sizeTip (target) {
-	var p, h, w;
-	
-	p = ttDiv.offsetWidth + ttDiv.offsetHeight;
-	ttDiv.style.width = '';
-	h = 1 / ((aspectRatio + 1) / p);
-	w = p - h;
-	target.width(Math.max(target.minWidth(), Math.round(w)), true);
-};
-
-*/
 function tip(elementId, content) {
 	var thisToolTip = this;
 	var targetElement = void 0;
@@ -392,8 +379,8 @@ function tip(elementId, content) {
 		cursor: 'help',
 		fontFamily: 'Tahoma',
 		fontSize: '16',
-		foregroundColor: 'beige',
-		backgroundColor: 'midnightBlue',
+		foregroundColor: 'white',
+		backgroundColor: '#333333',
 		backgroundOpacity: 1,
 		padding: '5px 10px',
 		borderRadius: 12,
@@ -878,15 +865,15 @@ function setUp() {
 	}
 	windowResized();
 
-//	if (document.styleSheets.length == 0) {
-		var head = document.getElementsByTagName("head")[0];
-		sheet = document.createElement("style");
-		sheet.type = "text/css";
-		sheet.rel = 'stylesheet';
-		sheet.media = 'screen';
-		sheet.title = 'fxToolTip';
-		sheet = head.appendChild(sheet).sheet;
-//	}
+	//	if (document.styleSheets.length == 0) {
+	var head = document.getElementsByTagName("head")[0];
+	sheet = document.createElement("style");
+	sheet.type = "text/css";
+	sheet.rel = 'stylesheet';
+	sheet.media = 'screen';
+	sheet.title = 'fxToolTip';
+	sheet = head.appendChild(sheet).sheet;
+	//	};
 
 	sheet = document.styleSheets[0];
 	rules = sheet.cssRules ? sheet.cssRules : sheet.rules;
@@ -1002,7 +989,16 @@ function remove(elementId) {
 	if (index !== -1) tips[index].remove();
 }
 
-var index = { create: create, remove: remove };
+function getTipByElementId(elementId) {
+	var index = tipIndex.indexOf(elementId);
+	if (index !== -1) {
+		return tips[index];
+	} else {
+		return undefined;
+	}
+}
+
+var index = { create: create, remove: remove, getTipByElementId: getTipByElementId };
 
 return index;
 
