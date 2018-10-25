@@ -1,4 +1,4 @@
-# <a id="top">fxToolTip.js</a>
+# <a id='top'>fxToolTip.js</a>
 
 ---
 ## Installation
@@ -11,7 +11,7 @@ npm install -g fx.tooltip.js   //install globally
 ```
 
 ---
-##Overview
+## Overview
 fxToolTip.js is a small, simple library designed to show tooltips on hover over any DOM element.  It uses a combination of JavaScript and css styles to provide flexibility and ease of implementation.  It has no dependencies and should work on any modern browser (i.e., not Internet Explorer 8.0 and earlier).
 
 fxToolTip.js will automatically size and position tootips [default behavior] to ensure they are displayed in the viewport. Tooltips can be positioned relative to their target DOM element [default behavior] or track the cursor.
@@ -30,29 +30,60 @@ Find a simple demo fxToolTip.js at my [fxToolTip.js demo bl.ock](http://bl.ocks.
 * [License](#license)
 
 ---
-## <a id="usage">Usage</a>
-fxToolTip.js exposes three methods: create remove, and getTipByElementId.
+## <a id='usage'>Usage</a>
+Include fxTooltip in your project in one of two ways:
 
-### <a id ="fxToolTip.create">fxToolTip.create (elementId, content)</a>
+You can include a reference to the built version of the library
+```html
+<!DOCTYPE Html>
+    <html>
+        <head>
+            <body>
+                <script type = 'text/javascript' src = 'fxToolTip.min.js'></script>
+                .
+                .
+                .
+            </body>
+        </head>
+    </html>
+```
+
+Or you can include it in your javascript build
+```javascript
+include {default as fxToolTip} from 'fx.tooltip.js';
+```
+
+fxToolTip.js exposes three methods: create remove, and getTipByElementId; and one object: globalOptions.
+
+### <a id ='fxToolTip.create'>fxToolTip.create (elementId, content)</a>
 * **elementId** (string) - the unique id of your target DOM element
 * **content** (string) - any valid html
 * **returns** - a [fxToolTip object](#The-fxToolTip-object)
 * **description** - The create method is the only method you need to invoke to instantiate a tooltip with all of the predefined defaults.  It returns a [fxToolTip object](#The-fxToolTip-object) which you may save as a variable to dynamically alter its options, or you may use method chaining to set desired options at the time the tooltip is created.  If you attempt to create a tooltip on a target element that already has a tooltip associated with it, the .create() method will delete the old tooltip before returning the new [fxToolTip object](#The-fxToolTip-object).
 
-### <a id ="fxToolTip.remove">fxToolTip.remove (elementId)</a> 
+### <a id ='fxToolTip.remove'>fxToolTip.remove (elementId)</a> 
 * **elementId** (string) - the unique id of the target DOM element whose tooltip you want to remove.
 * **returns** - null
 * **description** - removes all of the event listeners and the associated [fxToolTip object](#The-fxToolTip-object) object from the stack.  If this is the only [fxToolTip object](#The-fxToolTip-object) on the stack, the .remove() method will remove all of the [fxToolTip object](#The-fxToolTip-object) css rules from the stylesheet and set the library back to its un-instantiated state.  Generally, this method is not required, since fxToolTip.js automatically detects the removal of target elements, and performs corresponsing tooltip removal automatically.
 
-### <a id="fxToolTip.getTipByElementId">fxToolTip.getTipByElementId(elementId)</a>
+### <a id='fxToolTip.getTipByElementId'>fxToolTip.getTipByElementId(elementId)</a>
 * **elementId** (string) - the unique id of the target DOM element whose tooltip you want to retrieve.
 * **returns** - if the tip exists, returns a [fxToolTip object](#The-fxToolTip-object). Otherwise, undefined.
-* **description** - retrieves the [fxToolTip object](#The-fxToolTip-object) associated with the DOM element thta has the unique id provided by the argument, *elementId*. If there is no [fxToolTip object](#The-fxToolTip-object) associated with the id, returns undefined.
+* **description** - retrieves the [fxToolTip object](#The-fxToolTip-object) associated with the DOM element that has the unique id provided by the argument, *elementId*. If there is no [fxToolTip object](#The-fxToolTip-object) associated with the id, returns undefined. This is useful for when you create several tooltips which will need to accessed at run time and you do not wish to store a variable to hold each.
+
+### <a id='fxToolTip.globalOptions'>fxToolTip.globalOptions</a>
+* **description** - provides the ability to set options globally for all subsequently created tooltips. After the global options are changed, individual tooltips can be individually styled. Setting global options follwows the same convention as setting individual tooltip options as describe in the [fxToolTip object](#The-fxToolTip-object) section. Note that fxToolTip.globalOptions is an onject litteral, but each oprion returns the [fxToolTip.globalOptions object](#fxToolTip.globalOptions), so setting of global options can be chained.
+
+```javascript
+    fxTooltip.globalOptions
+        .backgroundColor(#ccc)
+        .foregroundColor(#000)
+```
 
 [:house: top](#top)
 
 ---
-## <a id="how-it-works">How it Works</a>
+## <a id='how-it-works'>How it Works</a>
 When the [fxToolTip.create()](#fxToolTip.create) method is first called it appends three class styles to the document's stylesheet:
 
 * .fxToolTip - contains all of the rules that style the tooltip
@@ -61,7 +92,7 @@ When the [fxToolTip.create()](#fxToolTip.create) method is first called it appen
 
 The [fxToolTip.create()](#fxToolTip.create) method also appends two div elements to the document body element:
 
-* The first div element is created with the class name "fxToolTip" and is the container for all tooltips in the document
+* The first div element is created with the class name 'fxToolTip' and is the container for all tooltips in the document
 * The second div element is permanently hidden and is used internally to size objects
 
 *note*:  The classes and div elements are created only once and shared by all of the tooltips
@@ -73,7 +104,7 @@ Upon each call of the [fxToolTip.create()](#fxToolTip.create) method, a unique [
 [:house: top](#top)
 
 ---
-## <a id ="The-fxToolTip-object">The fxToolTip object</a>
+## <a id ='The-fxToolTip-object'>The fxToolTip object</a>
 Upon creation, the [fxToolTip.create()](#fxToolTip.create) method returns a [fxToolTip object](#The-fxToolTip-object) which exposes methods you can use to change the default behavior.
 
 * [.content](#.content)
@@ -100,367 +131,367 @@ Upon creation, the [fxToolTip.create()](#fxToolTip.create) method returns a [fxT
 
 [:house: top](#top)
 
-### <a id=".content">.content (content)</a>
+### <a id='.content'>.content (content)</a>
 * **content** (string) - any valid html
-* **default** - ""
+* **default** - ''
 * **returns** - if the content argument is passed, the .content() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .content() method is called with no arguments, the .content() method returns the current content string.
 * **description** - although the content of the tooltip is set with the [fxToolTip.create()](#fxToolTip.create) method, you may use the .content() method on the [fxToolTip object](#The-fxToolTip-object) to dynamically alter the content of the tooltip at runtime.  The content argument can be any valid html (text, tables, images, svg, etc.).  See [Tooltip Content](#tooltip-content) for more detail.
 
 ``` javascript
-var myTooltip = fxToolTip.create("myElement", "Loreiem Ipsum");
-	.
-	.
-	.
-myTooltip.content("Ut enim ad minim veniam");
+let myTooltip = fxToolTip.create('myElement', 'Loreiem Ipsum');
+    .
+    .
+    .
+myTooltip.content('Ut enim ad minim veniam');
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
-### <a id=".orientation">.orientation (orientation)</a>
-* **orientation** (string) - "right" | "left" | "top" | "bottom"
-* **default** - ""
+### <a id='.orientation'>.orientation (orientation)</a>
+* **orientation** (string) - 'right' | 'left' | 'top' | 'bottom'
+* **default** - ''
 * **returns** - if the orientation argument is passed, the .orientation() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .orientation() method is called with no arguments, the .orientation() method returns the current orientation setting.
 * **description** - You may set the location of the tooltip relative to the target element (or cursor if the [.mousePoint](#.mousePoint) method is called with true as the argument).  If the orientation is set, autopositioning is disabled (see the [.autoPosition](#.autoPosition) method).
 
 ``` javascript
-fxToolTip.create("myElement", "Loreiem Ipsum")
-  .orientation("left");
+fxToolTip.create('myElement', 'Loreiem Ipsum')
+  .orientation('left');
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
-### <a id=".preferredOrientation">.preferredOrientation (orientation)</a>
-* **orientation** (string)  - "right" | "left" | "top" | "bottom" | "none"
-* **default** -  "right"
+### <a id='.preferredOrientation'>.preferredOrientation (orientation)</a>
+* **orientation** (string)  - 'right' | 'left' | 'top' | 'bottom' | 'none'
+* **default** -  'right'
 * **returns** - if the orientation argument is passed, the .preferredOrientation() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .preferredOrientationt() method is called with no arguments, the .preferredOrientation() method returns the current preferredOrientation setting.
 * **description** - The .preferredOrientation() method is designed to work with autopositioning.  If there is sufficient space to display the tooltip at the preferred orientation, then regardless of which position is optimum, the tooltip will be displayed at the preferred orientation.  If there is insufficient room to display the tooltip at the preferred orientation, then autopositioning takes over and displays the tooltip at the optimum position.
 
 ``` javascript
-var myTooltip = fxToolTip.create("myElement", "Loreiem Ipsum")
-	.preferredOrientation("left");
+let myTooltip = fxToolTip.create('myElement', 'Loreiem Ipsum')
+	.preferredOrientation('left');
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
-### <a id=".autoPosition">.autoPosition (autoPostion)</a>
+### <a id='.autoPosition'>.autoPosition (autoPostion)</a>
 * **autoposition** (boolean) - true | false
 * **default** - true
 * **returns** - if the autoPosition argument is passed, the .autoPosition() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .autoPosition() method is called with no arguments, the .autoPosition() method returns the current autoPosition setting.
-* **description** - If set to true, the .autoPosition() method enables autopositioning of the tooltip.  Autopositioning evaluates the available screen space on all four sides of the target element (or cursor if the [.mousePoint](#.mousePoint) method is called with true as the argument) and the height and width of the tooltip and positions the tooltip at the orientation with the most room.  If the preferred orientation is not set to "none", and that location has sufficient room to display the tooltip, then the preferred location is used.
+* **description** - If set to true, the .autoPosition() method enables autopositioning of the tooltip.  Autopositioning evaluates the available screen space on all four sides of the target element (or cursor if the [.mousePoint](#.mousePoint) method is called with true as the argument) and the height and width of the tooltip and positions the tooltip at the orientation with the most room.  If the preferred orientation is not set to 'none', and that location has sufficient room to display the tooltip, then the preferred location is used.
 
 ``` javascript
-fxToolTip.create("myElement", "Loreiem Ipsum")
+fxToolTip.create('myElement', 'Loreiem Ipsum')
 	.autoPosition(false);
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
-### <a id=".autoSize">.autoSize (autoSize)</a>
+### <a id='.autoSize'>.autoSize (autoSize)</a>
 * **autoSize** (boolean) - true | false
 * **default** -  true
 * **returns** - if the autoSize argument is passed, the .autoSize() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .autoSize() method is called with no arguments, the .autoSize() method returns the current autoSize setting.
 * **description** - If set to true, the .autoSize() method enables autosizing of the tooltip.  Autosizing evaluates the content of the tooltip and attempts to scale the width and height of the tooltip to conform to the aspect ratio of the document viewport.  Autosizing to the document viewport aspect ratio is intended to present an appealing appearance and maximize the probability that the tooltip will be displayable on the screen.  If the content includes non-text elements like tables or images, it may be necessary to set the minimum width of the tooltip using the [.minWidth](#.minWidth) method.  *Note*: autosizing does not actually set the tooltip height.  It sets the width, so that when the tooltip div element auto-scales the height for overflow, the desired aspect ratio is achieved.
 
 ``` javascript
-fxToolTip.create("myElement", "Loreiem Ipsum")
-	.autoSize(false);
+fxToolTip.create('myElement', 'Loreiem Ipsum')
+    .autoSize(false);
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
-### <a id=".mousePoint">.mousePoint(mousePoint)</a>
+### <a id='.mousePoint'>.mousePoint(mousePoint)</a>
 * **mousePoint** (boolean) - true | false
 * **default** - false
 * **returns** - if the mousePoint argument is passed, the .mousePoint() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .mousePoint() method is called with no arguments, the .mousePoint() method returns the current mousePoint setting.
 * **description** - if set to true, the .mousePoint() method causes the tooltip to be displayed relative to the cursor position instead of the target element.  If set to false the tooltip will be displayed relative to the target element.  In this case, the tooltip will attempt to center relative to one of the four sides of the target element (depending on the autoposition setting).  If, due to document viewport limitations, the tooltip can't center itself, it will adjust the tooltip left, right, up, or down as appropriate, but offset the tooltip pointer to keep it centered on the element.
 
 ``` javascript
-fxToolTip.create("myElement", "Loreiem Ipsum")
-	.mousePoint(true);
+fxToolTip.create('myElement', 'Loreiem Ipsum')
+    .mousePoint(true);
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
-### <a id=".trackMouse">.trackMouse (trackMouse)</a>
+### <a id='.trackMouse'>.trackMouse (trackMouse)</a>
 * **trackMouse** (boolean) - true | false
 * **default** - false
 * **returns** - if the trackMouse argument is passed, the .trackMouse() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .trackMouse() method is called with no arguments, the .trackMouse() method returns the current trackMouse setting.
 * **description** - if set to true, the .trackMouse() method causes the tooltip to follow the cursor as it moves over the target element. If autopositioning is set to true, the tooltip will continue to adjust it orientation to ensure that it can be displayed within the document viewport.  The tooltip will also continuously offset the tooltip pointer, as required, to keep it centered relative to the cursor. When true is passed to the .trackMouse() method, the mousePoint option to will automatically be set to true as well.
 
 ``` javascript
-fxToolTip.create("myElement", "Loreiem Ipsum")
-	.trackMouse(true);
+fxToolTip.create('myElement', 'Loreiem Ipsum')
+    .trackMouse(true);
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
-### <a id=".cursor">.cursor (cursor)</a>
-* **cursor** (string) - "" | “alias” | “all-scroll” | “auto” | “cell” | “context-menu” | “col-resize” | “copy” | “crosshair” | “default” | “e-resize” | “ew-resize” | “help” | “move” | “n-resize” | “ne-resize” | “nesw-resize” | “ns-resize” | “nw-resize” | “nwse-resize” | “no-drop” | “none” | “not-allowed” | “pointer” | “progress” | “row-resize” | “s-resize” | “se-resize” | “sw-resize” | “text” | “URL” | “vertical-text” | “w-resize” | “wait” | “zoom-in” | “zoom-out” | “initial” | “inherit”
-* **default** - "help"
+### <a id='.cursor'>.cursor (cursor)</a>
+* **cursor** (string) - '' | “alias” | “all-scroll” | “auto” | “cell” | “context-menu” | “col-resize” | “copy” | “crosshair” | “default” | “e-resize” | “ew-resize” | “help” | “move” | “n-resize” | “ne-resize” | “nesw-resize” | “ns-resize” | “nw-resize” | “nwse-resize” | “no-drop” | “none” | “not-allowed” | “pointer” | “progress” | “row-resize” | “s-resize” | “se-resize” | “sw-resize” | “text” | “URL” | “vertical-text” | “w-resize” | “wait” | “zoom-in” | “zoom-out” | “initial” | “inherit”
+* **default** - 'help'
 * **returns** - if the cursor argument is passed, the .cursor() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .cursor() method is called with no arguments, the .cursor() method returns the current cursor setting.
-* **description** - The .cursor() method allows programmtic control of the cursor appearance as the mouse hovers over the target element.  If an empty string ("") is passed to the .cursor() method, the cursor displayed while hovering over the target element defaults to whatever style (inline, css, etc.) was otherwise defined.
+* **description** - The .cursor() method allows programmtic control of the cursor appearance as the mouse hovers over the target element.  If an empty string ('') is passed to the .cursor() method, the cursor displayed while hovering over the target element defaults to whatever style (inline, css, etc.) was otherwise defined.
 
 ``` javascript
-fxToolTip.create("myElement", "Loreiem Ipsum")
-	.cursor("pointer");
+fxToolTip.create('myElement', 'Loreiem Ipsum')
+    .cursor('pointer');
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
-### <a id=".font">.font(family, size)</a>
-* **family** (string) - any valid css font-family (e.g., "tahoma, sans-serif")
-* **size** (string | number) - any valid css font-size (e.g., "1em" | "16px").  If a number is passed, it is assumed to be in pixels.
-* defaults - "tahoma", 16
-* **returns** - if the family and size arguments are passed, the .font() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .font() method is called with no arguments, the .font() method returns the current font setting as an object (e.g., {family:"tahoma, sans-serf", size:16).
+### <a id='.font'>.font(family, size)</a>
+* **family** (string) - any valid css font-family (e.g., 'tahoma, sans-serif')
+* **size** (string | number) - any valid css font-size (e.g., '1em' | '16px').  If a number is passed, it is assumed to be in pixels.
+* defaults - 'tahoma', 16
+* **returns** - if the family and size arguments are passed, the .font() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .font() method is called with no arguments, the .font() method returns the current font setting as an object (e.g., {family:'tahoma, sans-serf', size:16).
 * **description** - Setting the font family and size via the .font() method, sets the font-family and font-size options contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. These options set defaults for text within the tooltip, but can be customized through inline or css selector styles, contained in the content that is passed to the [fxToolTip.create()](#fxToolTipCreate) method.
 
-In the following example the phrase, "Lorem ipsum" will be displayed with the H1 style, and the span element will be displayed with the .myClass style.  The remaining text will be displayed with the family and size set with the .font() method.
+In the following example the phrase, 'Lorem ipsum' will be displayed with the H1 style, and the span element will be displayed with the .myClass style.  The remaining text will be displayed with the family and size set with the .font() method.
 
 ```html
 <style>
-	H1 {
-		.font-size: 1.25em;
-		.font-weight: bold;
-	}
-	.myClass {
-		.font-style: italic;
-	}
+    H1 {
+        .font-size: 1.25em;
+        .font-weight: bold;
+    }
+    .myClass {
+        .font-style: italic;
+    }
 </style>
 <body>
-	<p id="myElement">This is the target element</p>
-	<script type = "text/javascript" src="fxToolTip.js"></script>
-	<script>
-		var content = "<H1>Lorem ipsum</H1><p>Ut enim ad minim veniam, <span class="myClass">quis nostrud</span> exercitation</p>";
-		var myTooltip = fxToolTip.create("myElement", content)
-			.font("verdana, sans-serf", "12px")
-	</script>
+    <p id='myElement'>This is the target element</p>
+    <script type = 'text/javascript' src='fxToolTip.js'></script>
+    <script>
+        let content = '<H1>Lorem ipsum</H1><p>Ut enim ad minim veniam, <span class='myClass'>quis nostrud</span> exercitation</p>';
+        let myTooltip = fxToolTip.create('myElement', content)
+            .font('verdana, sans-serf', '12px')
+    </script>
 </body>
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
-### <a id=".foregroundColor">.foregroundColor (color)</a>
+### <a id='.foregroundColor'>.foregroundColor (color)</a>
 * **color** (string) - any valid css color such as hex, rgb, or a named css color
-* **default** - "beige"
+* **default** - 'beige'
 * **returns** - if the color argument is passed, the .foregroundColor() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .foregroundColor() method is called with no arguments, the .foregroundColor() method returns the current foregroundColor setting.
 * **description** - Setting the tooltip foregroundColor via the .foregroundColor() method, sets the foregroundColor option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. The forgroundColor option sets defaults for text color within the tooltip, but can be customized through inline or css selector styles.
 
-In the following example the phrase, "Lorem ipsum" will be displayed with the H1 style, and the span element will be displayed with the .myClass style.  The remaining text will be displayed with the foregroundColor set with the .foregroundColor() method.
+In the following example the phrase, 'Lorem ipsum' will be displayed with the H1 style, and the span element will be displayed with the .myClass style.  The remaining text will be displayed with the foregroundColor set with the .foregroundColor() method.
 
 ```html
 <style>
-	H1 {
-		.font-size: 1.25em;
-		.font-weight: bold;
-		.color: black;
+    H1 {
+        .font-size: 1.25em;
+        .font-weight: bold;
+        .color: black;
 	}
-	.myClass {
-		.font-style: italic;
-		.color: black
-	}
+    .myClass {
+        .font-style: italic;
+        .color: black
+    }
 </style>
 <body>
-	<p id="myElement">This is the target element</p>
-	<script type = "text/javascript" src="fxToolTip.js"></script>
-	<script>
-		var content = "<H1>Lorem ipsum</H1><p>Ut enim ad minim veniam, <span class="myClass">quis nostrud</span> exercitation</p>";
-		var myTooltip = fxToolTip.create("myElement", content)
-			.foregroundColor("lightBlue")
+    <p id='myElement'>This is the target element</p>
+    <script type = 'text/javascript' src='fxToolTip.js'></script>
+    <script>
+        let content = '<H1>Lorem ipsum</H1><p>Ut enim ad minim veniam, <span class='myClass'>quis nostrud</span> exercitation</p>';
+        let myTooltip = fxToolTip.create('myElement', content)
+            .foregroundColor('lightBlue')
 	</script>
 </body>
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
           
-### <a id=".backgroundColor">.backgroundColor(color) </a>
+### <a id='.backgroundColor'>.backgroundColor(color) </a>
 * **color** (string) - any valid css color such as hex, rgb, or a named css color
-* **default** - "midnightBlue"
+* **default** - 'midnightBlue'
 * **returns** - if the color argument is passed, the .backgroundColor() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .backgroundColor() method is called with no arguments, the .backgroundColor() method returns the current backgroundColor setting.
 * **description** - Setting the tooltip backgroundColor via the .backgroundColor() method, sets the backgroundColor option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. The backgroundColor option sets the background color of the tooltip.
 
 ``` javascript
-fxToolTip.create("myElement", "Loreiem Ipsum")
-	.backgroundColor("rgb(20, 40,128)");
+fxToolTip.create('myElement', 'Loreiem Ipsum')
+    .backgroundColor('rgb(20, 40,128)');
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
-### <a id=".backgroundOpacity">.backgroundOpacity(opacity)</a>
+### <a id='.backgroundOpacity'>.backgroundOpacity(opacity)</a>
 * **opacity** (number) - [0...1]
 * **default** - 1
 * **returns** - if the opacity argument is passed, the .backgroundOpacity() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .backgroundOpacity() method is called with no arguments, the .backgroundOpacity() method returns the current backgroundOpacity setting.
 * **description** - Setting the tooltip backgroundOpacity via the .backgroundOpacity() method, sets the backgroundOpacity option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. The backgroundOpacity option sets the background opacity of the tooltip.
 
 ``` javascript
-fxToolTip.create("myElement", "Loreiem Ipsum")
-	.backgroundOpacity(0.5);
+fxToolTip.create('myElement', 'Loreiem Ipsum')
+    .backgroundOpacity(0.5);
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
-### <a id=".padding">.padding (padding)</a>
-* **padding** (string) - a string representing 1 to 4 any valid css sizes (e.g., "1em" | "16px"). If no unit of measurement is given it is assumed to be in pixels.
-* **default** - "5px 10px"
-* **returns** - if the argument(s) are passed, the .padding() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .padding() method is called with no arguments, the .padding() method returns the current padding setting formatted as a single css shorthand string (e.g. "5px 10px").
+### <a id='.padding'>.padding (padding)</a>
+* **padding** (string) - a string representing 1 to 4 any valid css sizes (e.g., '1em' | '16px'). If no unit of measurement is given it is assumed to be in pixels.
+* **default** - '5px 10px'
+* **returns** - if the argument(s) are passed, the .padding() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .padding() method is called with no arguments, the .padding() method returns the current padding setting formatted as a single css shorthand string (e.g. '5px 10px').
 * **description** - Setting the tooltip padding via the .padding() method, sets the padding option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. The padding option establishes the padding for the tooltip.  If the padding argument contains only one measurement, uniform padding is applied to all sides of the tooltip.  If the padding argument contains two measurements, the first measure is applied to the top and bottom, and the second to the left and right.  If the padding argument contains three measurements, the first is applied to the top, the second to the left and right, and the third to the bottom.  If the padding argument contains four measurements, they are applied to the top, left, bottom, right respectively.  
 
 ``` javascript
-fxToolTip.create("myElement", "Loreiem Ipsum")
-	.padding("2em 5px 1em 5px");
+fxToolTip.create('myElement', 'Loreiem Ipsum')
+    .padding('2em 5px 1em 5px');
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
-### <a id=".borderRadius">.borderRadius (borderRadius)</a>
-* **borderRadius** (string | number) - any valid css size (e.g., "1em" | "16px") except percentage.  If a number is passed, it is assumed to be in pixels.
-* **default** - "12px"
+### <a id='.borderRadius'>.borderRadius (borderRadius)</a>
+* **borderRadius** (string | number) - any valid css size (e.g., '1em' | '16px') except percentage.  If a number is passed, it is assumed to be in pixels.
+* **default** - '12px'
 * **returns** - if the borderRadius argument is passed, the .borderRadius() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .borderRadius() method is called with no arguments, the .borderRadius() method returns the current borderRadius setting.
 * **description** - Setting the borderRadius via the .borderRadius() method, sets the borderRadius option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. The borderRadius option sets a uniform borderRadius for the tooltip corners.
 
 ``` javascript
-fxToolTip.create("myElement", "Loreiem Ipsum")
-	.borderRadius("1em");
+fxToolTip.create('myElement', 'Loreiem Ipsum')
+    .borderRadius('1em');
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
-### <a id=".boxShadow">.boxShadow (size, color, opacity)</a>
-* **size** (string | number) - any valid css size (e.g., "1em" | "16px")  except percentage, or "none".  If a number is passed, it is assumed to be in pixels.  If "none" is passed as a single argument, no boxShadow is shown
+### <a id='.boxShadow'>.boxShadow (size, color, opacity)</a>
+* **size** (string | number) - any valid css size (e.g., '1em' | '16px')  except percentage, or 'none'.  If a number is passed, it is assumed to be in pixels.  If 'none' is passed as a single argument, no boxShadow is shown
 * **color** (string) - any valid css color such as hex, rgb, or a named css color
 * **opacity** (number) - [0...1]
-* **defaults** - size: "8px", color: "rgb(0,0,0)", opacity: 0.5;
-* **returns** - if arguments are passed, the .boxShadow() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .boxShadow() method is called with no arguments, the .boxShadow() method returns the current boxShadow setting as a css box-shadow shorthand string (e.g. "8px 8px 8px 0 rgba(0,0,0,0.5)").
+* **defaults** - size: '8px', color: 'rgb(0,0,0)', opacity: 0.5;
+* **returns** - if arguments are passed, the .boxShadow() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .boxShadow() method is called with no arguments, the .boxShadow() method returns the current boxShadow setting as a css box-shadow shorthand string (e.g. '8px 8px 8px 0 rgba(0,0,0,0.5)').
 * **description** - Setting the boxShadow size, color, and opacity via the .boxShadow() method, sets the boxShadow option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. The boxShadow option sets a box shadow offsets to the lower right of the tooltip.
 
 ``` javascript
-fxToolTip.create("myElement", "Loreiem Ipsum")
-	.boxShadow("1em", "#0000FF", 0.5);
+fxToolTip.create('myElement', 'Loreiem Ipsum')
+    .boxShadow('1em', '#0000FF', 0.5);
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
-### <a id=".transitionVisible">.transitionVisible (delay, duration)</a>
+### <a id='.transitionVisible'>.transitionVisible (delay, duration)</a>
 * **delay** (number) - any valid number in seconds
 * **duration** (number) - any valid number in seconds
 * **defaults** - delay: 0, duration: 0.4;
-* **returns** - if arguments are passed, the .transitionVisible() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .transitionVisible() method is called with no arguments, the .transitionVisible() method returns the current transitionVisible setting as a css transition shorthand string (e.g. "opacity 0.4s 0s").
+* **returns** - if arguments are passed, the .transitionVisible() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .transitionVisible() method is called with no arguments, the .transitionVisible() method returns the current transitionVisible setting as a css transition shorthand string (e.g. 'opacity 0.4s 0s').
 * **description** - Setting the transitionVisible delay and duration via the .transitionVisible() method, sets the transitionVisible option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. The transitionVisible option sets the transition effect upon hover over the target element.
 
 *note*:  Internet Explorer 9 does not support CSS transitions.
 
 ``` javascript
-fxToolTip.create("myElement", "Loreiem Ipsum")
-	.transitionVisible(0, 0.6);
+fxToolTip.create('myElement', 'Loreiem Ipsum')
+    .transitionVisible(0, 0.6);
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
-### <a id=".transitionHidden">.transitionHidden (delay, duration)</a>
+### <a id='.transitionHidden'>.transitionHidden (delay, duration)</a>
 * **delay** (number) - any valid number in seconds
 * **duration** (number) - any valid number in seconds
 * **defaults** - delay: 0, duration: 0.4;
-* **returns** - if arguments are passed, the .transitionHidden() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .transitionHidden() method is called with no arguments, the .transitionHidden() method returns the current transitionHidden setting as a css transition shorthand string (e.g. "opacity 0.4s 0s").
+* **returns** - if arguments are passed, the .transitionHidden() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .transitionHidden() method is called with no arguments, the .transitionHidden() method returns the current transitionHidden setting as a css transition shorthand string (e.g. 'opacity 0.4s 0s').
 * **description** - Setting the transitionHidden delay and duration via the .transitionHidden() method, sets the transitionHidden option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon target element mouseout . The transitionHidden option sets the transition effect upon target element mouseout.
 
 *note*:  Internet Explorer 9 does not support CSS transitions.
 
 ``` javascript
-fxToolTip.create("myElement", "Loreiem Ipsum")
-	.transitionHidden(0, 0.2);
+fxToolTip.create('myElement', 'Loreiem Ipsum')
+    .transitionHidden(0, 0.2);
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
-### <a id=".arrowSize">.arrowSize (size)</a>
-* **arrowSize** (string | number) - any valid css size (e.g., "1em" | "16px").  If a number is passed, it is assumed to be in pixels.
-* **default** - "12px"
+### <a id='.arrowSize'>.arrowSize (size)</a>
+* **arrowSize** (string | number) - any valid css size (e.g., '1em' | '16px').  If a number is passed, it is assumed to be in pixels.
+* **default** - '12px'
 * **returns** - if the size argument is passed, the .arrowSize() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .arrowSize() method is called with no arguments, the .arrowSize() method returns the current arrowSize setting.
 * **description** - Setting the arrowSize via the .arrowSize() method, sets the arrowSize option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. The arrowSize option sets the size of the tooltip's arrow.
 
 ``` javascript
-fxToolTip.create("myElement", "Loreiem Ipsum")
-	.arrowSize("1.2em");
+fxToolTip.create('myElement', 'Loreiem Ipsum')
+    .arrowSize('1.2em');
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
-### <a id=".width">.width (width)</a>
-* **width** (string | number) - any valid css size (e.g., "1em" | "16px").  If a number is passed, it is assumed to be in pixels.
-* **default** - "auto"
+### <a id='.width'>.width (width)</a>
+* **width** (string | number) - any valid css size (e.g., '1em' | '16px').  If a number is passed, it is assumed to be in pixels.
+* **default** - 'auto'
 * **returns** - if the width argument is passed, the .width() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .width() method is called with no arguments, the .width() method returns the current width setting.
 * **description** - Setting the width via the .width() method, sets the width option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. The width option sets the width of the tooltip upon hover over the target element.  However if the [.autoSize()](#.autoSize) method is set to true, the width setting will be ignored.
 
 ``` javascript
-fxToolTip.create("myElement", "Loreiem Ipsum")
-	.width("500px");
+fxToolTip.create('myElement', 'Loreiem Ipsum')
+    .width('500px');
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
-### <a id=".minWidth">.minWidth (minWidth)</a>
-* **minWidth** (string | number) - any valid css size (e.g., "1em" | "16px").  If a number is passed, it is assumed to be in pixels.
-* **default** - "80px"
+### <a id='.minWidth'>.minWidth (minWidth)</a>
+* **minWidth** (string | number) - any valid css size (e.g., '1em' | '16px').  If a number is passed, it is assumed to be in pixels.
+* **default** - '80px'
 * **returns** - if the minWidth argument is passed, the .minWidth() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .minWidth() method is called with no arguments, the .minWidth() method returns the current minWidth setting.
 * **description** - Setting the minWidth via the .minWidth() method, sets the minWidth option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. The minWidth option sets the minimum width of the tooltip upon hover over the target element.  The .minWidth() method is useful to ensure that non-text content elements such as tables are correctly displayed in the tooltip when using autosizing.
 
 ``` javascript
-fxToolTip.create("myElement", "Loreiem Ipsum")
-	.minWidth("100px");
+fxToolTip.create('myElement', 'Loreiem Ipsum')
+    .minWidth('100px');
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
-### <a id=".remove">.remove () </a>
+### <a id='.remove'>.remove () </a>
 * **arguments** - none
 * **defaults** - none
 * **returns** - null
 * **description** - similar to the [fxToolTip.remove()](#fxToolTip.remove) method, the .remove() method of a [fxToolTip object](#The-fxToolTip-object) removes all of the event listeners and the associated [fxToolTip object](#The-fxToolTip-object) object from the stack.  If this is the only [fxToolTip object](#The-fxToolTip-object) on the stack, the .remove() method will remove all of the [fxToolTip object](#The-fxToolTip-object) css rules from the stylesheet and set the library back to its un-instantiated state.  Generally, this method is not required, since fxToolTip.js automatically detects the removal of target elements, and performs corresponsing tooltip removal automatically.
 
 ```javascript
-var myToolTip = fxToolTip.create("myElement", "Loreiem Ipsum");
-	.
-	.
-	.
+let myToolTip = fxToolTip.create('myElement', 'Loreiem Ipsum');
+    .
+    .
+    .
 myToolTip.remove();
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
 ----
-## <a id="working-with-D3">Working with D3.js</a>
+## <a id='working-with-D3'>Working with D3.js</a>
 
 [d3.js](https://d3js.org/) has a few peculiarities (especially with respect to D3 selectors, that fxToolTip.js accommodates.  In typical D3 coding, one generally won't save a unique var for each tooltip, as D3's chaining methods are generally used to create svg and other objects. This is easily accommodated by using the .each() method to create tooltips.  Note that each element that will have a tooltip associated with it must have a unique id. The following code illustrates one convenient way to do this:
 
 ```javascript
-var svg = d3.select("body").append("svg").attr("id", "svg")
-	.attr("width", width + margin.right + margin.left)
-	.attr("height", height + margin.top + margin.bottom);
+let svg = d3.select('body').append('svg').attr('id', 'svg')
+	.attr('width', width + margin.right + margin.left)
+	.attr('height', height + margin.top + margin.bottom);
 	
-var svgGroup = svg.append("g")
-	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+let svgGroup = svg.append('g')
+	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-var node = svgGroup.selectAll("g.node")
+let node = svgGroup.selectAll('g.node')
 	.data(nodes);	
 
-var nodeEnter = node.enter().append("g")
-	.attr("class", "node");
+let nodeEnter = node.enter().append('g')
+	.attr('class', 'node');
 
-nodeEnter.append("circle")
-	.attr("r", 1e-6)
-	.style("fill", "lightSteelBlue")
-	.style("stroke", "lightSteelBlue")
+nodeEnter.append('circle')
+	.attr('r', 1e-6)
+	.style('fill', 'lightSteelBlue')
+	.style('stroke', 'lightSteelBlue')
 	//This is where we assign a unique id
-	.attr("id", function(d, i) { return "node" + i })
+	.attr('id', function(d, i) { return 'node' + i })
 	//This is where we create a tooltip for each node
 	.each (function (d) {	
-			var content = "<p>" + d.toolTipText + "</p>";
-			fxToolTip.create("node" + d.id, content)
-				.backgroundColor("midnightBlue")
+			var content = '<p>' + d.toolTipText + '</p>';
+			fxToolTip.create('node' + d.id, content)
+				.backgroundColor('midnightBlue')
 				.backgroundOpacity(0.9)
-				.foregroundColor("linen")
+				.foregroundColor('linen')
 				.transitionVisible(0.5, 0.4)
 				.transitionHidden(0, 0.4)
-				.padding("0px 10px")
+				.padding('0px 10px')
 				.borderRadius(16)
 				.arrowSize(16);
 	};
@@ -471,7 +502,7 @@ You can find a demo of integrating fxToolTip.js with D3.js at my [D3.js demo bl.
 [:house: top](#top)
 
 ---
-## <a id="tooltip-content">Tooltip Content</a>
+## <a id='tooltip-content'>Tooltip Content</a>
 
 Content for tooltips in fxToolTip.js can contain any valid html, not just text.  The content can be styled using css selector styles or in-lined within the html itself.  Here are a few examples:
 
@@ -480,34 +511,34 @@ Content for tooltips in fxToolTip.js can contain any valid html, not just text. 
 When using tables and autoSizing in fxToolTip.js, it may be necessary to set the minimum width using the [.minWidth()](#.minWidth) method on the [fxToolTip object](#The-fxToolTip-object).  
 
 ```javascript
-var table = "<table id = 'table' width="100%"><tr><th>id</th><th>name</th><th>address</th></tr><tr><td>1</td><td>Bill Smith</td><td>17 Cherry Lane</td></tr><tr><td>2</td><td>Ed Walker</td><td>427 Oak Lane</td></tr></table>"
-var content = "<p class='centeredHeading'>Address</p>" + table;
-var myToolTip = fxToolTip.create("myElement", content)
-	.minWidth("300px");
+var table = '<table id = 'table' width='100%'><tr><th>id</th><th>name</th><th>address</th></tr><tr><td>1</td><td>Bill Smith</td><td>17 Cherry Lane</td></tr><tr><td>2</td><td>Ed Walker</td><td>427 Oak Lane</td></tr></table>'
+var content = '<p class='centeredHeading'>Address</p>' + table;
+var myToolTip = fxToolTip.create('myElement', content)
+    .minWidth('300px');
 ```
 
 ### Images
 Embedding images is possible by using the image tag.  To support autosizing, you should include the height and width attributes in the image tag, and set the minimum width using the [.minWidth()](#.minWidth) method on the [fxToolTip object](#The-fxToolTip-object).
 
 ```javascript
-var content = "<p class='centeredHeading'>Company Logo</p><img src=logo.png alt='logo' width='300px' height='300px'></img>";
+var content = '<p class='centeredHeading'>Company Logo</p><img src=logo.png alt='logo' width='300px' height='300px'></img>';
 
-fxToolTip.create("myElement", content)
-	.minWidth("300px")
-	.arrowSize("0.5em")
-	.cursor("pointer")
-	.padding("5px", "1em", "2em");
+fxToolTip.create('myElement', content)
+    .minWidth('300px')
+    .arrowSize('0.5em')
+    .cursor('pointer')
+    .padding('5px', '1em', '2em');
 ```
 
 You may also embed inline svg if your browser supports it.  To support autosizing, it may be necessary to set the minimum width using the [.minWidth()](#.minWidth) method on the [fxToolTip object](#The-fxToolTip-object).
 
 ```javascript
-var svg = "<svg width='250' height='250'><rect x='50' y='50' rx='20' ry='20' width='150' height='150' style='fill:red;stroke:black;stroke-width:5' /></svg>"
+var svg = '<svg width='250' height='250'><rect x='50' y='50' rx='20' ry='20' width='150' height='150' style='fill:red;stroke:black;stroke-width:5' /></svg>'
 
-fxToolTip.create("myElement", svg)
-	.minWidth(250)
-	.mousePoint(true)
-	.trackMouse(true);
+fxToolTip.create('myElement', svg)
+    .minWidth(250)
+    .mousePoint(true)
+    .trackMouse(true);
 ```
 
 [:house: top](#top)
@@ -518,11 +549,11 @@ fxToolTip.create("myElement", svg)
 
 Copyright (c) 2016 Michael R. fx
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 [:house: top](#top)
 

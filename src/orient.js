@@ -1,5 +1,3 @@
-//import {ttDiv, windowHeight, beforeRule, afterRule} from './globals.js';
-
 import {ttDiv, beforeRule, afterRule} from './startAndFinish.js';
 import {windowHeight, windowWidth, getElementCoordinates} from './utils.js';
 
@@ -11,7 +9,6 @@ export function orient (targetElement, target) {
 	let verticalAdjust;
 	let horizontalAdjust;
 	let sizeAdjust;
-	//var arrowAdjust;
 
 	var adjustVertical = function (top) {
 		var topAdjust = top;

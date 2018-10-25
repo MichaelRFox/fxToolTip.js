@@ -60,22 +60,18 @@ export function parseColor(input) {
 	return 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
 };
 
-/*
-export function parseSize (size) {
+export function parseSize (size, dimension) {
 	if (typeof size == 'number') { return size; };
-	pseudoDiv.style.width = size;
-	return parseInt(window.getComputedStyle(pseudoDiv, null).getPropertyValue('width'), 10);
+	dimension = (dimension == undefined) ? 'width' : dimension;
+	if (dimension == 'width') { 
+		pseudoDiv.style.width = size;
+		return parseInt(window.getComputedStyle(pseudoDiv, null).getPropertyValue('width'), 10);
+	} else {
+		pseudoDiv.style.height = size;
+		return parseInt(window.getComputedStyle(pseudoDiv, null).getPropertyValue('height'), 10);
+	};
 };
 
-*/
-export function parseSize (size, dimension) {
-		if (typeof size == 'number') { return size; };
-		dimension = (dimension == undefined) ? 'width' : dimension;
-		if (dimension == 'width') { 
-			pseudoDiv.style.width = size;
-			return parseInt(window.getComputedStyle(pseudoDiv, null).getPropertyValue('width'), 10);
-		} else {
-			pseudoDiv.style.height = size;
-			return parseInt(window.getComputedStyle(pseudoDiv, null).getPropertyValue('height'), 10);
-		};
-	};
+export function copyObject(object) {
+	return (Object.create(object));
+};

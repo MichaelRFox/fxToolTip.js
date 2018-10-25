@@ -1,15 +1,15 @@
-import resolve from 'rollup-plugin-node-resolve';
-import babel from 'rollup-plugin-babel';
+import nodeResolve from 'rollup-plugin-node-resolve'
 
 export default {
-  entry: 'src/index.js',
-  format: 'iife',
-  moduleName: 'fxToolTip',
-  dest: 'dist/iife/fxToolTip.js',
-  //acorn: {allowReserved: true},
+  input: 'src/index.js',
+  output: {
+    name: 'fxToolTip', 
+  	file: 'dist/fxToolTip.js',
+    strict: true,
+    format: 'iife',
+  },
+  acorn: {allowReserved: true},
   plugins: [
-  	resolve(),
-  	babel()
-  ],
-  useStrict: true
+    nodeResolve({modules: false})
+	],
 };

@@ -17,37 +17,15 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import {set, setUp} from './startAndFinish.js';
-import {tip, tips, tipsIndex} from './tip.js';
+import {create, remove} from './fxTip.js';
+import {getTipByElementId} from './tip.js';
+import {tipOptions} from './options.js';
 
- function create (elementId, content) {
-	if (document.getElementById(elementId) == null) { return; };
-	if (!set) setUp();
-	var index;
-	index = tipsIndex.indexOf(elementId)
-	if (index !== -1) {
-		tips[index].remove();
-	};
-	var newTip = new tip(elementId, content);
-	tips.push(newTip);
-	tipsIndex.push(elementId);
-	return tips[tips.length - 1];
-};
+/*function globalOptions() {
+	tipOptions(true);
+};*/
+//+let globalOptions = tipOptions(true);
+let globalOptions = new tipOptions(true);
 
-function remove (elementId) {
-	var index;
-	
-	index = tipsIndex.indexOf(elementId);
-	if (index !== -1) tips[index].remove();
-};
-
-function getTipByElementId(elementId) {
-	let index = tipsIndex.indexOf(elementId);
-	if (index !== -1) {
-		return tips[index];
-	} else {
-		return (undefined);
-	};
-};
-
-export default {create, remove, getTipByElementId};
+//export default {create, remove, getTipByElementId};
+export default {create, remove, getTipByElementId, globalOptions};

@@ -82,7 +82,7 @@
 		</style>
 	</head>
 	<body>
-		<script type = 'text/javascript' src="../../dist/iife/fxToolTip.js"></script>
+		<script type = 'text/javascript' src="../../dist/fxToolTip.js"></script>
 		
 		<div>
 			<span id='topLeft' class='target'>Text on the top left</span>
@@ -103,7 +103,7 @@
 			<p>On this page you will see several demonstrations (shaded in <span class='target'>light blue</span>) of foxToolTip.js in action.  Hover over each of them to see some fxToolTip.js features.</p>
 			<ul>
 				<li>Auto Positioning</li>
-				<p>fxToolTip.js features autopositioning, which evaluates the size of the tooltip, the position of the target element, and the available document viewport space to position the tooltip at the optimim position.  Try hovering over the text in the corners to see this in action.  foxToolTip.js will also adjust to center the arrow over the target, eventhough the tooltip itself can't be.  Try hovering over the text in the upper left corner to see a demonstration of this</p>
+				<p>fxToolTip.js features autopositioning, which evaluates the size of the tooltip, the position of the target element, and the available document viewport space to position the tooltip at the optimim position.  Try hovering over the text in the corners to see this in action.  fxToolTip.js will also adjust to center the arrow over the target, eventhough the tooltip itself can't be.  Try hovering over the text in the upper left corner to see a demonstration of this</p>
 				<li>Mouse Tracking</li>
 				<p>foxToolTip.js can position the tooltip relative to the target element or the cursor.  Try hovering over the picture of the tiger to see the tooltip position relative to the cursor and follow it as it moves over the target element.</p>
 				
@@ -133,6 +133,10 @@
 				var table = "<table id = 'table' width='100%'><tr><th>id</th><th>name</th><th>address</th></tr><tr><td>1</td><td>Bill Smith</td><td>17 Cherry Lane</td></tr><tr><td>2</td><td>Ed Walker</td><td>427 Oak Lane</td></tr></table>"
 				var svg = "<svg width='250' height='250'><rect x='50' y='50' rx='20' ry='20' width='150' height='150'  style='fill:lightblue;stroke:black;stroke-width:5' /></svg>"
 				
+				fxToolTip.globalOptions
+					.backgroundColor('lightblue')
+					.foregroundColor('darkblue');
+
 				fxToolTip.create('fox1', "<p class='tipTitle'>Transitions</p><p>You can set the delay and duration of both the transition when the tooltip appears, and when it disapears</p>")
 					.transitionVisible(1, 0.4)
 					.transitionHidden(0, 0.4);

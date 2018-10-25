@@ -2,53 +2,64 @@ import {ttDiv, ttContainer, targetTimerInterval, closeDown, beforeRule} from './
 import {aspectRatio, parseSize, parseColor} from './utils.js';
 import {mouseOver, mouseOut, mouseMove} from './mouse.js';
 import {detectTargetRemoval} from './utils.js';
-//import {ttDiv} from './startAndFinish.js';
-//import {targetTimer} from './utils.js';
+import {tipOptions} from './options.js';
 
 export let tips = [];
 export let tipsIndex = [];
 
+export function getTipByElementId(elementId) {
+    let index = tipsIndex.indexOf(elementId);
+    if (index !== -1) {
+        return tips[index];
+    } else {
+        return (undefined);
+    };
+};
+
 export function sizeTip (target) {
 
-		beforeRule.width = 'auto';
-		beforeRule.height = 'auto';
+	beforeRule.width = 'auto';
+	beforeRule.height = 'auto';
 
-		var perimeter;
-		var height;
-		var width;
-		var oldWidth = ttDiv.offsetWidth;
-		var newAspect = ttDiv.offsetWidth / ttDiv.offsetHeight;;
-		var oldDelta = Math.abs(newAspect - aspectRatio);
-		var itterations = 0;
-		var newDelta = oldDelta;
-		
-		//console.log('aspect ratio: ', aspectRatio);
-		while (newDelta > 0.1 && itterations < 10) {
-			perimeter = ttDiv.offsetWidth + ttDiv.offsetHeight;
-			height = 1 / ((aspectRatio + 1) / perimeter);
-			width = perimeter - height;
-			beforeRule.width = Math.round(width) + 'px';
-			newAspect = ttDiv.offsetWidth / ttDiv.offsetHeight;
-			newDelta = Math.abs(newAspect - aspectRatio);
-			if (Math.abs(newDelta - oldDelta) < 0.1) {
-				if (oldDelta < newDelta) { beforeRule.width = Math.round(oldWidth) + 'px' };
-				itterations = 10;
-			} else {
-				oldWidth = width;
-				oldDelta = newDelta;
-				itterations++;
-			}
-			//console.log('Itteration #', itterations, ' aspect: ', ttDiv.offsetWidth / ttDiv.offsetHeight);
+	let perimeter;
+	let height;
+	let width;
+	let oldWidth = ttDiv.offsetWidth;
+	let newAspect = ttDiv.offsetWidth / ttDiv.offsetHeight;;
+	let oldDelta = Math.abs(newAspect - aspectRatio);
+	let itterations = 0;
+	let newDelta = oldDelta;
+	
+	while (newDelta > 0.1 && itterations < 10) {
+		perimeter = ttDiv.offsetWidth + ttDiv.offsetHeight;
+		height = 1 / ((aspectRatio + 1) / perimeter);
+		width = perimeter - height;
+		beforeRule.width = Math.round(width) + 'px';
+		newAspect = ttDiv.offsetWidth / ttDiv.offsetHeight;
+		newDelta = Math.abs(newAspect - aspectRatio);
+		if (Math.abs(newDelta - oldDelta) < 0.1) {
+			if (oldDelta < newDelta) { beforeRule.width = Math.round(oldWidth) + 'px' };
+			itterations = 10;
+		} else {
+			oldWidth = width;
+			oldDelta = newDelta;
+			itterations++;
 		};
 	};
+};
 
 export function tip (elementId, content) {
-	let thisToolTip = this;
+	
+	//let thisToolTip = function (){};
 	let targetElement;
 	let targetTimer;
 	let className;
-
-	var options = {
+    
+    //let thisToolTip = Object.assign({}, globalOptions);
+    let thisToolTip = new tipOptions;
+    //let options = Object.assign({}, globalOptions);
+/*
+	let options = {
 		content: '',
 		orientation: '',
 		preferredOrientation: 'right',
@@ -74,7 +85,8 @@ export function tip (elementId, content) {
 		height: 'auto',
 		maxHeight: 0
 	};
-	
+*/
+/*
 	thisToolTip.content = function (content) {
 		if (typeof content == 'undefined') { return options.content; };
 		
@@ -105,7 +117,6 @@ export function tip (elementId, content) {
 		if (typeof autoPosition == 'undefined') { return options.autoPosition; };
 		
 		options.autoPosition = autoPosition;
-		//if (autoPosition == false && options.position == '') options.position = 'right';
 		if (autoPosition && options.position == '') options.position = 'right';
 		
 		return thisToolTip;
@@ -316,7 +327,7 @@ export function tip (elementId, content) {
 		
 		return thisToolTip;
 	};
-
+*/
 	thisToolTip.remove = function () {
 
 		window.clearInterval(targetTimer);
@@ -364,8 +375,8 @@ export function tip (elementId, content) {
 		
 		thisToolTip.maxWidth('75%');
 		thisToolTip.maxHeight('75%', 'height');
-	
-		options.content = content;
+		thisToolTip.content(content);
+		//options.content = content;
 
 	return (thisToolTip);
 };
