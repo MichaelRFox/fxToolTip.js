@@ -72,12 +72,12 @@ fxToolTip.js exposes three methods: create remove, and getTipByElementId; and on
 * **description** - retrieves the [fxToolTip object](#The-fxToolTip-object) associated with the DOM element that has the unique id provided by the argument, *elementId*. If there is no [fxToolTip object](#The-fxToolTip-object) associated with the id, returns undefined. This is useful for when you create several tooltips which will need to accessed at run time and you do not wish to store a variable to hold each.
 
 ### <a id='fxToolTip.globalOptions'>fxToolTip.globalOptions</a>
-* **description** - provides the ability to set options globally for all subsequently created tooltips. After the global options are changed, individual tooltips can be individually styled. Setting global options follwows the same convention as setting individual tooltip options as describe in the [fxToolTip object](#The-fxToolTip-object) section. Note that fxToolTip.globalOptions is an onject litteral, but each oprion returns the [fxToolTip.globalOptions object](#fxToolTip.globalOptions), so setting of global options can be chained.
+* **description** - provides the ability to set options globally for all subsequently created tooltips. After the global options are changed, individual tooltips can be individually styled. Setting global options follows the same convention as setting individual tooltip options as describe in the [fxToolTip object](#The-fxToolTip-object) section. Note that fxToolTip.globalOptions is an object litteral, but each option returns the [fxToolTip.globalOptions object](#fxToolTip.globalOptions), so setting of global options can be chained.
 
 ```javascript
     fxTooltip.globalOptions
-        .backgroundColor(#ccc)
-        .foregroundColor(#000)
+        .backgroundColor('#ccc')
+        .foregroundColor('#000')
 ```
 
 [:house: top](#top)
