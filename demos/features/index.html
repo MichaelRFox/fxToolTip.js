@@ -21,6 +21,7 @@
 				font-weight: normal;
 				font-style: italic;
 			}
+
 			.target {
 				background-color: LightBlue;
 			}
@@ -134,8 +135,8 @@
 				var svg = "<svg width='250' height='250'><rect x='50' y='50' rx='20' ry='20' width='150' height='150'  style='fill:lightblue;stroke:black;stroke-width:5' /></svg>"
 				
 				fxToolTip.globalOptions
-					.backgroundColor('lightblue')
-					.foregroundColor('darkblue');
+					//.backgroundColor('lightblue')
+					.foregroundColor('white');
 
 				fxToolTip.create('fox1', "<p class='tipTitle'>Transitions</p><p>You can set the delay and duration of both the transition when the tooltip appears, and when it disapears</p>")
 					.transitionVisible(1, 0.4)
@@ -156,13 +157,31 @@
 					.minWidth(250)
 					.boxShadow('none');
 				
-				fxToolTip.create('fox5', "<span class='tipTitle'>Image Target</span><p>Any element can have a tooltip, and you can individually style elements within the tooltip either <em>inline</em>, or with css selectors</p>")
+
+				let oldX = -1;
+				let oldY = -1;
+
+				let contentChange = function (event) {
+					let mouseX = event.clientX;
+					let mouseY = event.clientY;
+					if (Math.abs(mouseX - oldX) > 10 | Math.abs(mouseY - oldY) > 10) {
+						oldX = mouseX;
+						oldY = mouseY;
+						fxToolTip.getTipByElementId('fox5')
+							.content("<span class = 'tipTitle'>Image Target</span><p>This tooltip demonstrates mouse tracking and dynamic content change. The current mouse coordinates are X = " + mouseX + ' and Y = ' + mouseY + '.</p>')
+					}
+				};
+				
+				let fox5 = document.getElementById('fox5');
+				fox5.addEventListener('mousemove', contentChange, false);
+
+				fxToolTip.create('fox5', "<span class='tipTitle'>Image Target</span><p>This tooltip demonstrates mouse tracking and dynamic content change.</p>")
 					.trackMouse(true);
 				
 				fxToolTip.create('fox6', "<span class='tipTitle' style='color=indigo'>Styling Options</span>You can style each tooltip individually.<ul><li>background color: lavendar</li><li>foreground color: indigo</li><li>opacity: 0.8</li><li>border radius: 16 px</li><li>drop shadow: 12 px, indigo, opacity 0.5</li></ul>")
 					.backgroundColor('Lavender')
 					.foregroundColor('#4B0082')	//('Indigo')
-					.backgroundOpacity(0.8)
+					//.backgroundOpacity(0.8)
 					.borderRadius(16)
 					.boxShadow(12, '#4B0082', 0.5)
 					.backgroundOpacity(0.8);

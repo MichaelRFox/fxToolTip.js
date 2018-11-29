@@ -51,10 +51,10 @@ export function mouseMove (event) {
 	var targetElement = this;
 	var target;
 	
+	event = event || window.event;
+	
 	target = tips[tipsIndex.indexOf(targetElement.id)];
 	if (!target.trackMouse()) { return; }; // == false) { return; };
-	
-	event = event || window.event;
 
 	getMouseCoordinates(event);
 

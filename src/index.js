@@ -21,11 +21,6 @@ import {create, remove} from './fxTip.js';
 import {getTipByElementId} from './tip.js';
 import {tipOptions} from './options.js';
 
-/*function globalOptions() {
-	tipOptions(true);
-};*/
-//+let globalOptions = tipOptions(true);
 let globalOptions = new tipOptions(true);
 
-//export default {create, remove, getTipByElementId};
 export default {create, remove, getTipByElementId, globalOptions};

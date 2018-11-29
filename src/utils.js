@@ -71,7 +71,3 @@ export function parseSize (size, dimension) {
 		return parseInt(window.getComputedStyle(pseudoDiv, null).getPropertyValue('height'), 10);
 	};
 };
-
-export function copyObject(object) {
-	return (Object.create(object));
-};

@@ -5,6 +5,7 @@ export function getRule (rule) {
 	for (var i = 0; i < rules.length; i++) {
 		if (rules[i].selectorText.toLowerCase() == rule) return (rules[i]);
 	};
+	return undefined;
 };
 
 export function getRuleIndex (rule) {

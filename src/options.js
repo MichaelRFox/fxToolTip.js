@@ -1,6 +1,7 @@
 import {beforeRule, afterRule, targetRule, ttDiv, ttContainer} from './startAndFinish.js';
 import {sizeTip} from './tip.js';
 import {aspectRatio, parseSize, parseColor} from './utils.js';
+import {getRule} from './style.js';
 
 let globalOptions = {
     content: '',
@@ -29,8 +30,9 @@ let globalOptions = {
     maxHeight: 0
 };
 
-export let tipOptions = function(global = false) {
+export let tipOptions = function(global) {
 
+	global = global == undefined ? false : global;
     let that = this;
     let options;
 
@@ -42,7 +44,10 @@ export let tipOptions = function(global = false) {
 
     that.content = function (content) {
         if (typeof content == 'undefined') { return options.content; };
-        options.content = content
+        options.content = content;
+        if (beforeRule.opacity = that.backgroundOpacity()) {
+        	applyOptions(that);
+        }
         return that;
     };
 

@@ -11,7 +11,6 @@ export let targetRule;
 export let set = false;
 export let pseudoDiv;
 export const targetTimerInterval = 500;
-//export let targetTimer = null;
 
 export function setUp() {
 
@@ -26,7 +25,7 @@ export function setUp() {
 	};
 	windowResized();
 
-//	if (document.styleSheets.length == 0) {
+	if (document.styleSheets.length == 0) {
 		var head = document.getElementsByTagName("head")[0];
 		sheet = document.createElement("style")
 		sheet.type = "text/css";
@@ -34,25 +33,18 @@ export function setUp() {
 		sheet.media = 'screen';
 		sheet.title = 'fxToolTip';
 		sheet = head.appendChild(sheet).sheet;
-//	};
+	};
 	
 	sheet = document.styleSheets[0];
 	rules = sheet.cssRules ? sheet.cssRules: sheet.rules;
-
 			
-	
 	if (sheet.insertRule) {
-//		sheet.insertRule('.fxToolTip {opacity: 0;position: fixed;visibility: hidden;z-index: 1;pointer-events: none;display: inline-block;}', rules.length);
-		sheet.insertRule('.fxToolTip {opacity: 0;position: fixed;visibility: hidden;z-index: 1;pointer-events: none;display: inline-block}', rules.length);
+		sheet.insertRule('.fxToolTip {opacity: 0;position: fixed;visibility: hidden;z-index: 100;pointer-events: none;display: inline-block}', rules.length);
 		sheet.insertRule('.fxContainer {width:100%;height:100%;overflow:hidden;text-overflow:ellipsis}', rules.length);
-
-//		sheet.insertRule('.fxToolTip {opacity: 0;position: fixed;visibility: hidden;z-index: 1;pointer-events: none;display: inline-block; text-overflow:clip}', rules.length);
 		sheet.insertRule('.fxToolTip::after{content: "";position: absolute;border-style: solid;pointer-events: none;}', rules.length);
 		sheet.insertRule('.fxToolTipTarget {cursor: help;}', rules.length);
 	} else {
-//		sheet.addRule('.fxToolTip', '{opacity: 0;position: fixed;visibility: hidden;z-index: 1;pointer-events: none;display: inline-block;}', rules.length);
-		sheet.addRule('.fxToolTip', '{opacity: 0;position: fixed;visibility: hidden;z-index: 1;pointer-events: none;display: inline-block}', rules.length);
-//		sheet.addRule('.fxToolTip', '{opacity: 0;position: fixed;visibility: hidden;z-index: 1;pointer-events: none;display: inline-block; text-overflow:clip}', rules.length);
+		sheet.addRule('.fxToolTip', '{opacity: 0;position: fixed;visibility: hidden;z-index: 100;pointer-events: none;display: inline-block}', rules.length);
 		sheet.addRule('.fxContainer', '{width:100%;height:100%;overflow:hidden;text-overflow:ellipsis}', rules.length);
 		sheet.addRule('.fxToolTip::after', '{content: "";position: absolute;border-style: solid;pointer-events: none;}', rules.length);
 		sheet.addRule('.fxToolTipTarget', '{cursor: help;}', rules.length);
@@ -92,11 +84,15 @@ export function closeDown() {
 	};
 
 	if (sheet.deleteRule) {
-		sheet.deleteRule(getRuleIndex('.fxToolTip'));
+		if (userRules == false) {
+			sheet.deleteRule(getRuleIndex('.fxToolTip'));	
+		}
 		sheet.deleteRule(getRuleIndex('.fxToolTip::after'));
 		sheet.deleteRule(getRuleIndex('.fxToolTipTarget'))
 	} else {
-		sheet.removeRule(getRuleIndex('.fxToolTip'));
+		if (userRules == false) {
+			sheet.removeRule(getRuleIndex('.fxToolTip'));
+		}
 		sheet.removeRule(getRuleIndex('.fxToolTip::after'));
 		sheet.removeRule(getRuleIndex('.fxToolTipTarget'))
 	};

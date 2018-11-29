@@ -3,7 +3,7 @@
 ---
 ## Installation
 ``` html
-npm install fx.tooltip.js
+npm install fx.tooltip.js --save
 
 -or-
 
@@ -20,7 +20,7 @@ Tooltips can be styled in a wide variety of ways, and can contain any valid html
 
 fxToolTip.js supports method chaining and has special code to detect and integrate with [d3.js](https://d3js.org/).
 
-Find a simple demo fxToolTip.js at my [fxToolTip.js demo bl.ock](http://bl.ocks.org/MichaelRfx/8725b438cf26be9287ece9a7b90624d0/).
+Find a simple demo fxToolTip.js at my [fxToolTip.js demo bl.ock](http://bl.ocks.org/MichaelRfox/8725b438cf26be9287ece9a7b90624d0/).
 
 * [Usage](#usage)
 * [How it Works](#how-it-works)
@@ -133,7 +133,7 @@ Upon creation, the [fxToolTip.create()](#fxToolTip.create) method returns a [fxT
 
 ### <a id='.content'>.content (content)</a>
 * **content** (string) - any valid html
-* **default** - ''
+* **default** - ""
 * **returns** - if the content argument is passed, the .content() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .content() method is called with no arguments, the .content() method returns the current content string.
 * **description** - although the content of the tooltip is set with the [fxToolTip.create()](#fxToolTip.create) method, you may use the .content() method on the [fxToolTip object](#The-fxToolTip-object) to dynamically alter the content of the tooltip at runtime.  The content argument can be any valid html (text, tables, images, svg, etc.).  See [Tooltip Content](#tooltip-content) for more detail.
 
@@ -149,7 +149,7 @@ myTooltip.content('Ut enim ad minim veniam');
 
 ### <a id='.orientation'>.orientation (orientation)</a>
 * **orientation** (string) - 'right' | 'left' | 'top' | 'bottom'
-* **default** - ''
+* **default** - ""
 * **returns** - if the orientation argument is passed, the .orientation() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .orientation() method is called with no arguments, the .orientation() method returns the current orientation setting.
 * **description** - You may set the location of the tooltip relative to the target element (or cursor if the [.mousePoint](#.mousePoint) method is called with true as the argument).  If the orientation is set, autopositioning is disabled (see the [.autoPosition](#.autoPosition) method).
 
@@ -241,7 +241,7 @@ fxToolTip.create('myElement', 'Loreiem Ipsum')
 ### <a id='.font'>.font(family, size)</a>
 * **family** (string) - any valid css font-family (e.g., 'tahoma, sans-serif')
 * **size** (string | number) - any valid css font-size (e.g., '1em' | '16px').  If a number is passed, it is assumed to be in pixels.
-* defaults - 'tahoma', 16
+* defaults - 'verdana, sans-serf', 16
 * **returns** - if the family and size arguments are passed, the .font() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .font() method is called with no arguments, the .font() method returns the current font setting as an object (e.g., {family:'tahoma, sans-serf', size:16).
 * **description** - Setting the font family and size via the .font() method, sets the font-family and font-size options contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. These options set defaults for text within the tooltip, but can be customized through inline or css selector styles, contained in the content that is passed to the [fxToolTip.create()](#fxToolTipCreate) method.
 
@@ -477,27 +477,27 @@ let nodeEnter = node.enter().append('g')
 	.attr('class', 'node');
 
 nodeEnter.append('circle')
-	.attr('r', 1e-6)
-	.style('fill', 'lightSteelBlue')
-	.style('stroke', 'lightSteelBlue')
-	//This is where we assign a unique id
-	.attr('id', function(d, i) { return 'node' + i })
-	//This is where we create a tooltip for each node
-	.each (function (d) {	
-			var content = '<p>' + d.toolTipText + '</p>';
-			fxToolTip.create('node' + d.id, content)
-				.backgroundColor('midnightBlue')
-				.backgroundOpacity(0.9)
-				.foregroundColor('linen')
-				.transitionVisible(0.5, 0.4)
-				.transitionHidden(0, 0.4)
-				.padding('0px 10px')
-				.borderRadius(16)
-				.arrowSize(16);
-	};
+    .attr('r', 1e-6)
+    .style('fill', 'lightSteelBlue')
+    .style('stroke', 'lightSteelBlue')
+    //This is where we assign a unique id
+    .attr('id', function(d, i) { return 'node' + i })
+    //This is where we create a tooltip for each node
+    .each (function (d) {	
+        var content = '<p>' + d.toolTipText + '</p>';
+        fxToolTip.create('node' + d.id, content)
+            .backgroundColor('midnightBlue')
+            .backgroundOpacity(0.9)
+            .foregroundColor('linen')
+            .transitionVisible(0.5, 0.4)
+            .transitionHidden(0, 0.4)
+            .padding('0px 10px')
+            .borderRadius(16)
+            .arrowSize(16);
+    };
 ```
 
-You can find a demo of integrating fxToolTip.js with D3.js at my [D3.js demo bl.ock](http://bl.ocks.org/MichaelRfx/59cdc1c3478fb0362448cf87fdab30d0/).
+You can find a demo of integrating fxToolTip.js with D3.js at my [D3.js demo bl.ock](http://bl.ocks.org/MichaelRfox/59cdc1c3478fb0362448cf87fdab30d0/).
 
 [:house: top](#top)
 
