@@ -45,7 +45,7 @@ export let tipOptions = function(global) {
     that.content = function (content) {
         if (typeof content == 'undefined') { return options.content; };
         options.content = content;
-        if (beforeRule.opacity = that.backgroundOpacity()) {
+        if (beforeRule.opacity == that.backgroundOpacity()) {
         	applyOptions(that);
         }
         return that;

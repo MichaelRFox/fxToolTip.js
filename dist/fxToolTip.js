@@ -273,7 +273,7 @@ var fxToolTip = function () {
 
       options.content = content;
 
-      if (beforeRule.opacity = that.backgroundOpacity()) {
+      if (beforeRule.opacity == that.backgroundOpacity()) {
         applyOptions(that);
       }
 
