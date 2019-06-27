@@ -12,7 +12,7 @@ let globalOptions = {
     mousePoint: false,
     trackMouse: false,
     cursor: 'help',
-    fontFamily: 'verdana sans-serif',
+    fontFamily: 'verdana, sans-serif',
     fontSize: '16',
     foregroundColor: 'white',
     backgroundColor: '#333333',
@@ -278,6 +278,7 @@ export function applyOptions  (target) {
 		
 	if (target.autoSize()) {
 		sizeTip(target);
+		beforeRule.width = Math.max(parseInt(beforeRule.width, 10), target.minWidth()) + 'px';
 	} else {
 		beforeRule.width = target.width() + (targetWidth() !== 'auto') ? 'px' : '';
 		beforeRule.height = target.height() + (targetHeight() !== 'auto') ? 'px' : '';

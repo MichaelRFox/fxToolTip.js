@@ -212,7 +212,8 @@ var fxToolTip = function () {
     rule = rule.toLowerCase();
 
     for (var i = 0; i < rules.length; i++) {
-      if (rules[i].selectorText.toLowerCase() == rule) return rules[i];
+      var name = rules[i].cssText.match(/(?<name>[^{]*)\s*{/i).groups.name.trim();
+      if (name.toLowerCase() == rule) return rules[i];
     }
 
     return undefined;
@@ -222,7 +223,8 @@ var fxToolTip = function () {
     rule = rule.toLowerCase();
 
     for (var i = 0; i < rules.length; i++) {
-      if (rules[i].selectorText.toLowerCase() == rule) return i;
+      var name = rules[i].cssText.match(/(?<name>[^{]*)\s*{/i).groups.name.trim();
+      if (name.toLowerCase() == rule) return i;
     }
 
     return null;
@@ -237,7 +239,7 @@ var fxToolTip = function () {
     mousePoint: false,
     trackMouse: false,
     cursor: 'help',
-    fontFamily: 'verdana sans-serif',
+    fontFamily: 'verdana, sans-serif',
     fontSize: '16',
     foregroundColor: 'white',
     backgroundColor: '#333333',
@@ -580,31 +582,27 @@ var fxToolTip = function () {
 
     if (target.autoSize()) {
       sizeTip(target);
+      beforeRule.width = Math.max(parseInt(beforeRule.width, 10), target.minWidth()) + 'px';
     } else {
       beforeRule.width = target.width() + (targetWidth() !== 'auto') ? 'px' : '';
       beforeRule.height = target.height() + (targetHeight() !== 'auto') ? 'px' : '';
     }
-  } //import {mouseX, mouseY, beforeRule, tips, tipsIndex, targetElement} from './globals.js';
-
+  }
 
   var mouseX;
   var mouseY;
   var timer;
 
   function getMouseCoordinates(event) {
-    /*	if (typeof d3 !== 'undefined') {
-    		mouseX = d3.event.clientX;
-    		mouseY = d3.event.clientX;
-    	} else {
-    */
+    event = event || window.event;
     mouseX = event.clientX;
-    mouseY = event.clientY; //	};
+    mouseY = event.clientY;
   }
 
   function mouseOver(event) {
+    event = event || window.event;
     var targetElement = this;
     var target;
-    event = event || window.event;
 
     if (beforeRule.visibility !== 'hidden') {
       beforeRule.transition = '';
@@ -618,7 +616,6 @@ var fxToolTip = function () {
     //	beforeRule.width = target.width() + 'px';
 
     if (target.autoPosition()) {
-      // == true) {
       target.orientation(optimumOrientation(targetElement, target), true);
     }
 
@@ -627,9 +624,9 @@ var fxToolTip = function () {
   }
 
   function mouseMove(event) {
+    event = event || window.event;
     var targetElement = this;
     var target;
-    event = event || window.event;
     target = tips[tipsIndex.indexOf(targetElement.id)];
 
     if (!target.trackMouse()) {
@@ -647,18 +644,15 @@ var fxToolTip = function () {
   }
 
   function mouseOut(event) {
-    var targetElement = this;
-    var target;
-    var transitionString;
-    var transitionDuration;
     event = event || window.event;
-    target = tips[tipsIndex.indexOf(targetElement.id)];
-    transitionString = target.transitionHidden();
+    var targetElement = this;
+    var target = tips[tipsIndex.indexOf(targetElement.id)];
+    var transitionString = target.transitionHidden();
+    var transitionDuration = transitionString.split(' ')[1].replace('s', '');
     beforeRule.transition = transitionString;
     beforeRule['-moz-transition'] = transitionString;
     beforeRule['-webkit-transiton'] = transitionString;
     beforeRule['-o-transition'] = transitionString;
-    transitionDuration = transitionString.split(' ')[1].replace('s', '');
     timer = window.setTimeout(function () {
       beforeRule.visibility = 'hidden';
     }, transitionDuration * 1000);
@@ -956,8 +950,7 @@ var fxToolTip = function () {
     }
 
     if (!set) setUp();
-    var index;
-    index = tipsIndex.indexOf(elementId);
+    var index = tipsIndex.indexOf(elementId);
 
     if (index !== -1) {
       tips[index].remove();
@@ -970,15 +963,18 @@ var fxToolTip = function () {
   }
 
   function remove(elementId) {
-    var index;
-    index = tipsIndex.indexOf(elementId);
+    if (document.getElementById(elementId) == null) {
+      return;
+    }
+
+    var index = tipsIndex.indexOf(elementId);
     if (index !== -1) tips[index].remove();
   }
   /** 
   * @file fxToolTip.js
-  * @version 1.0.13
+  * @version 1.2.1
   * @author Michael R Fox
-  * @copyright (c) 2016 Michael R. Fox
+  * @copyright (c) 2016. 2017, 2018 Michael R. Fox
   *
   * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 
   * Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, 
