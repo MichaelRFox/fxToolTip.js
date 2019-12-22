@@ -1,88 +1,87 @@
-import {optimumOrientation, orient} from './orient.js';
-import {applyOptions} from './options.js';
-import {tips, tipsIndex, sizeTip} from './tip.js';
-import {beforeRule} from './startAndFinish.js';
+import { optimumOrientation, orient } from './orient.js';
+import { applyOptions } from './options.js';
+import { tips, tipsIndex, sizeTip } from './tip.js';
+import { beforeRule } from './startAndFinish.js';
 
-export let mouseX;
-export let mouseY;
+export var mouseX;
+export var mouseY;
 
-let timer;
+var timer;
 
-function getMouseCoordinates (event) {
+function getMouseCoordinates(event) {
 
-    event = event || window.event;
+  event = event || window.event;
 
-    mouseX = event.clientX;
-    mouseY = event.clientY;
+  mouseX = event.clientX;
+  mouseY = event.clientY;
 
-};
+}
 
-export function mouseOver (event) {
-	
-    event = event || window.event;
+export function mouseOver(event) {
 
-    let targetElement = this;
-	let target;
+  event = event || window.event;
 
-	if (beforeRule.visibility !== 'hidden') { 
-		beforeRule.transition = ''; 
-		clearTimeout(timer);
-	};
+  var targetElement = this;
+  var target;
 
-	beforeRule.visibility = 'visible';
-	
-	getMouseCoordinates(event);
+  if (beforeRule.visibility !== 'hidden') {
+    beforeRule.transition = '';
+    clearTimeout(timer);
+  };
 
-	target = tips[tipsIndex.indexOf(targetElement.id)];
-	
-	applyOptions(target);
-//	if (target.autoSize()) { sizeTip(target); };
-//	beforeRule.width = target.width() + 'px';
-	if (target.autoPosition()) {
-		target.orientation(optimumOrientation(targetElement, target), true);
-	};
-	orient(targetElement, target);
-	beforeRule.opacity = target.backgroundOpacity();
-};
+  beforeRule.visibility = 'visible';
 
-export function mouseMove (event) {
+  getMouseCoordinates(event);
 
-    event = event || window.event;
-	
-    let targetElement = this;
-	let target;
-	
-	target = tips[tipsIndex.indexOf(targetElement.id)];
-	if (!target.trackMouse()) { return; };
+  target = tips[tipsIndex.indexOf(targetElement.id)];
 
-	getMouseCoordinates(event);
+  applyOptions(target);
+  //  if (target.autoSize()) { sizeTip(target); };
+  //  beforeRule.width = target.width() + 'px';
+  if (target.autoPosition()) {
+    target.orientation(optimumOrientation(targetElement, target), true);
+  };
+  orient(targetElement, target);
+  beforeRule.opacity = target.backgroundOpacity();
+}
 
-	if (target.autoPosition()) { 
-        target.orientation(optimumOrientation(targetElement, target), true);
-    };
-//		if (target.autoPosition() == true) { target.orientation(optimumOrientation(targetElement, target), true); };
-	orient(targetElement, target);
-};
+export function mouseMove(event) {
 
-export function mouseOut (event) {
+  event = event || window.event;
 
-    event = event || window.event;
-	
-    let targetElement = this;
-	let target = tips[tipsIndex.indexOf(targetElement.id)];
-	let transitionString = target.transitionHidden();
-	let transitionDuration =  transitionString.split(' ')[1].replace('s', '');
+  var targetElement = this;
+  var target;
 
-	beforeRule.transition = transitionString;
-	beforeRule['-moz-transition'] = transitionString;
-	beforeRule['-webkit-transiton'] = transitionString;
-	beforeRule['-o-transition'] = transitionString;
+  target = tips[tipsIndex.indexOf(targetElement.id)];
+  if (!target.trackMouse()) {return;};
 
-	timer = window.setTimeout(function() {
-        beforeRule.visibility = 'hidden';
-        },
-        transitionDuration * 1000);
-	beforeRule.opacity = 0;
+  getMouseCoordinates(event);
 
-};
+  if (target.autoPosition()) {
+    target.orientation(optimumOrientation(targetElement, target), true);
+  };
+  //      if (target.autoPosition() == true) { target.orientation(optimumOrientation(targetElement, target), true); };
+  orient(targetElement, target);
+}
 
+export function mouseOut(event) {
+
+  event = event || window.event;
+
+  var targetElement = this;
+  var target = tips[tipsIndex.indexOf(targetElement.id)];
+  var transitionString = target.transitionHidden();
+  var transitionDuration = transitionString.split(' ')[1].replace('s', '');
+
+  beforeRule.transition = transitionString;
+  beforeRule['-moz-transition'] = transitionString;
+  beforeRule['-webkit-transiton'] = transitionString;
+  beforeRule['-o-transition'] = transitionString;
+
+  timer = window.setTimeout(function () {
+    beforeRule.visibility = 'hidden';
+  },
+  transitionDuration * 1000);
+  beforeRule.opacity = 0;
+
+}

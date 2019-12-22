@@ -7,28 +7,25 @@
     "test": "test",
     "dist": "dist",
     "demos": "demos",
-    "src": "src"
+    "src": "src",
+    "src-es6": "src-es6"
   },
   "scripts": {
-    "build": "npm run cleanDist && npm run rollupBuild && npm run babelBuild && npm run minify",
-    "cleanDist": "rm -f ./dist/*.*",
+    "buildSrc": "babel src-es6 --out-dir src",
+    "build": "npm run rollupBuild && npm run minifyBuild",
     "rollupBuild": "rollup -c rollup.config.js",
-    "babelBuild": "babel dist --out-file=dist/fxToolTip.js",
     "test": "tape './test/**/*-test.js'",
-    "lint": "eslint .src/*.js",
-    "minify": "uglifyjs ./dist/fxToolTip.js -o ./dist/fxToolTip.min.js  -c -m -v",
+    "minifyBuild": "terser ./dist/fxToolTip.js -o ./dist/fxToolTip.min.js --config-file .uglifyjsrc",
     "docs": "jsdoc"
   },
   "devDependencies": {
-    "@babel/cli": "^7.5.0",
-    "@babel/core": "^7.5.4",
-    "@babel/plugin-transform-arrow-functions": "^7.2.0",
-    "@babel/plugin-transform-object-assign": "^7.2.0",
-    "@babel/preset-env": "^7.5.4",
-    "eslint": "^5.16.0",
-    "rollup": "^0.66.6",
-    "rollup-plugin-node-resolve": "^3.4.0",
-    "uglify-js": "^3.6.0"
+    "@babel/cli": "^7.7.7",
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "@rollup/plugin-node-resolve": "^6.0.0",
+    "browserslist": "^4.8.2",
+    "rollup": "^1.27.14",
+    "terser": "^4.4.3"
   },
   "dependencies": {},
   "repository": {

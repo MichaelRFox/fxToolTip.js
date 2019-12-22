@@ -17,10 +17,10 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { create, remove } from './fxTip.js';
-import { getTipByElementId } from './tip.js';
-import { tipOptions } from './options.js';
+import {create, remove} from './fxTip.js';
+import {getTipByElementId} from './tip.js';
+import {tipOptions} from './options.js';
 
-var globalOptions = new tipOptions(true);
+let globalOptions = new tipOptions(true);
 
-export default { create: create, remove: remove, getTipByElementId: getTipByElementId, globalOptions: globalOptions };
+export default {create, remove, getTipByElementId, globalOptions};

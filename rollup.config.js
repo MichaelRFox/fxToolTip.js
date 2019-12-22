@@ -1,4 +1,4 @@
-import nodeResolve from 'rollup-plugin-node-resolve'
+import resolve from '@rollup/plugin-node-resolve';
 
 export default {
   input: 'src/index.js',
@@ -8,8 +8,5 @@ export default {
     strict: true,
     format: 'iife',
   },
-  acorn: {allowReserved: true},
-  plugins: [
-    nodeResolve({modules: false})
-	],
+  plugins: [resolve()]
 };
