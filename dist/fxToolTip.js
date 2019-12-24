@@ -422,6 +422,7 @@ var fxToolTip = (function () {
   var mouseY;
 
   var timer;
+  var suspended = false;
 
   function getMouseCoordinates(event) {
 
@@ -436,6 +437,7 @@ var fxToolTip = (function () {
 
     event = event || window.event;
 
+    if (suspend()) {return;}
     var targetElement = this;
     var target;
 
@@ -462,6 +464,7 @@ var fxToolTip = (function () {
 
     event = event || window.event;
 
+    if (suspend()) {return;}
     var targetElement = this;
     var target;
 
@@ -478,6 +481,11 @@ var fxToolTip = (function () {
   function mouseOut(event) {
 
     var targetElement = this;
+
+    if (window.getComputedStyle(targetElement, null).getPropertyValue('opacity') == 0 && suspend()) {
+      return;
+    }
+
     var target = tips[tipsIndex.indexOf(targetElement.id)];
     var transitionString = target.transitionHidden();
     var transitionDuration = transitionString.split(' ')[1].replace('s', '');
@@ -493,6 +501,10 @@ var fxToolTip = (function () {
     transitionDuration * 1000);
     beforeRule.opacity = 0;
 
+  }
+
+  function suspend(suspendTips) {
+    if (typeof suspendTips == 'undefined') {return suspended;}  suspended = suspendTips;
   }
 
   var tips = [];
@@ -813,7 +825,7 @@ var fxToolTip = (function () {
 
   var globalOptions$1 = new tipOptions(true);
 
-  var index = { create: create, remove: remove, getTipByElementId: getTipByElementId, globalOptions: globalOptions$1 };
+  var index = { create: create, remove: remove, getTipByElementId: getTipByElementId, globalOptions: globalOptions$1, suspend: suspend };
 
   return index;
 

@@ -7,6 +7,7 @@ export var mouseX;
 export var mouseY;
 
 var timer;
+var suspended = false;
 
 function getMouseCoordinates(event) {
 
@@ -20,6 +21,8 @@ function getMouseCoordinates(event) {
 export function mouseOver(event) {
 
   event = event || window.event;
+
+  if (suspend()) {return;};
 
   var targetElement = this;
   var target;
@@ -49,6 +52,8 @@ export function mouseMove(event) {
 
   event = event || window.event;
 
+  if (suspend()) {return;};
+
   var targetElement = this;
   var target;
 
@@ -69,6 +74,11 @@ export function mouseOut(event) {
   event = event || window.event;
 
   var targetElement = this;
+
+  if (window.getComputedStyle(targetElement, null).getPropertyValue('opacity') == 0 && suspend()) {
+    return;
+  }
+
   var target = tips[tipsIndex.indexOf(targetElement.id)];
   var transitionString = target.transitionHidden();
   var transitionDuration = transitionString.split(' ')[1].replace('s', '');
@@ -84,4 +94,9 @@ export function mouseOut(event) {
   transitionDuration * 1000);
   beforeRule.opacity = 0;
 
+}
+
+export function suspend(suspendTips) {
+  if (typeof suspendTips == 'undefined') {return suspended;};
+  suspended = suspendTips;
 }

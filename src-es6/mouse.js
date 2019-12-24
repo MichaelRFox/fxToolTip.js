@@ -7,6 +7,7 @@ export let mouseX;
 export let mouseY;
 
 let timer;
+let suspended = false;
 
 function getMouseCoordinates (event) {
 
@@ -21,6 +22,8 @@ export function mouseOver (event) {
     
     event = event || window.event;
 
+    if (suspend()) {return};
+    
     let targetElement = this;
     let target;
 
@@ -49,6 +52,8 @@ export function mouseMove (event) {
 
     event = event || window.event;
     
+    if (suspend()) {return};
+    
     let targetElement = this;
     let target;
     
@@ -69,6 +74,11 @@ export function mouseOut (event) {
     event = event || window.event;
 
     let targetElement = this;
+
+    if (window.getComputedStyle(targetElement, null).getPropertyValue('opacity') == 0 && suspend()) {
+        return;
+    }
+
     let target = tips[tipsIndex.indexOf(targetElement.id)];
     let transitionString = target.transitionHidden();
     let transitionDuration =  transitionString.split(' ')[1].replace('s', '');
@@ -84,4 +94,9 @@ export function mouseOut (event) {
         transitionDuration * 1000);
     beforeRule.opacity = 0;
 
+}
+
+export function suspend(suspendTips) {
+    if (typeof(suspendTips) == 'undefined') {return suspended};
+    suspended = suspendTips;
 }

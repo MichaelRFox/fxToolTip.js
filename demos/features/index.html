@@ -6,6 +6,10 @@
 		<meta charset="UTF-8">
 		<title>fxToolTip Feature Demo</title>
 		<style>
+			button {
+				display: block;
+				margin: 0 auto;
+			}
 			text {
 				font-family: verdana, sans-serif
 			}
@@ -123,6 +127,9 @@
 				<p>Each tooltip can be individually styled, to include foreground and background color, opacity, font size and family, margins, border radius, and drop shadow.  <span class='target' id='fox6'>Here</span> is an example of some of the things you can do.</p>	
 			</ul>
 		</div>
+		<div>
+			<button onclick = 'toggleToolTips()'>Click to toggle tooltip</button>
+		</div>
 		<script type = 'text/javascript'>
 
 			onload = function () {
@@ -201,6 +208,9 @@
 				//foxToolTip.remove('fox5');
 
 			};
+			function toggleToolTips() {
+				fxToolTip.suspend(!fxToolTip.suspend());
+			}
 		</script>
 	</body>
 </html>

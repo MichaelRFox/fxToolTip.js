@@ -53,7 +53,7 @@ Or you can include it in your javascript build
 include {default as fxToolTip} from 'fx.tooltip.js';
 ```
 
-fxToolTip.js exposes three methods: create remove, and getTipByElementId; and one object: globalOptions.
+fxToolTip.js exposes four methods: create remove, getTipByElementId, and suspend; and one object: globalOptions.
 
 ### <a id ='fxToolTip.create'>fxToolTip.create (elementId, content)</a>
 * **elementId** (string) - the unique id of your target DOM element
@@ -70,6 +70,12 @@ fxToolTip.js exposes three methods: create remove, and getTipByElementId; and on
 * **elementId** (string) - the unique id of the target DOM element whose tooltip you want to retrieve.
 * **returns** - if the tip exists, returns a [fxToolTip object](#The-fxToolTip-object). Otherwise, undefined.
 * **description** - retrieves the [fxToolTip object](#The-fxToolTip-object) associated with the DOM element that has the unique id provided by the argument, *elementId*. If there is no [fxToolTip object](#The-fxToolTip-object) associated with the id, returns undefined. This is useful for when you create several tooltips which will need to accessed at run time and you do not wish to store a variable to hold each.
+
+### <a id='fxToolTip.suspend'>fxToolTip.suspend(suspendTips)</a>
+* **suspendTips** (boolean) - Whether to suspend (true) or enable (false) global processing of tooltips.
+* **default** - false
+* **returns** - if the method is called without the suspendTips argument, the method returns the current state of tooltips (true for suspended, false for enabled). Otherwise, nothing is returned.
+* **description** - this method is useful for temprarilty suspending and reenabling tooltips globally in such cases where other onscreen interaction may be interfered with by the tooltips.
 
 ### <a id='fxToolTip.globalOptions'>fxToolTip.globalOptions</a>
 * **description** - provides the ability to set options globally for all subsequently created tooltips. After the global options are changed, individual tooltips can be individually styled. Setting global options follows the same convention as setting individual tooltip options as describe in the [fxToolTip object](#The-fxToolTip-object) section. Note that fxToolTip.globalOptions is an object litteral, but each option returns the [fxToolTip.globalOptions object](#fxToolTip.globalOptions), so setting of global options can be chained.

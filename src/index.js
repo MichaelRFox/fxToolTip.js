@@ -20,7 +20,8 @@
 import { create, remove } from './fxTip.js';
 import { getTipByElementId } from './tip.js';
 import { tipOptions } from './options.js';
+import { suspend } from './mouse.js';
 
 var globalOptions = new tipOptions(true);
 
-export default { create: create, remove: remove, getTipByElementId: getTipByElementId, globalOptions: globalOptions };
+export default { create: create, remove: remove, getTipByElementId: getTipByElementId, globalOptions: globalOptions, suspend: suspend };
