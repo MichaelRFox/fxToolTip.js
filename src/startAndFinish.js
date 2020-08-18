@@ -63,7 +63,7 @@ export function setUp() {
   ttDiv.appendChild(ttContainer);
 
   pseudoDiv = document.createElement('div');
-  pseudoDiv.style.visible = 'hidden';
+  pseudoDiv.style.visibility = 'hidden';
   pseudoDiv.style.position = 'absolute';
   pseudoDiv.style.display = 'inline-block';
   document.body.insertBefore(pseudoDiv, document.body.firstChild);
