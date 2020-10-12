@@ -20,7 +20,7 @@ Tooltips can be styled in a wide variety of ways, and can contain any valid html
 
 fxToolTip.js supports method chaining and has special code to detect and integrate with [d3.js](https://d3js.org/).
 
-Find a simple demo fxToolTip.js at my [fxToolTip.js demo bl.ock](http://bl.ocks.org/MichaelRfox/8725b438cf26be9287ece9a7b90624d0/).
+Demonstrations of fxToolTip.js capabilities can be found at https://michaelrfox.github.io/fxTooltipDemos/features/ and integrations with d3.js can be found at https://michaelrfox.github.io/fxTooltipDemos/d3/.
 
 * [Usage](#usage)
 * [How it Works](#how-it-works)
@@ -50,7 +50,7 @@ You can include a reference to the built version of the library
 
 Or you can include it in your javascript build
 ```javascript
-include {default as fxToolTip} from 'fx.tooltip.js';
+import {default as fxToolTip} from 'fx.tooltip.js';
 ```
 
 fxToolTip.js exposes four methods: create remove, getTipByElementId, and suspend; and one object: globalOptions.
@@ -64,7 +64,7 @@ fxToolTip.js exposes four methods: create remove, getTipByElementId, and suspend
 ### <a id ='fxToolTip.remove'>fxToolTip.remove (elementId)</a> 
 * **elementId** (string) - the unique id of the target DOM element whose tooltip you want to remove.
 * **returns** - null
-* **description** - removes all of the event listeners and the associated [fxToolTip object](#The-fxToolTip-object) object from the stack.  If this is the only [fxToolTip object](#The-fxToolTip-object) on the stack, the .remove() method will remove all of the [fxToolTip object](#The-fxToolTip-object) css rules from the stylesheet and set the library back to its un-instantiated state.  Generally, this method is not required, since fxToolTip.js automatically detects the removal of target elements, and performs corresponsing tooltip removal automatically.
+* **description** - removes all of the event listeners and the associated [fxToolTip object](#The-fxToolTip-object) object from the stack.  If this is the only [fxToolTip object](#The-fxToolTip-object) on the stack, the .remove() method will remove all of the [fxToolTip object](#The-fxToolTip-object) css rules from the stylesheet and set the library back to its un-instantiated state.  Generally, this method is not required, since fxToolTip.js automatically detects the removal of target elements, and performs corresponding tooltip removal automatically.
 
 ### <a id='fxToolTip.getTipByElementId'>fxToolTip.getTipByElementId(elementId)</a>
 * **elementId** (string) - the unique id of the target DOM element whose tooltip you want to retrieve.
@@ -75,10 +75,10 @@ fxToolTip.js exposes four methods: create remove, getTipByElementId, and suspend
 * **suspendTips** (boolean) - Whether to suspend (true) or enable (false) global processing of tooltips.
 * **default** - false
 * **returns** - if the method is called without the suspendTips argument, the method returns the current state of tooltips (true for suspended, false for enabled). Otherwise, nothing is returned.
-* **description** - this method is useful for temprarilty suspending and reenabling tooltips globally in such cases where other onscreen interaction may be interfered with by the tooltips.
+* **description** - this method is useful for temporarily suspending and re-enabling tooltips globally in such cases where other on-screen interaction may be interfered with by the tooltips.
 
 ### <a id='fxToolTip.globalOptions'>fxToolTip.globalOptions</a>
-* **description** - provides the ability to set options globally for all subsequently created tooltips. After the global options are changed, individual tooltips can be individually styled. Setting global options follows the same convention as setting individual tooltip options as describe in the [fxToolTip object](#The-fxToolTip-object) section. Note that fxToolTip.globalOptions is an object litteral, but each option returns the [fxToolTip.globalOptions object](#fxToolTip.globalOptions), so setting of global options can be chained.
+* **description** - provides the ability to set options globally for all subsequently created tooltips. After the global options are changed, individual tooltips can be individually styled. Setting global options follows the same convention as setting individual tooltip options as describe in the [fxToolTip object](#The-fxToolTip-object) section. Note that fxToolTip.globalOptions is an object literal, but each option returns the [fxToolTip.globalOptions object](#fxToolTip.globalOptions), so setting of global options can be chained.
 
 ```javascript
     fxTooltip.globalOptions
@@ -105,7 +105,7 @@ The [fxToolTip.create()](#fxToolTip.create) method also appends two div elements
 
 Lastly, the [fxToolTip.create()](#fxToolTip.create) method adds event listeners (mouseover, mouseout, and mousemove) for each [fxToolTip object](#The-fxToolTip-object) which call internal fxToolTip.js methods: mouseOver(), mouseOut(), and mouseMove() which act as dispatchers for showing, hiding, and moving tooltips.  The [fxToolTip.create()](#fxToolTip.create) method also adds an onresize event listener to the window element to keep track of the document viewport size.
 
-Upon each call of the [fxToolTip.create()](#fxToolTip.create) method, a unique [fxToolTip object](#The-fxToolTip-object) is created which contains all of the options necesary to style, position, and hide the tooltip.  fxToolTip.js maintains an internal stack of all of the [fxToolTip objects](#The-fxToolTip-object).  When the cursor hovers over a target element, fxToolTip.js determines which [fxToolTip object](#The-fxToolTip-object) is associated with that element, and alters the .fxToolTip, .fxToolTip::after, and .fxToolTipTarget style rules according to the options set for that tooltip.  This allows for unique tooltips to be created, removed, and dynamically styled.  
+Upon each call of the [fxToolTip.create()](#fxToolTip.create) method, a unique [fxToolTip object](#The-fxToolTip-object) is created which contains all of the options necessary to style, position, and hide the tooltip.  fxToolTip.js maintains an internal stack of all of the [fxToolTip objects](#The-fxToolTip-object).  When the cursor hovers over a target element, fxToolTip.js determines which [fxToolTip object](#The-fxToolTip-object) is associated with that element, and alters the .fxToolTip, .fxToolTip::after, and .fxToolTipTarget style rules according to the options set for that tooltip.  This allows for unique tooltips to be created, removed, and dynamically styled.  
 
 [:house: top](#top)
 
@@ -157,7 +157,7 @@ myTooltip.content('Ut enim ad minim veniam');
 * **orientation** (string) - 'right' | 'left' | 'top' | 'bottom'
 * **default** - ""
 * **returns** - if the orientation argument is passed, the .orientation() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .orientation() method is called with no arguments, the .orientation() method returns the current orientation setting.
-* **description** - You may set the location of the tooltip relative to the target element (or cursor if the [.mousePoint](#.mousePoint) method is called with true as the argument).  If the orientation is set, autopositioning is disabled (see the [.autoPosition](#.autoPosition) method).
+* **description** - You may set the location of the tooltip relative to the target element (or cursor if the [.mousePoint](#.mousePoint) method is called with true as the argument).  If the orientation is set, auto-positioning is disabled (see the [.autoPosition](#.autoPosition) method).
 
 ``` javascript
 fxToolTip.create('myElement', 'Loreiem Ipsum')
@@ -170,7 +170,7 @@ fxToolTip.create('myElement', 'Loreiem Ipsum')
 * **orientation** (string)  - 'right' | 'left' | 'top' | 'bottom' | 'none'
 * **default** -  'right'
 * **returns** - if the orientation argument is passed, the .preferredOrientation() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .preferredOrientationt() method is called with no arguments, the .preferredOrientation() method returns the current preferredOrientation setting.
-* **description** - The .preferredOrientation() method is designed to work with autopositioning.  If there is sufficient space to display the tooltip at the preferred orientation, then regardless of which position is optimum, the tooltip will be displayed at the preferred orientation.  If there is insufficient room to display the tooltip at the preferred orientation, then autopositioning takes over and displays the tooltip at the optimum position.
+* **description** - The .preferredOrientation() method is designed to work with auto-positioning.  If there is sufficient space to display the tooltip at the preferred orientation, then regardless of which position is optimum, the tooltip will be displayed at the preferred orientation.  If there is insufficient room to display the tooltip at the preferred orientation, then auto-positioning takes over and displays the tooltip at the optimum position.
 
 ``` javascript
 let myTooltip = fxToolTip.create('myElement', 'Loreiem Ipsum')
@@ -183,7 +183,7 @@ let myTooltip = fxToolTip.create('myElement', 'Loreiem Ipsum')
 * **autoposition** (boolean) - true | false
 * **default** - true
 * **returns** - if the autoPosition argument is passed, the .autoPosition() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .autoPosition() method is called with no arguments, the .autoPosition() method returns the current autoPosition setting.
-* **description** - If set to true, the .autoPosition() method enables autopositioning of the tooltip.  Autopositioning evaluates the available screen space on all four sides of the target element (or cursor if the [.mousePoint](#.mousePoint) method is called with true as the argument) and the height and width of the tooltip and positions the tooltip at the orientation with the most room.  If the preferred orientation is not set to 'none', and that location has sufficient room to display the tooltip, then the preferred location is used.
+* **description** - If set to true, the .autoPosition() method enables auto-positioning of the tooltip.  Auto-positioning evaluates the available screen space on all four sides of the target element (or cursor if the [.mousePoint](#.mousePoint) method is called with true as the argument) and the height and width of the tooltip and positions the tooltip at the orientation with the most room.  If the preferred orientation is not set to 'none', and that location has sufficient room to display the tooltip, then the preferred location is used.
 
 ``` javascript
 fxToolTip.create('myElement', 'Loreiem Ipsum')
@@ -196,7 +196,7 @@ fxToolTip.create('myElement', 'Loreiem Ipsum')
 * **autoSize** (boolean) - true | false
 * **default** -  true
 * **returns** - if the autoSize argument is passed, the .autoSize() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .autoSize() method is called with no arguments, the .autoSize() method returns the current autoSize setting.
-* **description** - If set to true, the .autoSize() method enables autosizing of the tooltip.  Autosizing evaluates the content of the tooltip and attempts to scale the width and height of the tooltip to conform to the aspect ratio of the document viewport.  Autosizing to the document viewport aspect ratio is intended to present an appealing appearance and maximize the probability that the tooltip will be displayable on the screen.  If the content includes non-text elements like tables or images, it may be necessary to set the minimum width of the tooltip using the [.minWidth](#.minWidth) method.  *Note*: autosizing does not actually set the tooltip height.  It sets the width, so that when the tooltip div element auto-scales the height for overflow, the desired aspect ratio is achieved.
+* **description** - If set to true, the .autoSize() method enables auto-sizing of the tooltip.  Auto-sizing evaluates the content of the tooltip and attempts to scale the width and height of the tooltip to conform to the aspect ratio of the document viewport.  Autosizing to the document viewport aspect ratio is intended to present an appealing appearance and maximize the probability that the tooltip will be displayable on the screen.  If the content includes non-text elements like tables or images, it may be necessary to set the minimum width of the tooltip using the [.minWidth](#.minWidth) method.  *Note*: auto-sizing does not actually set the tooltip height.  It sets the width, so that when the tooltip div element auto-scales the height for overflow, the desired aspect ratio is achieved.
 
 ``` javascript
 fxToolTip.create('myElement', 'Loreiem Ipsum')
@@ -209,7 +209,7 @@ fxToolTip.create('myElement', 'Loreiem Ipsum')
 * **mousePoint** (boolean) - true | false
 * **default** - false
 * **returns** - if the mousePoint argument is passed, the .mousePoint() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .mousePoint() method is called with no arguments, the .mousePoint() method returns the current mousePoint setting.
-* **description** - if set to true, the .mousePoint() method causes the tooltip to be displayed relative to the cursor position instead of the target element.  If set to false the tooltip will be displayed relative to the target element.  In this case, the tooltip will attempt to center relative to one of the four sides of the target element (depending on the autoposition setting).  If, due to document viewport limitations, the tooltip can't center itself, it will adjust the tooltip left, right, up, or down as appropriate, but offset the tooltip pointer to keep it centered on the element.
+* **description** - if set to true, the .mousePoint() method causes the tooltip to be displayed relative to the cursor position instead of the target element.  If set to false the tooltip will be displayed relative to the target element.  In this case, the tooltip will attempt to center relative to one of the four sides of the target element (depending on the auto-position setting).  If, due to document viewport limitations, the tooltip can't center itself, it will adjust the tooltip left, right, up, or down as appropriate, but offset the tooltip pointer to keep it centered on the element.
 
 ``` javascript
 fxToolTip.create('myElement', 'Loreiem Ipsum')
@@ -222,7 +222,7 @@ fxToolTip.create('myElement', 'Loreiem Ipsum')
 * **trackMouse** (boolean) - true | false
 * **default** - false
 * **returns** - if the trackMouse argument is passed, the .trackMouse() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .trackMouse() method is called with no arguments, the .trackMouse() method returns the current trackMouse setting.
-* **description** - if set to true, the .trackMouse() method causes the tooltip to follow the cursor as it moves over the target element. If autopositioning is set to true, the tooltip will continue to adjust it orientation to ensure that it can be displayed within the document viewport.  The tooltip will also continuously offset the tooltip pointer, as required, to keep it centered relative to the cursor. When true is passed to the .trackMouse() method, the mousePoint option to will automatically be set to true as well.
+* **description** - if set to true, the .trackMouse() method causes the tooltip to follow the cursor as it moves over the target element. If auto-positioning is set to true, the tooltip will continue to adjust it orientation to ensure that it can be displayed within the document viewport.  The tooltip will also continuously offset the tooltip pointer, as required, to keep it centered relative to the cursor. When true is passed to the .trackMouse() method, the mousePoint option to will automatically be set to true as well.
 
 ``` javascript
 fxToolTip.create('myElement', 'Loreiem Ipsum')
@@ -235,7 +235,7 @@ fxToolTip.create('myElement', 'Loreiem Ipsum')
 * **cursor** (string) - '' | “alias” | “all-scroll” | “auto” | “cell” | “context-menu” | “col-resize” | “copy” | “crosshair” | “default” | “e-resize” | “ew-resize” | “help” | “move” | “n-resize” | “ne-resize” | “nesw-resize” | “ns-resize” | “nw-resize” | “nwse-resize” | “no-drop” | “none” | “not-allowed” | “pointer” | “progress” | “row-resize” | “s-resize” | “se-resize” | “sw-resize” | “text” | “URL” | “vertical-text” | “w-resize” | “wait” | “zoom-in” | “zoom-out” | “initial” | “inherit”
 * **default** - 'help'
 * **returns** - if the cursor argument is passed, the .cursor() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .cursor() method is called with no arguments, the .cursor() method returns the current cursor setting.
-* **description** - The .cursor() method allows programmtic control of the cursor appearance as the mouse hovers over the target element.  If an empty string ('') is passed to the .cursor() method, the cursor displayed while hovering over the target element defaults to whatever style (inline, css, etc.) was otherwise defined.
+* **description** - The .cursor() method allows programmatic control of the cursor appearance as the mouse hovers over the target element.  If an empty string ('') is passed to the .cursor() method, the cursor displayed while hovering over the target element defaults to whatever style (inline, css, etc.) was otherwise defined.
 
 ``` javascript
 fxToolTip.create('myElement', 'Loreiem Ipsum')
@@ -438,7 +438,7 @@ fxToolTip.create('myElement', 'Loreiem Ipsum')
 * **minWidth** (string | number) - any valid css size (e.g., '1em' | '16px').  If a number is passed, it is assumed to be in pixels.
 * **default** - '80px'
 * **returns** - if the minWidth argument is passed, the .minWidth() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .minWidth() method is called with no arguments, the .minWidth() method returns the current minWidth setting.
-* **description** - Setting the minWidth via the .minWidth() method, sets the minWidth option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. The minWidth option sets the minimum width of the tooltip upon hover over the target element.  The .minWidth() method is useful to ensure that non-text content elements such as tables are correctly displayed in the tooltip when using autosizing.
+* **description** - Setting the minWidth via the .minWidth() method, sets the minWidth option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. The minWidth option sets the minimum width of the tooltip upon hover over the target element.  The .minWidth() method is useful to ensure that non-text content elements such as tables are correctly displayed in the tooltip when using auto-sizing.
 
 ``` javascript
 fxToolTip.create('myElement', 'Loreiem Ipsum')
@@ -451,7 +451,7 @@ fxToolTip.create('myElement', 'Loreiem Ipsum')
 * **arguments** - none
 * **defaults** - none
 * **returns** - null
-* **description** - similar to the [fxToolTip.remove()](#fxToolTip.remove) method, the .remove() method of a [fxToolTip object](#The-fxToolTip-object) removes all of the event listeners and the associated [fxToolTip object](#The-fxToolTip-object) object from the stack.  If this is the only [fxToolTip object](#The-fxToolTip-object) on the stack, the .remove() method will remove all of the [fxToolTip object](#The-fxToolTip-object) css rules from the stylesheet and set the library back to its un-instantiated state.  Generally, this method is not required, since fxToolTip.js automatically detects the removal of target elements, and performs corresponsing tooltip removal automatically.
+* **description** - similar to the [fxToolTip.remove()](#fxToolTip.remove) method, the .remove() method of a [fxToolTip object](#The-fxToolTip-object) removes all of the event listeners and the associated [fxToolTip object](#The-fxToolTip-object) object from the stack.  If this is the only [fxToolTip object](#The-fxToolTip-object) on the stack, the .remove() method will remove all of the [fxToolTip object](#The-fxToolTip-object) css rules from the stylesheet and set the library back to its un-instantiated state.  Generally, this method is not required, since fxToolTip.js automatically detects the removal of target elements, and performs corresponding tooltip removal automatically.
 
 ```javascript
 let myToolTip = fxToolTip.create('myElement', 'Loreiem Ipsum');
@@ -503,7 +503,7 @@ nodeEnter.append('circle')
     };
 ```
 
-You can find a demo of integrating fxToolTip.js with D3.js at my [D3.js demo bl.ock](http://bl.ocks.org/MichaelRfox/59cdc1c3478fb0362448cf87fdab30d0/).
+You can find a demo of integrating fxToolTip.js with D3.js at https://michaelrfox.github.io/fxTooltipDemos/d3/.
 
 [:house: top](#top)
 
@@ -524,7 +524,7 @@ var myToolTip = fxToolTip.create('myElement', content)
 ```
 
 ### Images
-Embedding images is possible by using the image tag.  To support autosizing, you should include the height and width attributes in the image tag, and set the minimum width using the [.minWidth()](#.minWidth) method on the [fxToolTip object](#The-fxToolTip-object).
+Embedding images is possible by using the image tag.  To support auto-sizing, you should include the height and width attributes in the image tag, and set the minimum width using the [.minWidth()](#.minWidth) method on the [fxToolTip object](#The-fxToolTip-object).
 
 ```javascript
 var content = '<p class='centeredHeading'>Company Logo</p><img src=logo.png alt='logo' width='300px' height='300px'></img>';
@@ -536,7 +536,7 @@ fxToolTip.create('myElement', content)
     .padding('5px', '1em', '2em');
 ```
 
-You may also embed inline svg if your browser supports it.  To support autosizing, it may be necessary to set the minimum width using the [.minWidth()](#.minWidth) method on the [fxToolTip object](#The-fxToolTip-object).
+You may also embed inline svg if your browser supports it.  To support auto-sizing, it may be necessary to set the minimum width using the [.minWidth()](#.minWidth) method on the [fxToolTip object](#The-fxToolTip-object).
 
 ```javascript
 var svg = '<svg width='250' height='250'><rect x='50' y='50' rx='20' ry='20' width='150' height='150' style='fill:red;stroke:black;stroke-width:5' /></svg>'
@@ -555,7 +555,7 @@ fxToolTip.create('myElement', svg)
 
 Copyright (c) 2016 Michael R. fx
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sub-license, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 

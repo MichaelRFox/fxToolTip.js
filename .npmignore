@@ -1,2 +1,7 @@
-demos
-src-es6
+.babelrc
+.browserslist
+.gitignore
+.npmignore
+.uglifyjsrc
+*.sublime*
+rollup.config.js

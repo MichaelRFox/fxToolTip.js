@@ -1,12 +1,11 @@
 {
   "name": "fx.tooltip.js",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "A tooltip library for javascript",
   "main": "src/index.js",
   "directories": {
     "test": "test",
     "dist": "dist",
-    "demos": "demos",
     "src": "src",
     "src-es6": "src-es6"
   },

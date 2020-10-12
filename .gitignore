@@ -17,5 +17,4 @@ fxToolTip.sublime-workspace
 fxToolTip.sublime-project
 
 # JSdoc files
-out/
-
+out
