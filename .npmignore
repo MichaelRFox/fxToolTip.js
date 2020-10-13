@@ -1,7 +1,9 @@
 .babelrc
-.browserslist
+.browserslistrc
 .gitignore
 .npmignore
 .uglifyjsrc
 *.sublime*
 rollup.config.js
+out
+test

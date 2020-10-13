@@ -20,7 +20,12 @@ Tooltips can be styled in a wide variety of ways, and can contain any valid html
 
 fxToolTip.js supports method chaining and has special code to detect and integrate with [d3.js](https://d3js.org/).
 
-Demonstrations of fxToolTip.js capabilities can be found at https://michaelrfox.github.io/fxTooltipDemos/features/ and integrations with d3.js can be found at https://michaelrfox.github.io/fxTooltipDemos/d3/.
+## Demonstrations
+
+- [Demonstration of General Capabilities](https://michaelrfox.github.io/demos/fxTooltipDemos/features/)
+- [Demonstration of D3.js Integration](https://michaelrfox.github.io/demos/fxTooltipDemos/d3/)
+
+## General
 
 * [Usage](#usage)
 * [How it Works](#how-it-works)
