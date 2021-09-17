@@ -208,7 +208,7 @@ export let tipOptions = function(global) {
 
     that.width = function (width, autoSize) {
         if (typeof width == 'undefined') { return options.width; };
-        autoSize = (typeof autoSize == 'undefined') ? false : true;
+        autoSize = (typeof autoSize == 'undefined') ? false : autoSize;
         options.width = parseSize(width);
         options.autoSize = autoSize;
         return that;
@@ -222,7 +222,7 @@ export let tipOptions = function(global) {
 
     that.height = function (height, autoSize) {
         if (typeof height == 'undefined') { return options.height; };
-        autoSize = (typeof autoSize == 'undefined') ? false : true;
+        autoSize = (typeof autoSize == 'undefined') ? false : autoSize;
         options.height = parseSize(height);
         options.autoSize = autoSize;
         return that;
@@ -269,7 +269,15 @@ export function applyOptions  (target) {
     beforeRule.maxWidth = target.maxWidth() + 'px';
     beforeRule.maxHeight = target.maxHeight() + 'px';
 
-    beforeRule.width = target.minWidth() + 'px';
+    if (target.width == 'auto') {
+        beforeRule.width = target.minWidth() + 'px';        
+    } else {
+        beforeRule.width = target.width() + 'px';        
+    };
+
+    if (target.height != 'auto') {
+        beforeRule.height = target.height() + 'px';
+    }
 
     ttContainer.innerHTML = target.content();
 	
@@ -277,7 +285,7 @@ export function applyOptions  (target) {
         sizeTip(target);
         beforeRule.width = Math.max(parseInt(beforeRule.width, 10), target.minWidth()) + 'px';
     } else {
-        beforeRule.width = target.width() + (targetWidth() !== 'auto') ? 'px' : '';
-        beforeRule.height = target.height() + (targetHeight() !== 'auto') ? 'px' : '';
+        beforeRule.width = target.width() + (target.width() !== 'auto') ? 'px' : '';
+        beforeRule.height = target.height() + (target.height() !== 'auto') ? 'px' : '';
     };
 }
