@@ -1,44 +1,55 @@
 {
   "name": "fx.tooltip.js",
-  "version": "1.4.6",
+  "version": "2.0.0",
   "description": "A tooltip library for javascript",
-  "main": "src/index.js",
-  "directories": {
-    "test": "test",
-    "dist": "dist",
-    "src": "src",
-    "src-es6": "src-es6"
-  },
-  "scripts": {
-    "buildSrc": "babel src-es6 --out-dir src",
-    "build": "npm run rollupBuild && npm run minifyBuild",
-    "rollupBuild": "rollup -c rollup.config.js",
-    "test": "tape './test/**/*-test.js'",
-    "minifyBuild": "terser ./dist/fxToolTip.js -o ./dist/fxToolTip.min.js --config-file .uglifyjsrc",
-    "docs": "jsdoc"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.15.4",
-    "@babel/core": "^7.15.5",
-    "@babel/preset-env": "^7.15.6",
-    "@rollup/plugin-node-resolve": "^6.1.0",
-    "browserslist": "^4.16.7",
-    "rollup": "^1.32.1",
-    "terser": "^4.8.0"
-  },
-  "dependencies": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MichaelRFox/fxToolTip.js.git"
-  },
   "keywords": [
     "tooltip",
     "d3.js"
   ],
-  "author": "Michael R. Fox",
-  "license": "MIT",
+  "homepage": "https://github.com/MichaelRFox/fxToolTip.js/blob/master/README.md",
   "bugs": {
-    "url": "https://github.com/MichaelRFox/fxToolTip.js/issues"
+    "url": "https://github.com/MichaelRFox/fxToolTip.js/issues",
+    "email": "fox.michael.r@gmail.com"
   },
-  "homepage": "https://github.com/MichaelRFox/fxToolTip.js#readme"
+  "license": "MIT",
+  "author": {
+    "name": "Michael R. Fox, Ph.D.",
+    "email": "fox.michael.r@gmail.com"
+  },
+  "main": "dist/index.js",
+  "module": "src/index.js",
+  "directories": {
+    "test": "test",
+    "dist": "dist",
+    "src": "src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MichaelRFox/fxToolTip.js.git"
+  },
+  "scripts": {
+    "build": "npm run rollupBuild && npm run terser",
+    "rollupBuild": "rollup -c rollup.config.js",
+    "test": "tape './test/**/*-test.js'",
+    "docs": "jsdoc",
+    "terser": "terser ./dist/fxToolTip.js -o ./dist/fxToolTip.min.js --config-file terser.config",
+    "postversion": "git push && git push --tags"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.5",
+    "@babel/preset-env": "^7.15.6",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.5",
+    "browserslist": "^4.17.1",
+    "core-js": "^3.18.0",
+    "rollup": "^2.57.0",
+    "terser": "^5.9.0"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=14 <15",
+    "npm": ">=6"
+  }
 }

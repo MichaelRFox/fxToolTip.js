@@ -1,13 +1,20 @@
 # <a id='top'>fxToolTip.js</a>
 
+[![npm version](https://badge.fury.io/js/fx.tooltip.js.svg)](https://badge.fury.io/js/fx.tooltip.js)
+![npm bundle size](https://img.shields.io/bundlephobia/min/fx.tooltip.js)
+![npm](https://img.shields.io/npm/dw/fx.tooltip.js)
+![GitHub last commit](https://img.shields.io/github/last-commit/MichaelRFox/fxTooltip.js)
+![GitHub top language](https://img.shields.io/github/languages/top/MichaelRFox/fxTooltip.js)
+![NPM](https://img.shields.io/npm/l/fx.tooltip.js)
+
 ---
 ## Installation
-``` html
+```bash
 npm install fx.tooltip.js --save
 
 -or-
 
-npm install -g fx.tooltip.js   //install globally
+npm install -g fx.tooltip.js  //install globally
 ```
 
 ---
@@ -56,7 +63,16 @@ You can include a reference to the built version of the library
 Or you can include it in your javascript build
 ```javascript
 import {default as fxToolTip} from 'fx.tooltip.js';
+````
+
+if you use this option note that the source files are in ES6 (unlike the distribution files which have been transpiled). In this case if you need to support older browsers you may want to edit your .babelrc to specifically transpile fx.tooltip.js:
+
+```json
+{
+    "exclude": "/node_modules\/(?!fx.tooltip.js)/"
+}
 ```
+
 
 fxToolTip.js exposes four methods: create remove, getTipByElementId, and suspend; and one object: globalOptions.
 
@@ -66,7 +82,7 @@ fxToolTip.js exposes four methods: create remove, getTipByElementId, and suspend
 * **returns** - a [fxToolTip object](#The-fxToolTip-object)
 * **description** - The create method is the only method you need to invoke to instantiate a tooltip with all of the predefined defaults.  It returns a [fxToolTip object](#The-fxToolTip-object) which you may save as a variable to dynamically alter its options, or you may use method chaining to set desired options at the time the tooltip is created.  If you attempt to create a tooltip on a target element that already has a tooltip associated with it, the .create() method will delete the old tooltip before returning the new [fxToolTip object](#The-fxToolTip-object).
 
-### <a id ='fxToolTip.remove'>fxToolTip.remove (elementId)</a> 
+### <a id ='fxToolTip.remove'>fxToolTip.remove (elementId)</a>
 * **elementId** (string) - the unique id of the target DOM element whose tooltip you want to remove.
 * **returns** - null
 * **description** - removes all of the event listeners and the associated [fxToolTip object](#The-fxToolTip-object) object from the stack.  If this is the only [fxToolTip object](#The-fxToolTip-object) on the stack, the .remove() method will remove all of the [fxToolTip object](#The-fxToolTip-object) css rules from the stylesheet and set the library back to its un-instantiated state.  Generally, this method is not required, since fxToolTip.js automatically detects the removal of target elements, and performs corresponding tooltip removal automatically.
@@ -138,6 +154,10 @@ Upon creation, the [fxToolTip.create()](#fxToolTip.create) method returns a [fxT
 * [.arrowSize](#.arrowSize)
 * [.width](#.width)
 * [.minWidth](#.minWidth)
+* [.maxWidth](#.maxWidth)
+* [.height](#.height)
+* [.maxHeight](#.maxHeight)
+* [.minHeight](#.minHeight)
 * [.remove](#.remove)
 
 [:house: top](#top)
@@ -201,7 +221,7 @@ fxToolTip.create('myElement', 'Loreiem Ipsum')
 * **autoSize** (boolean) - true | false
 * **default** -  true
 * **returns** - if the autoSize argument is passed, the .autoSize() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .autoSize() method is called with no arguments, the .autoSize() method returns the current autoSize setting.
-* **description** - If set to true, the .autoSize() method enables auto-sizing of the tooltip.  Auto-sizing evaluates the content of the tooltip and attempts to scale the width and height of the tooltip to conform to the aspect ratio of the document viewport.  Autosizing to the document viewport aspect ratio is intended to present an appealing appearance and maximize the probability that the tooltip will be displayable on the screen.  If the content includes non-text elements like tables or images, it may be necessary to set the minimum width of the tooltip using the [.minWidth](#.minWidth) method.  *Note*: auto-sizing does not actually set the tooltip height.  It sets the width, so that when the tooltip div element auto-scales the height for overflow, the desired aspect ratio is achieved.
+* **description** - If set to true, the .autoSize() method enables auto-sizing of the tooltip.  Auto-sizing evaluates the content of the tooltip and attempts to scale the width and height of the tooltip to conform to the aspect ratio of the document viewport.  Autosizing to the document viewport aspect ratio is intended to present an appealing appearance and maximize the probability that the tooltip will be displayable on the screen.  If the content includes non-text elements like tables or images, it may be necessary to set the minimum width of the tooltip using the [.minWidth](#.minWidth) method or the minimum height using the [.minHeight](#.minHeight) method.  *Note*: auto-sizing does not actually set the tooltip height.  It sets the width, so that when the tooltip div element auto-scales the height for overflow, the desired aspect ratio is achieved. If autoSize is set to true, both the [.width](#.width) and [.height](#.height) options are set to 'auto'.
 
 ``` javascript
 fxToolTip.create('myElement', 'Loreiem Ipsum')
@@ -430,7 +450,7 @@ fxToolTip.create('myElement', 'Loreiem Ipsum')
 * **width** (string | number) - any valid css size (e.g., '1em' | '16px').  If a number is passed, it is assumed to be in pixels.
 * **default** - 'auto'
 * **returns** - if the width argument is passed, the .width() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .width() method is called with no arguments, the .width() method returns the current width setting.
-* **description** - Setting the width via the .width() method, sets the width option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. The width option sets the width of the tooltip upon hover over the target element.  However if the [.autoSize()](#.autoSize) method is set to true, the width setting will be ignored.
+* **description** - Setting the width via the .width() method, sets the width option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. When the width option is set to any value other than auto, autosizing is disabled. However, if the [.autoSize()](#.autoSize) method is subsequenlty set to true, the width setting will be ignored.
 
 ``` javascript
 fxToolTip.create('myElement', 'Loreiem Ipsum')
@@ -439,15 +459,68 @@ fxToolTip.create('myElement', 'Loreiem Ipsum')
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)
 
+### <a id='.maxWidth'>.maxWidth (maxWidth)</a>
+* **maxWidth** (string | number) - any valid css size (e.g., '1em' | '16px').  If a number is passed, it is assumed to be in pixels.
+* **default** - 'none'
+* **returns** - if the maxWidth argument is passed, the .maxWidth() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .maxWidth() method is called with no arguments, the .maxWidth() method returns the current maxWidth setting.
+* **description** - Setting the maxWidth via the .maxWidth() method, sets the maxWidth option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. The maxWidth option sets the maximum width of the tooltip upon hover over the target element.  The .maxWidth() method is useful to ensure that tooltips don't grow too large when using auto-sizing.
+
+``` javascript
+fxToolTip.create('myElement', 'Loreiem Ipsum')
+    .maxWidth('100px');
+```
+
+[:arrow_up: The fxToolTip object](#The-fxToolTip-object)
+
 ### <a id='.minWidth'>.minWidth (minWidth)</a>
 * **minWidth** (string | number) - any valid css size (e.g., '1em' | '16px').  If a number is passed, it is assumed to be in pixels.
-* **default** - '80px'
+* **default** - 'none'
 * **returns** - if the minWidth argument is passed, the .minWidth() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .minWidth() method is called with no arguments, the .minWidth() method returns the current minWidth setting.
 * **description** - Setting the minWidth via the .minWidth() method, sets the minWidth option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. The minWidth option sets the minimum width of the tooltip upon hover over the target element.  The .minWidth() method is useful to ensure that non-text content elements such as tables are correctly displayed in the tooltip when using auto-sizing.
 
 ``` javascript
 fxToolTip.create('myElement', 'Loreiem Ipsum')
     .minWidth('100px');
+```
+
+
+[:arrow_up: The fxToolTip object](#The-fxToolTip-object)
+
+### <a id='.height'>.height (height)</a>
+* **height** (string | number) - any valid css size (e.g., '1em' | '16px').  If a number is passed, it is assumed to be in pixels.
+* **default** - 'auto'
+* **returns** - if the height argument is passed, the .height() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .height() method is called with no arguments, the .height() method returns the current height setting.
+* **description** - Setting the height via the .height() method, sets the height option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. When the height option is set to any value other than auto, autosizing is disabled. However, if the [.autoSize()](#.autoSize) method is subsequenlty set to true, the height setting will be ignored.
+
+``` javascript
+fxToolTip.create('myElement', 'Loreiem Ipsum')
+    .height('500px');
+```
+
+[:arrow_up: The fxToolTip object](#The-fxToolTip-object)
+
+### <a id='.maxHeight'>.maxHeight (maxHeight)</a>
+* **maxHeight** (string | number) - any valid css size (e.g., '1em' | '16px').  If a number is passed, it is assumed to be in pixels.
+* **default** - 'none'
+* **returns** - if the maxHeight argument is passed, the .maxHeight() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .maxHeight() method is called with no arguments, the .maxHeight() method returns the current maxHeight setting.
+* **description** - Setting the maxHeight via the .maxHeight() method, sets the maxHeight option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. The .maxHeight() method is useful to ensure that tooltips don't grow too large when using auto-sizing.
+
+``` javascript
+fxToolTip.create('myElement', 'Loreiem Ipsum')
+    .minWidth('100px');
+```
+
+[:arrow_up: The fxToolTip object](#The-fxToolTip-object)
+
+### <a id='.minHeight'>.minHeight (minHeight)</a>
+* **minHeight** (string | number) - any valid css size (e.g., '1em' | '16px').  If a number is passed, it is assumed to be in pixels.
+* **default** - 'none'
+* **returns** - if the minHeight argument is passed, the .minHeight() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .minHeight() method is called with no arguments, the .minHeight() method returns the current minHeight setting.
+* **description** - Setting the minHeight via the .minHeight() method, sets the minHeight option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. The .minHeight() method is useful to ensure that non-text content elements such as tables are correctly displayed in the tooltip when using auto-sizing.
+
+``` javascript
+fxToolTip.create('myElement', 'Loreiem Ipsum')
+    .minHeight('100px');
 ```
 
 [:arrow_up: The fxToolTip object](#The-fxToolTip-object)

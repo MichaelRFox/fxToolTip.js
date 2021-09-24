@@ -2,8 +2,10 @@
 .browserslistrc
 .gitignore
 .npmignore
-.uglifyjsrc
+.terser.config
 *.sublime*
 rollup.config.js
 out
 test
+node_modules
+*OLD

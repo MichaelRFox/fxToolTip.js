@@ -1,33 +1,33 @@
-import { set, setUp } from './startAndFinish.js';
-import { tip, tips, tipsIndex } from './tip.js';
+import {set, setUp} from './startAndFinish.js';
+import {tip, tips, tipsIndex} from './tip.js';
 
-export function create(elementId, content) {
+export function create (elementId, content) {
+	
+    if (document.getElementById(elementId) == null) {
+        return;
+    };
+	
+    if (!set) setUp();
+    let index= tipsIndex.indexOf(elementId);
 
-  if (document.getElementById(elementId) == null) {
-    return;
-  };
+    if (index !== -1) {
+        tips[index].remove();
+    };
 
-  if (!set) setUp();
-  var index = tipsIndex.indexOf(elementId);
-
-  if (index !== -1) {
-    tips[index].remove();
-  };
-
-  var newTip = new tip(elementId, content);
-  tips.push(newTip);
-  tipsIndex.push(elementId);
-  return tips[tips.length - 1];
-
+    let newTip = new tip(elementId, content);
+    tips.push(newTip);
+    tipsIndex.push(elementId);
+    return tips[tips.length - 1];
+ 
 }
 
-export function remove(elementId) {
+export function remove (elementId) {
 
-  if (document.getElementById(elementId) == null) {
-    return;
-  };
+    if (document.getElementById(elementId) == null) {
+        return;
+    };
 
-  var index = tipsIndex.indexOf(elementId);
-  if (index !== -1) tips[index].remove();
+    let index = tipsIndex.indexOf(elementId);
+    if (index !== -1) tips[index].remove();
 
 }
