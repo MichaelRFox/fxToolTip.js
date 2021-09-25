@@ -330,10 +330,10 @@ var fxToolTip = (function () {
       arrowSize: 12,
       width: 'auto',
       maxWidth: 'none',
-      minWidth: 'none',
+      minWidth: 0,
       height: 'auto',
       maxHeight: 'none',
-      minHeight: "none"
+      minHeight: 0
     };
     var tipOptions = function tipOptions(global) {
       global = global == undefined ? false : global;
@@ -387,12 +387,12 @@ var fxToolTip = (function () {
       };
 
       that.autoSize = function (autoSize) {
-        if (typeof autosize == 'undefined') {
+        if (typeof autoSize == 'undefined') {
           return options.autoSize;
         }
         options.autoSize = autoSize;
 
-        if (autoSize == True) {
+        if (autoSize == true) {
           options.width = 'auto';
           options.height = 'auto';
         }
@@ -568,14 +568,12 @@ var fxToolTip = (function () {
         return that;
       };
 
-      that.width = function (width, autoSize) {
+      that.width = function (width) {
         if (typeof width == 'undefined') {
           return options.width;
         }
-
         options.width = width == 'auto' ? 'auto' : parseSize(width);
-        options.autoSize = false; //autoSize;
-
+        options.autoSize = width == 'auto' ? options.autoSize : false;
         return that;
       };
 
@@ -595,14 +593,12 @@ var fxToolTip = (function () {
         return that;
       };
 
-      that.height = function (height, autoSize) {
+      that.height = function (height) {
         if (typeof height == 'undefined') {
           return options.height;
         }
-
         options.height = height == 'auto' ? 'auto' : parseSize(height, 'height');
-        options.autoSize = false; //autoSize;
-
+        options.autoSize = height == 'auto' ? options.autoSize : false;
         return that;
       };
 
@@ -640,6 +636,10 @@ var fxToolTip = (function () {
       beforeRule['-moz-transition'] = transitionString;
       beforeRule['-webkit-transiton'] = transitionString;
       beforeRule['-o-transition'] = transitionString;
+      beforeRule.maxWidth = target.maxWidth() == 'none' ? 'none' : target.maxWidth() + 'px';
+      beforeRule.minWidth = target.minWidth() == 0 ? 0 : target.minWidth() + 'px';
+      beforeRule.maxHeight = target.maxHeight() == 'none' ? 'none' : target.maxHeight() + 'px';
+      beforeRule.minHeight = target.minHeight() == 0 ? 0 : target.minHeight() + 'px';
       ttContainer.innerHTML = target.content();
 
       if (target.autoSize()) {
@@ -648,26 +648,6 @@ var fxToolTip = (function () {
         beforeRule.width = target.width() == 'auto' ? 'auto' : target.width() + 'px';
         beforeRule.height = target.height() == 'auto' ? 'auto' : target.height() + 'px';
       }
-      beforeRule.maxWidth = target.maxWidth() == 'none' ? 'none' : target.maxWidth() + 'px';
-      beforeRule.minWidth = target.minWidth() == 'none' ? 'none' : target.minWidth() + 'px';
-      beforeRule.maxHeight = target.maxHeight() == 'none' ? 'none' : target.maxHeight() + 'px';
-      beforeRule.minHeight = target.minHeight() == 'none' ? 'none' : target.minHeight() + 'px'; // beforeRule.maxWidth = target.maxWidth() + 'px';
-      // beforeRule.maxHeight = target.maxHeight() + 'px';
-      // if (target.width == 'auto') {
-      //     beforeRule.width = target.minWidth() + 'px';        
-      // } else {
-      //     beforeRule.width = target.width() + 'px';        
-      // };
-      // if (target.height != 'auto') {
-      //     beforeRule.height = target.height() + 'px';
-      // }
-      // if (target.autoSize()) {
-      //     sizeTip(target);
-      //     beforeRule.width = Math.max(parseInt(beforeRule.width, 10), target.minWidth()) + 'px';
-      // } else {
-      //     beforeRule.width = target.width() + (target.width() !== 'auto') ? 'px' : '';
-      //     beforeRule.height = target.height() + (target.height() !== 'auto') ? 'px' : '';
-      // };
     }
 
     var mouseX;
@@ -843,10 +823,7 @@ var fxToolTip = (function () {
         targetElement.onmouseout = mouseOut;
         targetElement.onmousemove = mouseMove;
       }
-      thisToolTip.maxWidth('75%');
-      thisToolTip.maxHeight('75%', 'height');
-      thisToolTip.content(content); //options.content = content;
-
+      thisToolTip.content(content);
       return thisToolTip;
     }
 
@@ -859,13 +836,6 @@ var fxToolTip = (function () {
           tips[i].remove();
         }
       });
-      /*    
-          tipsIndex.forEach(function (thisTip, i) {
-              if (document.getElementById(thisTip) == null) {
-                  tips[i].remove();
-              };
-          });
-      */
     }
     function windowResized() {
       windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;

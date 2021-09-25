@@ -46,6 +46,7 @@ export function sizeTip (target) {
             itterations++;
         };
     };
+     
 }
 
 export function tip (elementId, content) {
@@ -101,10 +102,7 @@ export function tip (elementId, content) {
             targetElement.onmousemove = mouseMove;
         };
         
-        thisToolTip.maxWidth('75%');
-        thisToolTip.maxHeight('75%', 'height');
         thisToolTip.content(content);
-        //options.content = content;
 
     return (thisToolTip);
 }

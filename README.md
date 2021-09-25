@@ -62,7 +62,7 @@ You can include a reference to the built version of the library
 
 Or you can include it in your javascript build
 ```javascript
-import {default as fxToolTip} from 'fx.tooltip.js';
+import {default as fxToolTip} from './node_modules/fx.tooltip.js';
 ````
 
 if you use this option note that the source files are in ES6 (unlike the distribution files which have been transpiled). In this case if you need to support older browsers you may want to edit your .babelrc to specifically transpile fx.tooltip.js:
@@ -474,7 +474,7 @@ fxToolTip.create('myElement', 'Loreiem Ipsum')
 
 ### <a id='.minWidth'>.minWidth (minWidth)</a>
 * **minWidth** (string | number) - any valid css size (e.g., '1em' | '16px').  If a number is passed, it is assumed to be in pixels.
-* **default** - 'none'
+* **default** - 0
 * **returns** - if the minWidth argument is passed, the .minWidth() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .minWidth() method is called with no arguments, the .minWidth() method returns the current minWidth setting.
 * **description** - Setting the minWidth via the .minWidth() method, sets the minWidth option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. The minWidth option sets the minimum width of the tooltip upon hover over the target element.  The .minWidth() method is useful to ensure that non-text content elements such as tables are correctly displayed in the tooltip when using auto-sizing.
 
@@ -514,7 +514,7 @@ fxToolTip.create('myElement', 'Loreiem Ipsum')
 
 ### <a id='.minHeight'>.minHeight (minHeight)</a>
 * **minHeight** (string | number) - any valid css size (e.g., '1em' | '16px').  If a number is passed, it is assumed to be in pixels.
-* **default** - 'none'
+* **default** - 0
 * **returns** - if the minHeight argument is passed, the .minHeight() method returns the [fxToolTip object](#The-fxToolTip-object).  If the .minHeight() method is called with no arguments, the .minHeight() method returns the current minHeight setting.
 * **description** - Setting the minHeight via the .minHeight() method, sets the minHeight option contained within the [fxToolTip object](#The-fxToolTip-object) which is injected into the .fxToolTip style's ruleset upon hover over the target element. The .minHeight() method is useful to ensure that non-text content elements such as tables are correctly displayed in the tooltip when using auto-sizing.
 

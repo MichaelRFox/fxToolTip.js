@@ -12,13 +12,6 @@ export function detectTargetRemoval() {
             tips[i].remove();
         };
     });
-/*    
-    tipsIndex.forEach(function (thisTip, i) {
-        if (document.getElementById(thisTip) == null) {
-            tips[i].remove();
-        };
-    });
-*/
 }
 
 export function windowResized() {

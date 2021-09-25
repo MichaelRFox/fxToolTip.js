@@ -1,6 +1,6 @@
 import {beforeRule, afterRule, targetRule, ttDiv, ttContainer} from './startAndFinish.js';
 import {sizeTip} from './tip.js';
-import {aspectRatio, parseSize, parseColor} from './utils.js';
+import {aspectRatio, parseSize, parseColor, windowWidth, windowHeight} from './utils.js';
 import {getRule} from './style.js';
 
 let globalOptions = {
@@ -25,10 +25,10 @@ let globalOptions = {
     arrowSize: 12,
     width: 'auto',
     maxWidth: 'none',
-    minWidth: 'none',
+    minWidth: 0,
     height: 'auto',
     maxHeight: 'none',
-    minHeight: "none", 
+    minHeight: 0, 
 };
 
 export let tipOptions = function(global) {
@@ -74,9 +74,9 @@ export let tipOptions = function(global) {
     }
 	
     that.autoSize = function (autoSize) {
-        if (typeof autosize == 'undefined') { return options.autoSize; };
+        if (typeof autoSize == 'undefined') { return options.autoSize; };
         options.autoSize = autoSize;
-        if (autoSize == True) {
+        if (autoSize == true) {
             options.width = 'auto';
             options.height = 'auto';
         }
@@ -211,11 +211,10 @@ export let tipOptions = function(global) {
         return that;
     }
 
-    that.width = function (width, autoSize) {
+    that.width = function (width) {
         if (typeof width == 'undefined') { return options.width; };
-        //autoSize = (typeof autoSize == 'undefined') ? false : autoSize;
         options.width = width == 'auto' ? 'auto' : parseSize(width);
-        options.autoSize = false //autoSize;
+        options.autoSize = width == 'auto' ? options.autoSize : false;
         return that;
     }
 	
@@ -231,11 +230,10 @@ export let tipOptions = function(global) {
         return that;
     }
 
-    that.height = function (height, autoSize) {
+    that.height = function (height) {
         if (typeof height == 'undefined') { return options.height; };
-        //autoSize = (typeof autoSize == 'undefined') ? false : autoSize;
         options.height = height == 'auto' ? 'auto': parseSize(height, 'height');
-        options.autoSize = false //autoSize;
+        options.autoSize = height == 'auto' ? options.autoSize : false;
         return that;
     }
 	
@@ -276,7 +274,12 @@ export function applyOptions  (target) {
     beforeRule['-moz-transition'] = transitionString;
     beforeRule['-webkit-transiton'] = transitionString;
     beforeRule['-o-transition'] = transitionString;
-	
+
+    beforeRule.maxWidth = (target.maxWidth() == 'none') ? 'none' : target.maxWidth() + 'px'; 
+    beforeRule.minWidth = (target.minWidth() == 0) ? 0 : target.minWidth() + 'px'; 
+    beforeRule.maxHeight = (target.maxHeight() == 'none') ? 'none' : target.maxHeight() + 'px'; 
+    beforeRule.minHeight = (target.minHeight() == 0) ? 0 : target.minHeight() + 'px'; 	
+    
     ttContainer.innerHTML = target.content();
 
     if (target.autoSize()) {
@@ -286,31 +289,4 @@ export function applyOptions  (target) {
         beforeRule.height = target.height() == 'auto' ? 'auto' : target.height() + 'px';
     };
 
-    beforeRule.maxWidth = target.maxWidth() == 'none' ? 'none' : target.maxWidth() + 'px'; 
-    beforeRule.minWidth = target.minWidth() == 'none' ? 'none' : target.minWidth() + 'px'; 
-    beforeRule.maxHeight = target.maxHeight() == 'none' ? 'none' : target.maxHeight() + 'px'; 
-    beforeRule.minHeight = target.minHeight() == 'none' ? 'none' : target.minHeight() + 'px'; 
-
-    // beforeRule.maxWidth = target.maxWidth() + 'px';
-    // beforeRule.maxHeight = target.maxHeight() + 'px';
-
-    // if (target.width == 'auto') {
-    //     beforeRule.width = target.minWidth() + 'px';        
-    // } else {
-    //     beforeRule.width = target.width() + 'px';        
-    // };
-
-    // if (target.height != 'auto') {
-    //     beforeRule.height = target.height() + 'px';
-    // }
-
-
-	
-    // if (target.autoSize()) {
-    //     sizeTip(target);
-    //     beforeRule.width = Math.max(parseInt(beforeRule.width, 10), target.minWidth()) + 'px';
-    // } else {
-    //     beforeRule.width = target.width() + (target.width() !== 'auto') ? 'px' : '';
-    //     beforeRule.height = target.height() + (target.height() !== 'auto') ? 'px' : '';
-    // };
 }

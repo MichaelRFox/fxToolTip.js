@@ -1,6 +1,6 @@
 {
   "name": "fx.tooltip.js",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A tooltip library for javascript",
   "keywords": [
     "tooltip",
@@ -16,7 +16,7 @@
     "name": "Michael R. Fox, Ph.D.",
     "email": "fox.michael.r@gmail.com"
   },
-  "main": "dist/index.js",
+  "main": "dist/fxToolTip.js",
   "module": "src/index.js",
   "directories": {
     "test": "test",
@@ -30,7 +30,7 @@
   "scripts": {
     "build": "npm run rollupBuild && npm run terser",
     "rollupBuild": "rollup -c rollup.config.js",
-    "test": "tape './test/**/*-test.js'",
+    "test": "cp src/*.js test/",
     "docs": "jsdoc",
     "terser": "terser ./dist/fxToolTip.js -o ./dist/fxToolTip.min.js --config-file terser.config",
     "postversion": "git push && git push --tags"

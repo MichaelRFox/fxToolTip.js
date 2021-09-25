@@ -10,6 +10,11 @@
 
 :warning: - Breaking Change
 
+#  v2.0.1
+##  Sept 25, 2021
+- :bug: fixed typo in autoPosition option code
+- :bug: fixed typo in autoSize option
+
 # v2.0.0
 ## Sept 24, 2021
 - :warning: Set default max/min height/width to *none*
