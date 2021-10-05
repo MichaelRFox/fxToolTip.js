@@ -1,6 +1,14 @@
-import {ttDiv, beforeRule, afterRule} from './startAndFinish.js';
+/** @module orient */
+
+import {ttDiv, beforeRule, afterRule} from './init.js';
 import {windowHeight, windowWidth, getElementCoordinates} from './utils.js';
 
+/**
+ * @function orient
+ * @desc Sets the orientation [left | right | top | bottom] of the tooltip relative to the HTML element with which it is associated.
+ * @param {string} targetElement The unique id of the HTML element that owns the tooltip.
+ * @param {Tip} target The object containing all of the current tooltip's options and content.
+ */
 export function orient (targetElement, target) {
     
     let targetCoordinates = getElementCoordinates(targetElement);
@@ -124,6 +132,14 @@ export function orient (targetElement, target) {
     };
 }
 
+/**
+ * @function optimumOrientation
+ * @desc  If autoPosition is set to true, the preferredOrientation setting will be honored unless there is insufficient viewport space.
+ * in this case, the position with the most available space will be used.
+ * @param {string} targetElement The unique id of the HTML element that owns the tooltip.
+ * @param {Tip} target The object containing all of the current tooltip's options and content.
+ * @returns {string} One of ['left' | 'right' | 'top' | 'bottom']
+ */
 export function optimumOrientation  (targetElement, target) {
 
     let elementCoordinates = getElementCoordinates(targetElement);

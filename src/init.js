@@ -1,17 +1,99 @@
-import {windowResized, detectTargetRemoval} from './utils.js';
+/** 
+ * @module init
+ * @desc The init module provides functions to initialize the fxToolTip environment
+ * upon startup, and to remove it upon shutdown.
+ */
+
+import {windowResized/*, detectTargetRemoval*/} from './utils.js';
 import {getRule, getRuleIndex} from './style.js';
+import {targetTimer} from './fxTip.js';
 
+/**
+ * The CSS stylesheet used to store and alter the fxToolTip div elements' styles.
+ * @type CSSStyleSheet
+ * @global
+ */
 export let sheet;
-export let rules;
-export let ttDiv;
-export let ttContainer;
-export let beforeRule;
-export let afterRule;
-export let targetRule;
-export let set = false;
-export let pseudoDiv;
-export const targetTimerInterval = 500;
 
+/**
+ * A collection of all of the CSS rules in the document's stylesheet.
+ * @type Array
+ * @global
+ */
+export let rules;
+
+/**
+ * The HTML div element inserted into the DOM which is used to display
+ * all tooltips. This element is assigned the *fxToolTip* class.
+ * @type DOM.element
+ * @global
+ */
+export let ttDiv;
+
+/**
+ * The HTML div element inserted into the DOM which is used to display
+ * all tooltip content. Child element of *ttDiv*.
+ * @type DOM.Element
+ * @global
+ */
+export let ttContainer;
+
+/**
+ * CSS rule associated with the *fxToolTip* class.
+ * @type CSSRule
+ * @global
+ */
+export let beforeRule;
+
+/**
+ * CSS rule associated with the *fxToolTip::after* pseudo class.
+ * Used to style the tooltip arrow.
+ * @type CSSRule
+ * @global
+ */
+export let afterRule;
+
+/**
+ * CSS rule associated with the *.fxToolTipTarget* class. This class
+ * is appended to all DOM elements associated with a tooltip.
+ * @type CSSRule
+ * @global
+ */
+export let targetRule;
+
+/**
+ * Represents the state of the fxToolTip environment.
+ * @type boolean
+ * @global
+ */
+export let set = false;
+
+/**
+ * An invisible HTML div element inserted into the DOM to facilitate
+ * error checking and parsing of colors and sizes. See the [utils module]{@link module:utils}.
+ * @type DOM.Element
+ * @global
+ */
+export let pseudoDiv;
+
+/**
+ * @function setup
+ * @desc The setup function is called upon initialization of the fxToolTip environment.
+ * First, it sets a listener for the window *resize* event which invokes the
+ * [windowResized]{@link module:utils~windowResized} function. Second, it determines if there
+ * is a current stylesheet associated with the document, and if not inserts one. Next, it
+ * inserts four class styles (*.fxToolTip*, *.fxContainer*, *fxToolTip::after*, and *.fxTooltipTarget*).
+ * *.fxToolTip* contains all of the rules that style the tooltip. *.fxToolTip::after* contains all of
+ * the rules that style the tooltip arrow. *.fxContainer* contains the tooltip content.
+ * *.fxToolTipTarget* contains one rule that styles the cursor of the target element.
+ * The setup function also appends two div elements to the document body element:
+ * The first div element is created with the class name 'fxToolTip' and is the container for
+ * all tooltips in the document. The second div element is permanently hidden and is used internally
+ * to size objects (see the [parseSize]{@link module:utils~parseSize},
+ * [parseColor]{@link module:utils~parseColor}, and [checkCSS]{@link module:utils~checkCSS} functions.
+ *
+ * *note*:  The classes and div elements are created only once and shared by all of the tooltips.
+ */
 export function setUp() {
 
     if (set) { return; };
@@ -73,6 +155,11 @@ export function setUp() {
     set = true;
 }
 
+/**
+ * @function closeDown
+ * @desc The closeDown function is called after the last tooltip is removed from the stack.
+ * It removes all event listeners, div elements, and CSS styles and rules.
+ */
 export function closeDown() {
     
     if (window.removeEventListener) {
@@ -84,15 +171,15 @@ export function closeDown() {
     };
 
     if (sheet.deleteRule) {
-        if (userRules == false) {
+        //if (userRules == false) {
             sheet.deleteRule(getRuleIndex('.fxToolTip'));   
-        }
+        //}
         sheet.deleteRule(getRuleIndex('.fxToolTip::after'));
         sheet.deleteRule(getRuleIndex('.fxToolTipTarget'))
     } else {
-        if (userRules == false) {
+        //if (userRules == false) {
             sheet.removeRule(getRuleIndex('.fxToolTip'));
-        }
+        //}
         sheet.removeRule(getRuleIndex('.fxToolTip::after'));
         sheet.removeRule(getRuleIndex('.fxToolTipTarget'))
     };
@@ -103,6 +190,9 @@ export function closeDown() {
     sheet = undefined;
     rules = undefined;
     
+    window.clearInterval(targetTimer);
+    //targetTimer = 0;
+
     set = false;
 }
 

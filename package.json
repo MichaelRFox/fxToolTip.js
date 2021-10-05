@@ -1,6 +1,6 @@
 {
   "name": "fx.tooltip.js",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "A tooltip library for javascript",
   "keywords": [
     "tooltip",
@@ -28,12 +28,13 @@
     "url": "git+https://github.com/MichaelRFox/fxToolTip.js.git"
   },
   "scripts": {
-    "build": "npm run rollupBuild && npm run terser",
+    "build": "npm run rollupBuild && npm run terserLite && npm run terser",
     "rollupBuild": "rollup -c rollup.config.js",
     "test": "cp src/*.js test/",
-    "docs": "jsdoc",
+    "docs": "find ../github.io/docs/ -type f -name '*.html' -delete && jsdoc src -r --package package.json -c jsDocConfig.json",
+    "terserLite": "terser ./dist/fxToolTip.js -o ./dist/fxToolTip.js --config-file terserLite.json",
     "terser": "terser ./dist/fxToolTip.js -o ./dist/fxToolTip.min.js --config-file terser.config",
-    "postversion": "git push && git push --tags"
+    "postversion": "npm run docs && git push && git push --tags"
   },
   "devDependencies": {
     "@babel/cli": "^7.15.7",
@@ -44,6 +45,8 @@
     "@rollup/plugin-node-resolve": "^13.0.5",
     "browserslist": "^4.17.1",
     "core-js": "^3.18.0",
+    "docdash": "^1.2.0",
+    "jsdoc": "^3.6.7",
     "rollup": "^2.57.0",
     "terser": "^5.9.0"
   },

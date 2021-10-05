@@ -2,7 +2,7 @@
 .browserslistrc
 .gitignore
 .npmignore
-terser.config
+terser*
 *.sublime*
 rollup.config.js
 out

@@ -1,11 +1,50 @@
-import {beforeRule, afterRule, targetRule, ttDiv, ttContainer} from './startAndFinish.js';
-import {sizeTip} from './tip.js';
-import {aspectRatio, parseSize, parseColor, windowWidth, windowHeight} from './utils.js';
-import {getRule} from './style.js';
+/** 
+ * @module options
+ * @desc The options module provides the [globalOptions]{@link module:options~globalOptions} object which serves as the template
+ * for all [Tip]{@link Tip} object options. The [globalOptions]{@link module:options~globalOptions} object may be
+ * directly changed so as to become the new defaults for all subsequently created tooltips through the globalOptions object which
+ * is exposed by the [default]{@link module:index~default} object, which is exported in [index.js]{@link module:index}.
+ * It also provided the [applyOptions]{@link module:options~applyOptions} function which sets the fxTooltip div's styles.
+*/
 
-let globalOptions = {
+import {beforeRule, afterRule, targetRule, /*ttDiv,*/ ttContainer} from './init.js';
+import {sizeTip} from './tips.js';
+// import {aspectRatio, parseSize, parseColor, windowWidth, windowHeight, checkBoolean, checkCSS, checkFontFamily} from './utils.js';
+// import {getRule} from './style.js';
+
+/**
+ * @typedef {Object} globalOptions
+ * @desc The globalOptions object contains all of the option settings for each tooltip. A globalOptions object is stored within each
+ * [Tip]{@link Tip} object and its members may be modified by methods exposed by the [Tip]{@link Tip} object.
+ * @property {string} content Contains the HTML text to be displayed when the tooltip is shown. **Default** - ''.
+ * @property {string} orientation The side of the target HTML element where the tooltip is positioned. **Default**: 'right'.
+ * @property {string} preferredOrientation The preferred side of the target HTML element where the tooltip is positioned. **Default**: 'right'.
+ * @property {boolean} autoPosition Whether or not the tooltip should be optimally positioned relative to its owning HTML element. **Default**: true.
+ * @property {boolean} autoSize Whether or not the tooltip should be optimally sized relative to its content. **Default**: true.
+ * @property {boolean} mousePoint Whether the tooltip arrow should track relative to the mouse cursor. **Default**: false.
+ * @property {boolean} trackMouse Whether the tooltip should track relative to the muse cursor. **Default**: false.
+ * @property {string} cursor Which css cursor should be displayed when the mouse is over a tooltip's owing HTML element. **Default**: help'.
+ * @property {string} fontFamily The font family for text inside the tooltip. **Default**: 'verdana, sans-serif'.
+ * @property {int} fontSize The font size for text inside the tooltip. **Default**: '16'.
+ * @property {string} foregroundColor The color for foreground elements (e.g., text) inside the tooltip. **Default**: 'white'.
+ * @property {string} backgroundColor The background color of the tooltip. **Default**: '#333333'.
+ * @property {int} backgroundOpacity The opacity of the tooltip. **Default**: 1.
+ * @property {string} padding The tooltip padding around its content. **Default**: '5px 10px'.
+ * @property {int} borderRadius The rounding of the tooltip's corners. **Default**: 12.
+ * @property {string} boxShadow The box shadow to the lower left of the tooltip. **Default**: '8px 8px 8px 0 rgba(0,0,0, 0.5)'.
+ * @property {string} transitionVisible The delay and duration of the tooltip becoming visible when the mouse hovers over its owing HTML element. **Default**: 'opacity 0.4s ease-in 0s'.
+ * @property {string} transitionHidden The delay and duration of the tooltip becoming invisible when the mouse hovers over its owing HTML element. **Default**: 'opacity 0.4s ease-out 0s'.
+ * @property {int} arrowSize The size of the tooltip's arrow. **Default**: 12.
+ * @property {string} width The width of the tooltip. **Default**: 'auto'.
+ * @property {string} maxWidth The maximum width of the tooltip. **Default**: 'none'.
+ * @property {int} minWidth The minimum width of the tooltip. **Default**: 0.
+ * @property {string} height The height of the tooltip. **Default**: 'auto'.
+ * @property {string} maxHeight The maximum height of the tooltip. **Default**: 'none'.
+ * @property {int} minHeight The minimum height of the tooltip. **Default**: 0.
+ */
+export let globalOptions = {
     content: '',
-    orientation: '',
+    orientation: 'right',
     preferredOrientation: 'right',
     autoPosition: true,
     autoSize: true,
@@ -20,237 +59,24 @@ let globalOptions = {
     padding: '5px 10px',
     borderRadius: 12,
     boxShadow: '8px 8px 8px 0 rgba(0,0,0, 0.5)',
-    transitionVisible: 'opacity 0.4s 0s',
-    transitionHidden: 'opacity 0.4s 0s',
+    transitionVisible: 'opacity 0.4s ease-in 0s',
+    transitionHidden: 'opacity 0.4s ease-out 0s',
     arrowSize: 12,
     width: 'auto',
     maxWidth: 'none',
     minWidth: 0,
     height: 'auto',
     maxHeight: 'none',
-    minHeight: 0, 
+    minHeight: 0
 };
 
-export let tipOptions = function(global) {
-
-    global = global == undefined ? false : global;
-    let that = this;
-    let options;
-
-    if (global) {
-        options = globalOptions;
-    } else {
-        options = Object.assign({}, globalOptions);
-    };
-
-    that.content = function (content) {
-        if (typeof content == 'undefined') { return options.content; };
-        options.content = content;
-        if (beforeRule.opacity == that.backgroundOpacity()) {
-        	applyOptions(that);
-        }
-        return that;
-    }
-
-    that.orientation = function (orientation, autoPosition) {
-        if (typeof orientation == 'undefined') { return options.orientation; };
-        autoPosition = (typeof autoPosition == 'undefined') ? false: autoPosition;
-        options.orientation = orientation;
-        options.autoPosition = autoPosition;
-        return that;
-    }
-
-    that.preferredOrientation = function (preferredOrientation) {
-        if (typeof preferredOrientation == 'undefined') { return options.preferredOrientation; };
-        options.preferredOrientation = preferredOrientation;
-        return that;
-    }
-
-    that.autoPosition = function (autoPosition) {
-        if (typeof autoPosition == 'undefined') { return options.autoPosition; };
-        options.autoPosition = autoPosition;
-        if (autoPosition && options.position == '') options.position = 'right';
-        return that;
-    }
-	
-    that.autoSize = function (autoSize) {
-        if (typeof autoSize == 'undefined') { return options.autoSize; };
-        options.autoSize = autoSize;
-        if (autoSize == true) {
-            options.width = 'auto';
-            options.height = 'auto';
-        }
-        return that;
-    }
-	
-    that.mousePoint = function (mousePoint) {
-        if (typeof mousePoint == 'undefined') { return options.mousePoint;	};
-        options.mousePoint = mousePoint;
-        return that;
-	}
-
-    that.trackMouse = function (trackMouse) {
-        if (typeof trackMouse == 'undefined') { return options.trackMouse; };
-        options.trackMouse = trackMouse;
-        options.mousePoint = trackMouse;
-        return that;
-    }
-
-    that.cursor = function (cursor) {
-        if (typeof cursor == 'undefined') { return options.cursor; };
-        options.cursor = cursor;
-        return that;
-    }
-
-    that.font = function (family, size) {
-        if (arguments.length == 0) { return {family: options.fontFamily, size: options.fontSize}; };
-        if (arguments.length == 1) { size = '1em'; };
-        options.fontFamily = family;
-        options.fontSize = parseSize(size);
-        return that;
-    }
-
-    that.foregroundColor = function (foregroundColor) {
-        if (typeof foregroundColor == 'undefined') { return options.foregroundColor; };
-        options.foregroundColor = foregroundColor;
-        return that;
-    }
-
-    that.backgroundColor = function (backgroundColor) {
-        if (typeof backgroundColor == 'undefined') { return options.backgroundColor; };
-        options.backgroundColor = backgroundColor;
-        return that;
-    }
-
-    that.backgroundOpacity = function (backgroundOpacity) {
-        if (typeof backgroundOpacity == 'undefined') { return options.backgroundOpacity; };
-        options.backgroundOpacity = backgroundOpacity;
-        return that;
-    }
-
-    that.padding = function (padding) {
-        if(typeof padding == 'undefined') { return options.padding; };
-		
-        let size0;
-        let size1;
-        padding = padding.split(' ', 4);
-        switch (padding.length) {
-            case 0: {
-                return options.padding;
-            };
-            case 1: {
-                size0 = parseSize(padding[0]);
-                options.padding = size0 + 'px ' + size0 + 'px ' + size0 + 'px ' + size0 + 'px';
-                break;
-            };
-            case 2: {
-                size0 = parseSize(padding[0]);
-                size1 = parseSize(padding[1]);
-                options.padding = size0 + 'px ' + size1 + 'px ' + size0 + 'px ' + size1 + 'px';
-                break;
-            };
-            case 3: {
-                size0 = parseSize(padding[1]);
-                options.padding = parseSize(padding[0]) + 'px ' + size0 + 'px ' + parseSize(padding[2]) + 'px ' + size0 + 'px';
-                break;
-            };
-            case 4: {
-                options.padding = parseSize(padding[0]) + 'px ' + parseSize(padding[1]) + 'px ' + parseSize(padding[2]) + 'px ' + parseSize(padding[3]) + 'px';
-                break;
-            };
-        };
-        return that;
-    }
-
-    that.borderRadius = function (borderRadius) {
-        if (typeof borderRadius == 'undefined') { return options.borderRadius; };
-        options.borderRadius = parseSize(borderRadius);
-        return that;
-    }
-
-    that.boxShadow = function (size, color, opacity) {
-        if (arguments.length == 0) { return options.boxShadow };
-
-        let parsedColor;
-        let parsedSize;
-        let boxShadowString;
-        let rgbCore;
-
-        if (arguments[0] == 'none') {
-            options.boxShadow = '';
-        } else {
-            parsedSize = parseSize(size);
-            parsedColor = parseColor(color);
-
-            if (opacity !== 0) { 
-                rgbCore = parsedColor.match(/\d+/g);
-                boxShadowString = 'rgba(' + parseInt(rgbCore[0]) + ',' + parseInt(rgbCore[1]) + ',' + parseInt(rgbCore[2]) + ',' + opacity + ')';
-            } else {
-                boxShadowString = parsedColor;
-            };
-            options.boxShadow = parsedSize + 'px ' + parsedSize + 'px ' + parsedSize + 'px 0 ' + boxShadowString;
-        };
-        return that;
-    }
-
-    that.transitionVisible = function (delay, duration) {
-        if (arguments.length == 0) { return options.transitionVisible; };
-        options.transitionVisible = 'opacity ' + duration + 's ease-in ' + delay + 's';
-        return that;
-    }
-	
-    that.transitionHidden = function (delay, duration) {
-        if (arguments.length == 0) { return options.transitionHidden; };
-        options.transitionHidden = 'opacity ' + duration + 's ease-out ' + delay + 's';
-        return that;
-    }
-	
-    that.arrowSize = function (arrowSize) {
-        if (typeof arrowSize == 'undefined') { return options.arrowSize; };
-        options.arrowSize = parseSize(arrowSize);
-        return that;
-    }
-
-    that.width = function (width) {
-        if (typeof width == 'undefined') { return options.width; };
-        options.width = width == 'auto' ? 'auto' : parseSize(width);
-        options.autoSize = width == 'auto' ? options.autoSize : false;
-        return that;
-    }
-	
-    that.maxWidth = function (maxWidth) {
-        if (typeof maxWidth == 'undefined') { return options.maxWidth; };
-        options.maxWidth = maxWidth == 'none' ? 'none' : parseSize(maxWidth);
-        return that;
-    }
-
-    that.minWidth = function (minWidth) {
-        if (typeof minWidth == 'undefined') { return options.minWidth; };
-        options.minWidth = minWidth == 'none' ? 'none' : parseSize(minWidth);
-        return that;
-    }
-
-    that.height = function (height) {
-        if (typeof height == 'undefined') { return options.height; };
-        options.height = height == 'auto' ? 'auto': parseSize(height, 'height');
-        options.autoSize = height == 'auto' ? options.autoSize : false;
-        return that;
-    }
-	
-    that.maxHeight = function (maxHeight) {
-        if (typeof maxHeight == 'undefined') { return options.maxHeight; };
-        options.maxHeight = maxHeight == 'none' ? 'none' : parseSize(maxHeight, 'height');
-        return that;
-    }
-
-    that.minHeight = function (minHeight) {
-        if (typeof minHeight == 'undefined') { return options.minHeight; };
-        options.minHeight = minHeight == 'none' ? 'none' : parseSize(minHeight, 'height');
-        return that;
-    }
-
-}
-
+/**
+ * @function applyOptions
+ * @desc This function is called when an HTML element is hovered over, but before the tooltip becomes visible.
+ * It sets the CSS styles of the fxTooltip div element in accordance with the options setting stored in its
+ * [Tip]{@link Tip} class object.
+ * @param {Tip} target The [Tip]{@link Tip} class object being visualized.
+ */
 export function applyOptions  (target) {
 	
     let transitionString;
