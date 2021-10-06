@@ -27,7 +27,7 @@
  * It has no dependencies and should work on any modern browser (i.e., not Internet Explorer 8.0 and earlier).
  * fxToolTip will automatically size and position tooltips (default behavior) to ensure they are displayed
  * in the viewport. Tooltips can be positioned relative to their target DOM element (default behavior) or track the cursor.
- * fxToolTip.js supports method chaining and integrate nicely with [d3.js]{@link https://d3js.org/}. Tooltips can be styled
+ * fxToolTip supports method chaining and integrate nicely with [d3.js]{@link https://d3js.org/}. Tooltips can be styled
  * in a wide variety of ways, and can contain any valid HTML (text, tables, images, svg, etc.).
  * 
  * # Installation
@@ -68,7 +68,7 @@
  * ```
  * 
  * if you use this option note that the source files are in ES6 (unlike the distribution files which have been transpiled).
- * In this case, if you need to support older browsers you may want to edit your *.babelrc* file to specifically transpile fxToolTip.js:
+ * In this case, if you need to support older browsers you may want to edit your *.babelrc* file to specifically transpile fxToolTip:
  * ```json
  * {
  *      "exclude": "/node_modules\/(?!fx.tooltip.js)/"
@@ -168,9 +168,9 @@
 
 /** 
  * @module index 
- * @desc The entry point for fxTooltip 
+ * @desc The entry point for fxToolTip.  
  */
-import {create, remove} from './fxTip.js';
+import {create, remove, checkDOM} from './fxTip.js';
 import {getTipByElementId} from './tips.js';
 import {Tip} from './Tip.js';
 import {suspend} from './mouse.js';
@@ -180,8 +180,8 @@ setUp();
 
 let globalOptions = new Tip('', '', true);
 /**
- * @typedef {Object} default - The default object exported by fxToolTip.js which exposes
- * four methods and one object.
+ * @typedef {Object} default - The default object exported by fxToolTip which exposes
+ * five methods and one object.
  * @property {function} create - Method to instantiate a new [Tip]{@link Tip} class object.
  * See the [create]{@link module:fxTip~create} method.
  * @property {function} remove - Method to remove a [Tip]{@link Tip} class object.
@@ -193,5 +193,7 @@ let globalOptions = new Tip('', '', true);
  * globally. See the [Tip]{@link Tip} class object.
  * @property {function} suspend - A method to suspend or resume showing tooltips globally.
  * See the [suspend]{@link module:mouse~suspend} method.
+ * @property {function} checkDOM - Method to toggle polling for deleted DOM elements.
+ * See [checkDOM]{@link module:fxTip~checkDOM}.
  */
-export default {create, remove, getTipByElementId, globalOptions, suspend};
+export default {create, remove, getTipByElementId, globalOptions, suspend, checkDOM};

@@ -28,7 +28,7 @@ export let mouseY;
 /**
  * Countdown timer that executes a on [mouseout]{@link module:mouse~mouseOut} event
  * to ensure that the .fxToolTip visibility CSS rule
- * is not set to hidden until the current tooltip's transitionHidden is executed.
+ * is not set to hidden until the current tooltip's transition to hidden is completed.
  * @type number
  * @inner
  */ 
@@ -45,7 +45,7 @@ let suspended = false;
  * @function getMouseCoordinates
  * @desc Internal helper function which retrieves the current X and Y coordinates in the client window
  * and stores them in the global variables mouseX and mouseY.
- * @param {Window.event} event - The firing window event
+ * @param {Event} event - The firing window event
  */ 
 function getMouseCoordinates (event) {
 
@@ -58,8 +58,8 @@ function getMouseCoordinates (event) {
 
 /**
  * @function mouseOver
- * @desc Fires when the cursor hovers over an HTML element that has a tooltip attached to it.
- * @param {Window.event} event - The firing window event.
+ * @desc Fires when the cursor hovers over a DOM element that has a tooltip aassociated with it.
+ * @param {Event} event - The firing event.
  * @event mouseover
  */
 export function mouseOver (event) {
@@ -71,7 +71,7 @@ export function mouseOver (event) {
     let targetElement = this;
     let target;
 
-    if (beforeRule.visibility !== 'hidden') { 
+    if (beforeRule.visibility !== 'hidden') { //executed if another tooltip is transitioning to hidden
         beforeRule.transition = ''; 
         clearTimeout(timer);
     };
@@ -93,8 +93,8 @@ export function mouseOver (event) {
 
 /**
  * @function mouseMove
- * @desc Fires when the cursor moves over an HTML element that has a tooltip attached to it.
- * @param {Window.event} event - The firing window event.
+ * @desc Fires when the cursor moves over a DOM element that has a tooltip associated with it.
+ * @param {event} event - The firing window event.
  * @event mousemove
  */
 export function mouseMove (event) {
@@ -120,8 +120,8 @@ export function mouseMove (event) {
 
 /**
  * @function mouseOut
- * @desc Fires when the cursor leaves an HTML element that has a tooltip attached to it.
- * @param {Window.event} event - The firing window event.
+ * @desc Fires when the cursor leaves a DOM element that has a tooltip associated with it.
+ * @param {event} event - The firing window event.
  * @event mouseout
  */
 export function mouseOut (event) {
@@ -144,7 +144,7 @@ export function mouseOut (event) {
     beforeRule['-webkit-transiton'] = transitionString;
     beforeRule['-o-transition'] = transitionString;
 
-    timer = window.setTimeout(function() {
+    timer = window.setTimeout(function() { // ensures the visibility isn't set to hidden until the transition completes
         beforeRule.visibility = 'hidden';
         },
         (transitionDuration + transitionDelay) * 1000);
@@ -162,7 +162,7 @@ export function mouseOut (event) {
  * Otherwise, nothing is returned.
  */ 
 export function suspend (suspendTips) {
-    if (typeof(suspendTips) == 'undefined') {return suspended};
+    if (suspendTips == undefined) {return suspended};
     if (checkBoolean(suspendTips, 'suspend')) {
         suspended = suspendTips;
     };

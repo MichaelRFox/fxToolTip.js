@@ -4,7 +4,7 @@
  * upon startup, and to remove it upon shutdown.
  */
 
-import {windowResized/*, detectTargetRemoval*/} from './utils.js';
+import {windowResized} from './utils.js';
 import {getRule, getRuleIndex} from './style.js';
 import {targetTimer} from './fxTip.js';
 
@@ -55,7 +55,8 @@ export let afterRule;
 
 /**
  * CSS rule associated with the *.fxToolTipTarget* class. This class
- * is appended to all DOM elements associated with a tooltip.
+ * is appended to all DOM elements associated with a tooltip. Used to
+ * style the target element's cursor on hover.
  * @type CSSRule
  * @global
  */
@@ -84,8 +85,8 @@ export let pseudoDiv;
  * is a current stylesheet associated with the document, and if not inserts one. Next, it
  * inserts four class styles (*.fxToolTip*, *.fxContainer*, *fxToolTip::after*, and *.fxTooltipTarget*).
  * *.fxToolTip* contains all of the rules that style the tooltip. *.fxToolTip::after* contains all of
- * the rules that style the tooltip arrow. *.fxContainer* contains the tooltip content.
- * *.fxToolTipTarget* contains one rule that styles the cursor of the target element.
+ * the rules that style the tooltip arrow. *.fxContainer* contains rules that style the tooltip content.
+ * *.fxToolTipTarget* contains one rule that styles the cursor of the target element on hover.
  * The setup function also appends two div elements to the document body element:
  * The first div element is created with the class name 'fxToolTip' and is the container for
  * all tooltips in the document. The second div element is permanently hidden and is used internally
@@ -150,8 +151,6 @@ export function setUp() {
     pseudoDiv.style.display = 'inline-block';
     document.body.insertBefore(pseudoDiv, document.body.firstChild);
     
-    //targetTimer = window.setInterval(detectTargetRemoval, targetTimerInterval);
-    
     set = true;
 }
 
@@ -171,15 +170,11 @@ export function closeDown() {
     };
 
     if (sheet.deleteRule) {
-        //if (userRules == false) {
-            sheet.deleteRule(getRuleIndex('.fxToolTip'));   
-        //}
+        sheet.deleteRule(getRuleIndex('.fxToolTip'));   
         sheet.deleteRule(getRuleIndex('.fxToolTip::after'));
         sheet.deleteRule(getRuleIndex('.fxToolTipTarget'))
     } else {
-        //if (userRules == false) {
-            sheet.removeRule(getRuleIndex('.fxToolTip'));
-        //}
+        sheet.removeRule(getRuleIndex('.fxToolTip'));
         sheet.removeRule(getRuleIndex('.fxToolTip::after'));
         sheet.removeRule(getRuleIndex('.fxToolTipTarget'))
     };
@@ -191,7 +186,6 @@ export function closeDown() {
     rules = undefined;
     
     window.clearInterval(targetTimer);
-    //targetTimer = 0;
 
     set = false;
 }

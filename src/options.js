@@ -7,10 +7,8 @@
  * It also provided the [applyOptions]{@link module:options~applyOptions} function which sets the fxTooltip div's styles.
 */
 
-import {beforeRule, afterRule, targetRule, /*ttDiv,*/ ttContainer} from './init.js';
+import {beforeRule, afterRule, targetRule, ttContainer} from './init.js';
 import {sizeTip} from './tips.js';
-// import {aspectRatio, parseSize, parseColor, windowWidth, windowHeight, checkBoolean, checkCSS, checkFontFamily} from './utils.js';
-// import {getRule} from './style.js';
 
 /**
  * @typedef {Object} globalOptions
@@ -23,7 +21,7 @@ import {sizeTip} from './tips.js';
  * @property {boolean} autoSize Whether or not the tooltip should be optimally sized relative to its content. **Default**: true.
  * @property {boolean} mousePoint Whether the tooltip arrow should track relative to the mouse cursor. **Default**: false.
  * @property {boolean} trackMouse Whether the tooltip should track relative to the muse cursor. **Default**: false.
- * @property {string} cursor Which css cursor should be displayed when the mouse is over a tooltip's owing HTML element. **Default**: help'.
+ * @property {string} cursor Which CSS cursor should be displayed when the mouse is over a tooltip's owing HTML element. **Default**: help'.
  * @property {string} fontFamily The font family for text inside the tooltip. **Default**: 'verdana, sans-serif'.
  * @property {int} fontSize The font size for text inside the tooltip. **Default**: '16'.
  * @property {string} foregroundColor The color for foreground elements (e.g., text) inside the tooltip. **Default**: 'white'.
@@ -72,7 +70,7 @@ export let globalOptions = {
 
 /**
  * @function applyOptions
- * @desc This function is called when an HTML element is hovered over, but before the tooltip becomes visible.
+ * @desc This function is called when a DOM HTML element is hovered over, but before the tooltip becomes visible.
  * It sets the CSS styles of the fxTooltip div element in accordance with the options setting stored in its
  * [Tip]{@link Tip} class object.
  * @param {Tip} target The [Tip]{@link Tip} class object being visualized.

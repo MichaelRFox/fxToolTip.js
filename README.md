@@ -25,11 +25,9 @@ fxToolTip will automatically size and position tootips (default behavior) to ens
 
 Tooltips can be styled in a wide variety of ways, and can contain any valid HTML (text, tables, images, svg, etc.).
 
-fxToolTip.js supports method chaining and integrates seamlessly with [d3.js](https://d3js.org/).
+fxToolTip supports method chaining and integrates seamlessly with [d3.js](https://d3js.org/).
 
 ## API Documentation
 See the API documentation at:
 
-https://michaelrfox.github.io/docs/fx.tooltip.js/2.10
-
-
+https://michaelrfox.github.io/docs/fx.tooltip.js/2.1.1/

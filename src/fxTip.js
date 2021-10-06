@@ -6,8 +6,16 @@
  * associated with them.
  */
 
+/**
+ * The state of whether DOM polling is enabled
+ * @type boolean
+ * @since v2.1.1
+ */
+let DOMchecking = true;
+
 import {tips, tipsIndex} from './tips.js';
 import {Tip} from './Tip.js';
+import {checkBoolean} from './utils.js'
 
 /**
  * The timing metric used to determine how frequently the DOM should be queried for
@@ -27,7 +35,9 @@ export let targetTimer;
 
 /** 
  * @function create
- * @desc Creates a new [Tip]{@link Tip} class object with all of the default parameters.
+ * @desc Creates a new [Tip]{@link Tip} class object with all of the default parameters. If a tooltip
+ * is already associated with DOM element represented by the *elementId* parameter, that tolltip is
+ * deleted and replaced by a new one.
  * @param {string} elementId The unique id of the DOM element that be associated with the tooltip.
  * @param {string} content Any valid HTML content that will be displayed in the tooltip when shown.
  * @returns {(Tip | undefined)} A newly instantiated [Tip]{@link Tip} class object. If the element
@@ -38,6 +48,8 @@ export function create (elementId, content) {
         return;
     };
     
+    content = content == undefined ? '' : content;
+
     let index = tipsIndex.indexOf(elementId);
 
     if (index !== -1) {
@@ -48,7 +60,7 @@ export function create (elementId, content) {
     tips.push(newTip);
     tipsIndex.push(elementId);
 
-    if (targetTimer == undefined) {
+    if (targetTimer == undefined && DOMchecking) {
         targetTimer = window.setInterval(detectTargetRemoval, targetTimerInterval);
     };
 
@@ -60,8 +72,8 @@ export function create (elementId, content) {
  * @function remove
  * @desc Removes a specific tooltip from the stack (both the [tips]{@link module:tips~tips}
  * and [tipsIndex]{@link module:tips~tipsIndex} arrays) by calling the [Tip]{@link Tip} class
- * object's *remove* method. If the element represented by
- * the elementId parameter is not in the DOM, no action is taken.
+ * object's *remove* method. If the DOM element represented by
+ * the *elementId* parameter is not in the DOM, no action is taken.
  * @param {string} elementId The unique id of the DOM element associated with the tooltip
  * to be removed.
  */
@@ -74,6 +86,28 @@ export function remove (elementId) {
     let index = tipsIndex.indexOf(elementId);
     if (index !== -1) tips[index].remove();
 
+}
+
+/**
+ * @function checkDOM
+ * @desc Controls whether the DOM will be periodically polled to see if DOM elements
+ * that are associated with a tooltip have been remove from the document, and
+ * automatically removes the [Tip]{@link Tip} class object. This may be useful if
+ * your document has a large number of tooltips and you don't desire the additional
+ * overhead of polling the DOM.
+ * @param {boolean} checkDOM Whether to poll the DOM or not.
+ * @since v2.1.1
+ */
+export function checkDOM (checkDOM) {
+    if (checkDOM == undefined) return DOMchecking;
+    if (checkBoolean(checkDOM)) {
+        DOMchecking = checkDOM;
+        if (DOMchecking) {
+            targetTimer = window.setInterval(detectTargetRemoval, targetTimerInterval);            
+        } else {
+            window.clearInterval(targetTimer);
+        };
+    };
 }
 
 /**

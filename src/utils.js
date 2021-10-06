@@ -90,7 +90,7 @@ function hexToRgb(hex) {
 /**
  * @function parseColor
  * @desc Parses any valid CSS color
- * @param {string} input Any valid css color.
+ * @param {string} input Any valid CSS color.
  * @returns {string} The CSS color formatted as an rgb string
  */
 export function parseColor(input) {
@@ -153,8 +153,9 @@ export function checkBoolean (argument, argumentName) {
 export function checkFontFamily (fontFamily) {
     if (document.fonts == undefined) return true;  //interface undefined - probably IE
     if (document.fonts.check(`16px ${fontFamily}`)) return true;
-    console.log(`Option setting error. ${fontFamily} is not a valid font family for this browser`);
+    console.log (`Option setting error. ${fontFamily} is not a valid font family for this browser`);
     return false;
+
 }
 
 /**

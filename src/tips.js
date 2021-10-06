@@ -6,10 +6,6 @@
 
 import {ttDiv, beforeRule} from './init.js';
 import {aspectRatio} from './utils.js';
-// import {mouseOver, mouseOut, mouseMove} from './mouse.js';
-// import {detectTargetRemoval} from './utils.js';
-// import {tipOptions} from './options.js';
-// import {fxTooltip} from './fxTooltip.js';
 
 /**
  * An array of [Tip]{@link Tip} class objects representing all of the tooltips that have been instantiated.

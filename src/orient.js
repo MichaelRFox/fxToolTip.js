@@ -1,4 +1,8 @@
-/** @module orient */
+/** 
+ * @module orient
+ * @desc The orient module provides functions to determine the optimum orientation of a tooltip
+ * if auto-sizing is set to true, and to set the proper CSS values for the tooltip's div elements. 
+ */
 
 import {ttDiv, beforeRule, afterRule} from './init.js';
 import {windowHeight, windowWidth, getElementCoordinates} from './utils.js';
@@ -134,11 +138,13 @@ export function orient (targetElement, target) {
 
 /**
  * @function optimumOrientation
- * @desc  If autoPosition is set to true, the preferredOrientation setting will be honored unless there is insufficient viewport space.
+ * @desc  If [auto-positioning]{@link Tip#autoPosition} is on, the
+ * [preferred-orientation]{@link Tip#prefferedOrientation}
+ * setting will be honored unless there is insufficient viewport space.
  * in this case, the position with the most available space will be used.
- * @param {string} targetElement The unique id of the HTML element that owns the tooltip.
- * @param {Tip} target The object containing all of the current tooltip's options and content.
- * @returns {string} One of ['left' | 'right' | 'top' | 'bottom']
+ * @param {string} targetElement The unique id of the DOM element that is associated with the tooltip.
+ * @param {Tip} target The [Tip]{@link Tip} class object containing all of the current tooltip's options and content.
+ * @returns {string} One of ['left' | 'right' | 'top' | 'bottom'].
  */
 export function optimumOrientation  (targetElement, target) {
 

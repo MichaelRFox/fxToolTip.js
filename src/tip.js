@@ -1,7 +1,7 @@
 
 import {globalOptions, applyOptions} from './options.js';
-import {beforeRule, /*targetTimerInterval, */closeDown} from './init.js';
-import {checkBoolean, checkCSS, checkFontFamily, parseSize, parseColor/*, detectTargetRemoval*/} from './utils.js';
+import {beforeRule, closeDown} from './init.js';
+import {checkBoolean, checkCSS, checkFontFamily, parseSize, parseColor} from './utils.js';
 import {mouseOver, mouseOut, mouseMove} from './mouse.js';
 import {tips, tipsIndex} from './tips.js';
 
@@ -12,22 +12,26 @@ export class Tip {
 
     /**
      * Instantiates a new tooltip with all of the default options, and provides methods to customize each option.
-     * @param {string} elementId The unique id of the HTML element that will own the tooltip.
+     * @param {string} elementId The unique id of the DOM element that will be associated with the tooltip.
      * @param {string} content Any valid HTML which will be displayed in the tooltip.
      * @param {boolean} global If this is set to true, the changes to the returned tooltip will affect all subsequently
      * instantiated tooltips. This parameter is only used when the globalOptions object is created.
-     * @returns {Tip} A [Tip]{@link Tip} object which contains a [globalOptions object]{@link module:options~globalOptions}
-     * and exposes several methods used to customize those options.
+     * @returns {Tip} A [Tip]{@link Tip} class object which contains a private [globalOptions]{@link module:options~globalOptions}
+     * object and exposes several methods to customize those options.
      */
     constructor (elementId, content, global) {
         global = global == undefined ? false : global;
-        if (global) { // create global Tip object without mouse listeners
+        if (global) { // create global Tip class object without mouse listeners
             this.#options = globalOptions;
         } else {
+            content = content == undefined ? '' : content;
+            let targetElement = document.getElementById(elementId);
+            if (targetElement == undefined) {
+                throw new Error (`There is no element in the DOM with an id of: ${elementId}`);
+            };
             this.#options = Object.assign({}, globalOptions);
             this.#elementId = elementId;
-            let targetElement = document.getElementById(elementId);
-            let className = (targetElement.getAttribute('class') === null) ? '' : targetElement.getAttribute('class');
+            let className = (targetElement.getAttribute('class') == null) ? '' : targetElement.getAttribute('class');
             targetElement.setAttribute('class', className + ' fxToolTipTarget')
 
             if(targetElement.addEventListener) {
@@ -83,7 +87,7 @@ export class Tip {
         } else {
             this.#options.orientation = orientation;
             this.#options.autoPosition = false; //autoPosition;            
-        }
+        };
         return this;
     }
 
@@ -243,7 +247,7 @@ export class Tip {
      * target element. These options set defaults for text within the tooltip, but can be customized through inline or css selector styles,
      * contained in the content that is passed to the [create]{@link Tip#create} method.
      * @param {string} family Any valid CSS font-family (e.g., 'tahoma, sans-serif'). **Default**: 'verdana, sans-serif'.
-     * @param {(number | string)} size Any valid css font-size (e.g., '1em' | '16px').  If a number is passed, it is assumed to be in pixels. Default: 16.
+     * @param {(number | string)} size Any valid CSS font-size (e.g., '1em' | '16px').  If a number is passed, it is assumed to be in pixels. Default: 16.
      * @returns {(Tip | Object)} If the family and size arguments are passed, the *font* method returns the [Tip]{@link Tip} object}.
      * If the *font* method is called with no arguments, the *font* method returns the current
      * font setting as an object (e.g., {family:'tahoma, sans-serf', size:16}).

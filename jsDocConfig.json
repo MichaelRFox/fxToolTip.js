@@ -24,6 +24,14 @@
     "docdash": {
         "sort": false,
         "search": true,
-        "collapse": true
+        "collapse": true,
+        "menu": {
+            "Source Code": {
+                "href":"https://github.com/MichaelRFox/fxToolTip.js",
+                "target":"_blank",
+                "class":"menu-item",
+                "id":"source_link"                
+            }
+        }
     }
 }

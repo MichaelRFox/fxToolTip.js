@@ -10,15 +10,21 @@
 
 :warning: - Breaking Change
 
-# v2.0.2
-### DATE
+# v2.1.1
+### Oct 6, 2021
+- :bug: Fixed broken docs link
+- :pencil: Docs updates
+- :hammer_and_wrench: Added new method to the fxToolTip object to suspend or enable checking the DOM for deleted DOM elements.
+
+# v2.1.0
+### Oct 5, 2021
 - :pencil: Updated Readme.md - clarified cursor usage
 - :bug: change default orientation to 'right' to provide a default if autoPosition is false
 - :hammer_and_wrench: Added error checking code to several options
 - :hammer_and_wrench: Converted the fxTooltip code to and ES6 class and incorporated tip.js
 - :bug: Improved mouseout delay
-- :bug" Corrected bug in code that automatically shuts dowm the fxToolTip environment
-- :pencil: Added jsDoc annotations throughout - created new documentatioon github.io
+- :bug: Corrected bug in code that automatically shuts dowm the fxToolTip environment
+- :pencil: Added jsDoc annotations throughout - created new documentation github.io
 
 #  v2.0.1
 ###  Sept 25, 2021

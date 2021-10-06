@@ -304,7 +304,7 @@ var fxToolTip = function() {
         beforeRule.opacity = 0;
     }
     function suspend(suspendTips) {
-        if (typeof suspendTips == "undefined") {
+        if (suspendTips == undefined) {
             return suspended;
         }
         if (checkBoolean(suspendTips, "suspend")) {
@@ -314,13 +314,6 @@ var fxToolTip = function() {
     var windowWidth;
     var windowHeight;
     var aspectRatio;
-    function detectTargetRemoval() {
-        tipsIndex.forEach((function(thisTip, i) {
-            if (document.getElementById(thisTip) == null) {
-                tips[i].remove();
-            }
-        }));
-    }
     function windowResized() {
         windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
         windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -555,7 +548,6 @@ var fxToolTip = function() {
     var targetRule;
     var set = false;
     var pseudoDiv;
-    var targetTimerInterval = 500;
     function setUp() {
         if (set) {
             return;
@@ -615,15 +607,11 @@ var fxToolTip = function() {
             window.onresize = "";
         }
         if (sheet.deleteRule) {
-            if (userRules == false) {
-                sheet.deleteRule(getRuleIndex(".fxToolTip"));
-            }
+            sheet.deleteRule(getRuleIndex(".fxToolTip"));
             sheet.deleteRule(getRuleIndex(".fxToolTip::after"));
             sheet.deleteRule(getRuleIndex(".fxToolTipTarget"));
         } else {
-            if (userRules == false) {
-                sheet.removeRule(getRuleIndex(".fxToolTip"));
-            }
+            sheet.removeRule(getRuleIndex(".fxToolTip"));
             sheet.removeRule(getRuleIndex(".fxToolTip::after"));
             sheet.removeRule(getRuleIndex(".fxToolTipTarget"));
         }
@@ -631,6 +619,7 @@ var fxToolTip = function() {
         pseudoDiv.parentNode.removeChild(pseudoDiv);
         sheet = undefined;
         rules = undefined;
+        window.clearInterval(targetTimer);
         set = false;
     }
     var tips = [];
@@ -690,10 +679,14 @@ var fxToolTip = function() {
             if (global) {
                 _classPrivateFieldSet(this, _options, globalOptions$1);
             } else {
+                content = content == undefined ? "" : content;
+                var targetElement = document.getElementById(elementId);
+                if (targetElement == undefined) {
+                    throw new Error("There is no element in the DOM with an id of: ".concat(elementId));
+                }
                 _classPrivateFieldSet(this, _options, Object.assign({}, globalOptions$1));
                 _classPrivateFieldSet(this, _elementId, elementId);
-                var targetElement = document.getElementById(elementId);
-                var className = targetElement.getAttribute("class") === null ? "" : targetElement.getAttribute("class");
+                var className = targetElement.getAttribute("class") == null ? "" : targetElement.getAttribute("class");
                 targetElement.setAttribute("class", className + " fxToolTipTarget");
                 if (targetElement.addEventListener) {
                     targetElement.addEventListener("mouseover", mouseOver, false);
@@ -1028,37 +1021,41 @@ var fxToolTip = function() {
         }, {
             key: "remove",
             value: function remove() {
-                var targetTimer;
-                window.clearInterval(targetTimer);
                 var targetElement = document.getElementById(_classPrivateFieldGet(this, _elementId));
-                var className = targetElement.getAttribute("class") == null ? "" : targetElement.getAttribute("class");
-                className = className.replace(" fxToolTipTarget", "");
-                targetElement.setAttribute("class", className);
-                if (targetElement.removeEventListener) {
-                    targetElement.removeEventListener("mouseover", mouseOver);
-                    targetElement.removeEventListener("mouseout", mouseOut);
-                    targetElement.removeEventListener("mousemove", mouseMove);
-                } else {
-                    targetElement.onmousemove = null;
-                    targetElement.onmouseover = null;
-                    targetElement.onmouseout = null;
+                if (targetElement != undefined) {
+                    var className = targetElement.getAttribute("class") == null ? "" : targetElement.getAttribute("class");
+                    className = className.replace(" fxToolTipTarget", "");
+                    targetElement.setAttribute("class", className);
+                    if (targetElement.removeEventListener) {
+                        targetElement.removeEventListener("mouseover", mouseOver);
+                        targetElement.removeEventListener("mouseout", mouseOut);
+                        targetElement.removeEventListener("mousemove", mouseMove);
+                    } else {
+                        targetElement.onmousemove = null;
+                        targetElement.onmouseover = null;
+                        targetElement.onmouseout = null;
+                    }
                 }
                 var tipIndex = tipsIndex.indexOf(_classPrivateFieldGet(this, _elementId));
-                tips.splice(tipIndex, 1);
-                tipsIndex.splice(tipIndex, 1);
-                if (tips.length == 0) {
-                    closeDown();
-                } else {
-                    targetTimer = window.setInterval(detectTargetRemoval, targetTimerInterval);
+                if (tipIndex != -1) {
+                    tips.splice(tipIndex, 1);
+                    tipsIndex.splice(tipIndex, 1);
+                    if (tips.length == 0) {
+                        closeDown();
+                    }
                 }
             }
         } ]);
         return Tip;
     }();
+    var DOMchecking = true;
+    var targetTimerInterval = 500;
+    var targetTimer;
     function create(elementId, content) {
         if (document.getElementById(elementId) == null) {
             return;
         }
+        content = content == undefined ? "" : content;
         var index = tipsIndex.indexOf(elementId);
         if (index !== -1) {
             tips[index].remove();
@@ -1066,6 +1063,9 @@ var fxToolTip = function() {
         var newTip = new Tip(elementId, content);
         tips.push(newTip);
         tipsIndex.push(elementId);
+        if (targetTimer == undefined && DOMchecking) {
+            targetTimer = window.setInterval(detectTargetRemoval, targetTimerInterval);
+        }
         return tips[tips.length - 1];
     }
     function remove(elementId) {
@@ -1075,6 +1075,24 @@ var fxToolTip = function() {
         var index = tipsIndex.indexOf(elementId);
         if (index !== -1) tips[index].remove();
     }
+    function checkDOM(checkDOM) {
+        if (checkDOM == undefined) return DOMchecking;
+        if (checkBoolean(checkDOM)) {
+            DOMchecking = checkDOM;
+            if (DOMchecking) {
+                targetTimer = window.setInterval(detectTargetRemoval, targetTimerInterval);
+            } else {
+                window.clearInterval(targetTimer);
+            }
+        }
+    }
+    function detectTargetRemoval() {
+        tipsIndex.forEach((function(thisTip, i) {
+            if (document.getElementById(thisTip) == null) {
+                tips[i].remove();
+            }
+        }));
+    }
     setUp();
     var globalOptions = new Tip("", "", true);
     var index = {
@@ -1082,7 +1100,8 @@ var fxToolTip = function() {
         remove: remove,
         getTipByElementId: getTipByElementId,
         globalOptions: globalOptions,
-        suspend: suspend
+        suspend: suspend,
+        checkDOM: checkDOM
     };
     return index;
 }();
