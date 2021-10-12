@@ -5,17 +5,26 @@
  */
 
 import {ttDiv, beforeRule, afterRule} from './init.js';
-import {windowHeight, windowWidth, getElementCoordinates} from './utils.js';
+import {windowHeight, windowWidth, getElementCoordinates, overlap, parseSize} from './utils.js';
 
 /**
- * @function orient
- * @desc Sets the orientation [left | right | top | bottom] of the tooltip relative to the HTML element with which it is associated.
+ * @function position
+ * @desc Sets the position of the tooltip relative to the HTML element with which it is associated.
  * @param {string} targetElement The unique id of the HTML element that owns the tooltip.
  * @param {Tip} target The object containing all of the current tooltip's options and content.
  */
-export function orient (targetElement, target) {
+export function position (targetElement, target, orientation) {
     
-    let targetCoordinates = getElementCoordinates(targetElement);
+    const targetCoordinates = getElementCoordinates(targetElement);
+    const divWidth = ttDiv.getBoundingClientRect()['width'];
+    const divHeight = ttDiv.getBoundingClientRect()['height'];
+    const halfDivHeight = divHeight / 2;
+    const halfDivWidth = divWidth / 2;
+    const borderRadius = parseSize(target.borderRadius(), 'width', ttDiv);
+    const arrowSize = parseSize(target.arrowSize(), 'width', ttDiv);
+
+    afterRule.borderWidth = arrowSize + 'px';
+
     let top;
     let left;
     let verticalAdjust;
@@ -24,14 +33,14 @@ export function orient (targetElement, target) {
 
     let adjustVertical = function (top) {
         let topAdjust = top;
-        let arrowAdjust = ttDiv.offsetHeight / 2;
+        let arrowAdjust = halfDivHeight;
 
         if (top < 0) { 
             topAdjust = 0;
-            arrowAdjust = Math.max((target.arrowSize()) + target.borderRadius(), top + (ttDiv.offsetHeight / 2));
-        } else if (top + ttDiv.offsetHeight > windowHeight) {
-            topAdjust = windowHeight - ttDiv.offsetHeight;
-            arrowAdjust = Math.min(ttDiv.offsetHeight - target.borderRadius() - target.arrowSize(), (ttDiv.offsetHeight / 2) +  top - topAdjust);
+            arrowAdjust = Math.max(arrowSize + borderRadius, top + halfDivHeight);
+        } else if (top + divHeight > windowHeight) {
+            topAdjust = windowHeight - divHeight;
+            arrowAdjust = Math.min(divHeight - borderRadius - arrowSize, halfDivHeight +  top - topAdjust);
         };
 
         return {topAdjust: Math.round(topAdjust), arrowAdjust: Math.round(arrowAdjust)};
@@ -39,27 +48,27 @@ export function orient (targetElement, target) {
 
     let adjustHorizontal = function (left) {
         let leftAdjust = left;
-        let arrowAdjust = ttDiv.offsetWidth / 2;
+        let arrowAdjust = halfDivWidth;
 
         if (left < 0) { 
             leftAdjust = 0;
-            arrowAdjust = Math.max((target.arrowSize()) + target.borderRadius(), left + (ttDiv.offsetWidth / 2));
-        } else if (left + ttDiv.offsetWidth > windowWidth) {
-            leftAdjust = windowWidth - ttDiv.offsetWidth;
-            arrowAdjust = Math.min(ttDiv.offsetWidth - target.borderRadius() - target.arrowSize(), (ttDiv.offsetWidth / 2) +  left - leftAdjust);
+            arrowAdjust = Math.max(arrowSize + borderRadius, left + halfDivWidth);
+        } else if (left + divWidth > windowWidth) {
+            leftAdjust = windowWidth - divWidth;
+            arrowAdjust = Math.min(divWidth - borderRadius - arrowSize, halfDivWidth + left - leftAdjust);
         };
 
         return {leftAdjust: Math.round(leftAdjust), arrowAdjust: Math.round(arrowAdjust)};
     }
 
-    switch (target.orientation()) {
+    switch (orientation) {
         case 'top': {
-            top = targetCoordinates.top  - target.arrowSize() - ttDiv.offsetHeight;
+            top = targetCoordinates.top - arrowSize - divHeight;
             if (top < 0) {
-                beforeRule.height = Math.round((ttDiv.offsetHeight + top - target.arrowSize())) + 'px';
+                beforeRule.height = Math.round(divHeight + top) + 'px';
                 top = 0;
             };
-            left = (targetCoordinates.width / 2) + targetCoordinates.left - (ttDiv.offsetWidth / 2);
+            left = (targetCoordinates.width / 2) + targetCoordinates.left - halfDivWidth;
             horizontalAdjust = adjustHorizontal(left);
 
             beforeRule.top = Math.round(top) + 'px';
@@ -69,16 +78,16 @@ export function orient (targetElement, target) {
             afterRule.left = horizontalAdjust.arrowAdjust + 'px';
             afterRule.bottom = '';
             afterRule.right = '';   
-            afterRule.marginLeft = -target.arrowSize() + 'px';
+            afterRule.marginLeft = -arrowSize + 'px';
             afterRule.marginTop = '';
             afterRule.borderColor = target.backgroundColor() + ' transparent transparent transparent';
             break;
         };
         case 'bottom': {
-            top = targetCoordinates.top + targetCoordinates.height + target.arrowSize();
-            sizeAdjust = windowHeight - (ttDiv.offsetHeight + top + target.arrowSize());
-            beforeRule.height = (sizeAdjust < 0) ? (ttDiv.offsetHeight + sizeAdjust) + 'px' : beforeRule.height;
-            left = (targetCoordinates.width / 2) + targetCoordinates.left - (ttDiv.offsetWidth / 2);
+            top = targetCoordinates.top + targetCoordinates.height + arrowSize;
+            sizeAdjust = windowHeight - divHeight + top + arrowSize;
+            beforeRule.height = (sizeAdjust < 0) ? (divHeight + sizeAdjust) + 'px' : beforeRule.height;
+            left = (targetCoordinates.width / 2) + targetCoordinates.left - halfDivWidth;
             horizontalAdjust = adjustHorizontal(left);
             
             beforeRule.top = Math.round(top) + 'px'; 
@@ -88,16 +97,16 @@ export function orient (targetElement, target) {
             afterRule.left = horizontalAdjust.arrowAdjust + 'px';
             afterRule.bottom = '99.5%'; //'100%';
             afterRule.right = '';
-            afterRule.marginLeft = -target.arrowSize() + 'px';
+            afterRule.marginLeft = -arrowSize + 'px';
             afterRule.marginTop = '';
             afterRule.borderColor = 'transparent transparent ' + target.backgroundColor() + ' transparent';
             break;
         };
         case 'left': {
-            top =  (targetCoordinates.height / 2) + targetCoordinates.top - (ttDiv.offsetHeight / 2);
-            left =  targetCoordinates.left - ttDiv.offsetWidth - target.arrowSize();
+            top =  (targetCoordinates.height / 2) + targetCoordinates.top - halfDivHeight;
+            left =  targetCoordinates.left - divWidth - arrowSize;
             if (left < 0) {
-                beforeRule.width = (ttDiv.offsetWidth + left) + 'px';
+                beforeRule.width = Math.round(divWidth + left) + 'px';
                 left = 0;
             };
             verticalAdjust = adjustVertical(top);
@@ -110,15 +119,15 @@ export function orient (targetElement, target) {
             afterRule.bottom = '';
             afterRule.right = '';
             afterRule.marginLeft = '';
-            afterRule.marginTop = -target.arrowSize() + 'px';
+            afterRule.marginTop = -arrowSize + 'px';
             afterRule.borderColor = 'transparent transparent transparent ' + target.backgroundColor();
             break;
         };
         case 'right': {
-            top = (targetCoordinates.height / 2) + targetCoordinates.top - (ttDiv.offsetHeight / 2);
-            left = targetCoordinates.left + targetCoordinates.width + target.arrowSize();
-            sizeAdjust = windowWidth - (ttDiv.offsetWidth + left + target.arrowSize());
-            beforeRule.width = (sizeAdjust < 0) ? (ttDiv.offsetWidth + sizeAdjust) + 'px' : beforeRule.width;
+            top = (targetCoordinates.height / 2) + targetCoordinates.top - halfDivHeight;
+            left = targetCoordinates.left + targetCoordinates.width + arrowSize;
+            sizeAdjust = windowWidth - divWidth + left + arrowSize;
+            beforeRule.width = (sizeAdjust < 0) ? (divWidth + sizeAdjust) + 'px' : beforeRule.width;
             verticalAdjust = adjustVertical(top);
             
             beforeRule.top = verticalAdjust.topAdjust + 'px'; 
@@ -129,7 +138,7 @@ export function orient (targetElement, target) {
             afterRule.bottom = '';
             afterRule.right = '99.5%';  //'100%';
             afterRule.marginLeft = '';
-            afterRule.marginTop = -target.arrowSize() + 'px';
+            afterRule.marginTop = -arrowSize + 'px';
             afterRule.borderColor = 'transparent ' + target.backgroundColor() + ' transparent transparent';
             break;
         };
@@ -138,55 +147,101 @@ export function orient (targetElement, target) {
 
 /**
  * @function optimumOrientation
- * @desc  If [auto-positioning]{@link Tip#autoPosition} is on, the
+ * @desc  Determines the best side upon which to place the tooltip.
+ * If [auto-positioning]{@link Tip#autoPosition} is on, the
  * [preferred-orientation]{@link Tip#prefferedOrientation}
  * setting will be honored unless there is insufficient viewport space.
  * in this case, the position with the most available space will be used.
- * @param {string} targetElement The unique id of the DOM element that is associated with the tooltip.
+ * @param {string} targetElement The DOM element that is associated with the tooltip.
  * @param {Tip} target The [Tip]{@link Tip} class object containing all of the current tooltip's options and content.
  * @returns {string} One of ['left' | 'right' | 'top' | 'bottom'].
+ * @since v2.2.0
  */
-export function optimumOrientation  (targetElement, target) {
 
-    let elementCoordinates = getElementCoordinates(targetElement);
-    let elementCenterH = elementCoordinates.left + (elementCoordinates.width / 2);
-    let elementCenterV = elementCoordinates.top + (elementCoordinates.height / 2);
-    
-    let leftSpacing = elementCenterH - (ttDiv.offsetWidth / 2);
-    let rightSpacing = windowWidth - elementCenterH - (ttDiv.offsetWidth / 2); //check this
-    let topSpacing = elementCenterV - (ttDiv.offsetHeight / 2);
-    let bottomSpacing = windowHeight - elementCenterV - (ttDiv.offsetHeight / 2);
+export function optimumOrientation (targetElement, target) {
 
-    let leftMargin = elementCoordinates.left - target.arrowSize() - ttDiv.offsetWidth;
-    let rightMargin = windowWidth - ttDiv.offsetWidth - target.arrowSize() - elementCoordinates.left - elementCoordinates.width;
-    let topMargin = elementCoordinates.top - target.arrowSize() - ttDiv.offsetHeight;
-    let bottomMargin = windowHeight - ttDiv.offsetHeight - target.arrowSize() - elementCoordinates.top - elementCoordinates.height ;
+    const elementCoordinates = getElementCoordinates(targetElement);
+    const arrowSize = parseSize(target.arrowSize(), 'width', ttDiv);
 
-    let leftValue = Math.min(topSpacing, bottomSpacing, leftMargin);
-    let rightValue = Math.min(topSpacing, bottomSpacing, rightMargin);
-    let topValue = Math.min(leftSpacing, rightSpacing, topMargin);
-    let bottomValue = Math.min(leftSpacing, rightSpacing, bottomMargin);
+    const midX = elementCoordinates.left + (elementCoordinates.width / 2);
+    const midY = elementCoordinates.top + (elementCoordinates.height / 2);
+
+    const divWidth = ttDiv.getBoundingClientRect()['width'];
+    const divHeight = ttDiv.getBoundingClientRect()['height'];
+    const halfDivHeight = divHeight / 2;
+    const halfDivWidth = divWidth / 2;
+
+    const leftOverlap = overlap ('left',
+        {
+            x0: elementCoordinates.left - arrowSize - divWidth,
+            x1: elementCoordinates.left - arrowSize,
+            y0: midY - halfDivHeight,
+            y1: midY + halfDivHeight
+        });
+    const rightOverlap = overlap ('right',
+        {
+            x0: elementCoordinates.left + elementCoordinates.width + arrowSize,
+            x1: elementCoordinates.left + elementCoordinates.width + arrowSize + divWidth, 
+            y0: midY - halfDivHeight,
+            y1: midY + halfDivHeight
+        });
+    const topOverlap = overlap ('top',
+        {
+            x0: midX - halfDivWidth,
+            x1: midX + halfDivWidth,
+            y0: elementCoordinates.top - arrowSize - divHeight, 
+            y1: elementCoordinates.top - arrowSize
+        });
+    const bottomOverlap = overlap ('bottom',
+        {
+            x0: midX - halfDivWidth,
+            x1: midX + halfDivWidth,
+            y0: elementCoordinates.top + elementCoordinates.height + arrowSize,
+            y1: elementCoordinates.top + elementCoordinates.height + arrowSize + divHeight
+        });
 
     switch (target.preferredOrientation()) {
-        case 'left': { if (leftValue >= 0) return 'left'; break};
-        case 'right': { if (rightValue >= 0) return 'right'; break};
-        case 'top': { if (topValue >= 0) return 'top'; break};
-        case 'bottom': { if (bottomValue >= 0) return 'bottom'; break};
+        case 'left': { if (leftOverlap.overlap == 1) return 'left'; break; };
+        case 'right': { if (rightOverlap.overlap == 1) return 'right'; break; };
+        case 'top': { if (topOverlap.overlap == 1) return 'top'; break; };
+        case 'bottom': { if (bottomOverlap.overlap == 1) return 'bottom'; break; };
     };
 
-    if (leftValue < 0 && rightValue < 0  && topValue < 0 && bottomValue < 0) {
-        leftValue += elementCoordinates.height;
-        rightValue += elementCoordinates.height;
-        topValue += elementCoordinates.width;
-        bottomValue += elementCoordinates.width;
+    // if there is no preferred orientation or all overlaps are less than 1
+    let overlaps = [leftOverlap, rightOverlap, topOverlap, bottomOverlap];
+
+    //if all of the overlaps are less than 1 return the greatest
+    if (leftOverlap.overlap < 1 && rightOverlap.overlap < 1 && topOverlap.overlap < 1 && bottomOverlap.overlap < 1) {
+        return overlaps[overlaps.reduce((prev, current, index, array) => {
+            if (current.overlap > array[prev].overlap) {return index} else {return prev};
+        }, 0)].side;
     };
 
-    let maxValue = Math.max(leftValue, rightValue, topValue, bottomValue);
-    switch (true) {
-        case leftValue == maxValue: return 'left';
-        case rightValue == maxValue: return 'right';
-        case topValue == maxValue: return 'top';
-        case bottomValue == maxValue: return 'bottom';
-    };
+    // remove all overlaps that are less than 1
+    overlaps = overlaps.reduce((prev, current) => {
+        if (current.overlap == 1) {return prev.concat(current)} else {return prev};
+    }, []);
 
+    if (overlaps.length == 1) { return overlaps[0].side; }; // only one left;
+
+    return overlaps[overlaps.reduce((prev, current, index, array) => {
+        if (current.spacing[current.side] >= array[prev].spacing[prev.side]) {return index} else { return prev} ;
+    }, 0)].side;
+}
+
+/**
+ * @function getOrientation
+ * @desc Selects the appropriate orientation by deconflicting [auto-positioning]{@link Tip#autoPosition},
+ * [prefererd-orientation]{@link Tip#preferredOrientation, and [orientation]{@link Tip#orientation}
+ * settings in the Tip{} class object.
+ * @param {string} targetElement The DOM element that is associated with the tooltip.
+ * @param {Tip} target The [Tip]{@link Tip} class object containing all of the current tooltip's options and content.
+ * @returns {string} One of ['left' | 'right' | 'top' | 'bottom'].
+ * @since v2.1.2
+ */
+export function getOrientation (targetElement, target) {
+    if (target.orientation() != undefined) return target.orientation();
+    if (target.autoPosition()) return optimumOrientation (targetElement, target);
+    if (target.preferredOrientation() != 'none') return target.preferredOrientation();
+    return 'right';
 }

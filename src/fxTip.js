@@ -3,8 +3,12 @@
  * @desc The fxTip module provides the *create* and *remove* functions which are exposed by the
  * [default]{@link module:index~default} object, which is exported in [index.js]{@link module:index}.
  * It also provides a listener to detect the removal of DOM elements that have a tooltip
- * associated with them.
+ * associated with them and exports a method to suspend polling of the DOM for removed elements.
  */
+
+import {tips, tipsIndex} from './tips.js';
+import {Tip} from './Tip.js';
+import {checkBoolean} from './utils.js'
 
 /**
  * The state of whether DOM polling is enabled
@@ -13,15 +17,12 @@
  */
 let DOMchecking = true;
 
-import {tips, tipsIndex} from './tips.js';
-import {Tip} from './Tip.js';
-import {checkBoolean} from './utils.js'
-
 /**
  * The timing metric used to determine how frequently the DOM should be queried for
  * removed elements. Triggers the [detectTargetRemoval]{@link module:utils~detectTargetRemoval}
  * event listener.
  * @type number
+ * @const
  */
 const targetTimerInterval = 500;
 
@@ -77,7 +78,6 @@ export function create (elementId, content) {
  * @param {string} elementId The unique id of the DOM element associated with the tooltip
  * to be removed.
  */
-
 export function remove (elementId) {
     if (document.getElementById(elementId) == null) {
         return;

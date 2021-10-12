@@ -1,7 +1,7 @@
 
 import {globalOptions, applyOptions} from './options.js';
 import {beforeRule, closeDown} from './init.js';
-import {checkBoolean, checkCSS, checkFontFamily, parseSize, parseColor} from './utils.js';
+import {checkBoolean, checkCSS, checkFontFamily, checkSize, parseColor} from './utils.js';
 import {mouseOver, mouseOut, mouseMove} from './mouse.js';
 import {tips, tipsIndex} from './tips.js';
 
@@ -13,9 +13,10 @@ export class Tip {
     /**
      * Instantiates a new tooltip with all of the default options, and provides methods to customize each option.
      * @param {string} elementId The unique id of the DOM element that will be associated with the tooltip.
+     * If their is no element in the DOM with this id, throws and error.
      * @param {string} content Any valid HTML which will be displayed in the tooltip.
      * @param {boolean} global If this is set to true, the changes to the returned tooltip will affect all subsequently
-     * instantiated tooltips. This parameter is only used when the globalOptions object is created.
+     * instantiated tooltips. This parameter is only used internally when the globalOptions object is created.
      * @returns {Tip} A [Tip]{@link Tip} class object which contains a private [globalOptions]{@link module:options~globalOptions}
      * object and exposes several methods to customize those options.
      */
@@ -64,7 +65,7 @@ export class Tip {
     content (content) {
         if (content == undefined) { return this.#options.content; };
         this.#options.content = content;
-        if (beforeRule.opacity == this.#options.backgroundOpacity) {
+        if (beforeRule.opacity == this.#options.backgroundOpacity) { // inject new content while tip is shown
             applyOptions(this);
         };
         return this;
@@ -72,7 +73,8 @@ export class Tip {
 
     /**
      * You may set the location of the tooltip relative to the target element (or cursor if the [mousePoint]{@link Tip#mousePoint} 
-     * method is called with true as the argument).  If the orientation is set, auto-positioning is disabled (see the [autoPosition]{@link Tip#autoPosition} method).
+     * method is called with true as the argument).  If the orientation is set, auto-positioning is disabled
+     * (see the [autoPosition]{@link Tip#autoPosition} method).
      * @param {string} orientation One of ['right' | 'left' | 'top' | 'bottom']. **Default**: 'right'.
      * @returns {(Tip | string)} If the orientation argument is passed, the *orientation* method returns the [Tip]{@link Tip} object.
      * If the *orientation* method is called with no arguments, the *orientation* method returns the current orientation setting.
@@ -86,7 +88,7 @@ export class Tip {
             console.log("Option setting error. Orientation must be one of ['left' | 'right' | 'top' | 'bottom']");
         } else {
             this.#options.orientation = orientation;
-            this.#options.autoPosition = false; //autoPosition;            
+            //this.#options.autoPosition = false; //autoPosition;            
         };
         return this;
     }
@@ -276,9 +278,10 @@ export class Tip {
     font (family, size) {
         if (arguments.length == 0) { return {family: this.#options.fontFamily, size: this.#options.fontSize}; };
         if (arguments.length == 1) { size = '1em'; };
-        if (checkFontFamily(family)) {
+        if (typeof size == 'number') { size += 'px'; };
+        if (checkFontFamily(family) && checkSize(size)) {
             this.#options.fontFamily = family;
-            this.#options.fontSize = parseSize(size);            
+            this.#options.fontSize = size; //parseSize(size);            
         };
         return this;
     }
@@ -352,8 +355,8 @@ export class Tip {
      * the first measure is applied to the top and bottom, and the second to the left and right. If the padding argument contains
      * three measurements, the first is applied to the top, the second to the left and right, and the third to the bottom. 
      * If the padding argument contains four measurements, they are applied to the top, left, bottom, right respectively.
-     * @param {string}  padding A string representing 1 to 4 valid CSS sizes (e.g., '1em' | '16px'). If no unit of measurement is given
-     * it is assumed to be in pixels. **Default**: '5px 10px'.
+     * @param {string}  padding A string representing 1 to 4 valid CSS sizes (e.g., '1em' | '16px') **except for percentage**.
+     * If no unit of measurement is given it is assumed to be in pixels. **Default**: '5px 10px'.
      * @returns {(Tip | string)} If the padding argument is passed, the *padding* method returns the [Tip]{@link Tip} object.
      * If the *padding* method is called with no arguments, the *padding* method returns the current padding setting formatted
      * as a single CSS shorthand string (e.g. '5px 10px').
@@ -364,32 +367,42 @@ export class Tip {
     padding (padding) {
         if(padding == undefined) { return this.#options.padding; };
         
-        let size0;
-        let size1;
+        // let size0;
+        // let size1;
         let tmpPadding;
         padding = padding.split(' ', 4);
+
+        padding.forEach (d => {
+            if (typeof d == 'number') { d += 'px'; };
+            if (!checkSize(d)) return this;
+        });
+
         switch (padding.length) {
             case 0: {
                 return this.#options.padding;
             };
             case 1: {
-                size0 = parseSize(padding[0]);
-                tmpPadding = size0 + 'px ' + size0 + 'px ' + size0 + 'px ' + size0 + 'px';
+                // size0 = parseSize(padding[0]);
+                // tmpPadding = size0 + 'px ' + size0 + 'px ' + size0 + 'px ' + size0 + 'px';
+                tmpPadding = `${padding[0]} ${padding[0]} ${padding[0]} ${padding[0]}`;
                 break;
             };
             case 2: {
-                size0 = parseSize(padding[0]);
-                size1 = parseSize(padding[1]);
-                tmpPadding = size0 + 'px ' + size1 + 'px ' + size0 + 'px ' + size1 + 'px';
+                // size0 = parseSize(padding[0]);
+                // size1 = parseSize(padding[1]);
+                // tmpPadding = size0 + 'px ' + size1 + 'px ' + size0 + 'px ' + size1 + 'px';
+                tmpPadding = `${padding[0]} ${padding[1]} ${padding[0]} ${padding[1]}`;
                 break;
             };
             case 3: {
-                size0 = parseSize(padding[1]);
-                tmpPadding = parseSize(padding[0]) + 'px ' + size0 + 'px ' + parseSize(padding[2]) + 'px ' + size0 + 'px';
+                // size0 = parseSize(padding[1]);
+                // tmpPadding = parseSize(padding[0]) + 'px ' + size0 + 'px ' + parseSize(padding[2]) + 'px ' + size0 + 'px';
+                tmpPadding = `${padding[0]} ${padding[1]} ${padding[2]} ${padding[1]}`;
                 break;
             };
             case 4: {
-                tmpPadding = parseSize(padding[0]) + 'px ' + parseSize(padding[1]) + 'px ' + parseSize(padding[2]) + 'px ' + parseSize(padding[3]) + 'px';
+                // tmpPadding = parseSize(padding[0]) + 'px ' + parseSize(padding[1]) + 'px ' + parseSize(padding[2]) + 'px ' + parseSize(padding[3]) + 'px';
+                tmpPadding = `${padding[0]} ${padding[1]} ${padding[2]} ${padding[3]}`;
                 break;
             };
         };
@@ -403,7 +416,7 @@ export class Tip {
      * Setting the borderRadius via the *borderRadius* method, sets the borderRadius option contained within the
      * [Tip]{@link Tip} object which is injected into the *.fxToolTip* style's ruleset upon
      * hover over the target element. The borderRadius option sets a uniform borderRadius for the tooltip corners.
-     * @param {(number | string)} borderRadius Any valid CSS size (e.g., '1em' | '16px') except percentage.
+     * @param {(number | string)} borderRadius Any valid CSS size (e.g., '1em' | '16px').
      * If a number is passed, it is assumed to be in pixels. **Default**: 12.
      * @returns {(Tip | string)} If the borderRadius argument is passed, the *borderRadius* method returns the
      * [Tip]{@link Tip} object. If the *borderRadius* method is called with no arguments,
@@ -414,7 +427,11 @@ export class Tip {
      */
     borderRadius (borderRadius) {
         if (borderRadius == undefined) { return this.#options.borderRadius; };
-        this.#options.borderRadius = parseSize(borderRadius);
+        if (typeof borderRadius == 'number') { borderRadius += 'px'; };
+        if (checkSize(borderRadius)) {
+            this.#options.borderRadius = borderRadius; 
+        }
+        // this.#options.borderRadius = parseSize(borderRadius);
         return this;
     }
 
@@ -422,7 +439,7 @@ export class Tip {
      * Setting the boxShadow size, color, and opacity via the *boxShadow* method, sets the boxShadow option contained within the
      * [Tip]{@link Tip} object which is injected into the *.fxToolTip* style's ruleset upon hover over the
      * target element. The boxShadow option sets a box shadow offsets to the lower right of the tooltip.
-     * @param {(number | string)} size Any valid CSS size (e.g., '1em' | '16px') except percentage, or 'none'.
+     * @param {(number | string)} size Any valid CSS size (e.g., '1em' | '16px') **except percentage**, or 'none'.
      * If a number is passed, it is assumed to be in pixels.  If 'none' is passed as a single argument, no boxShadow is shown. **Default**: 8px'.
      * @param {string} color Any valid CSS color such as hex, rgb, or a named CSS color. **Default**: 'rgb(0,0,0)'.
      * @param {number} opacity A number [0...1]. **Default**:  0.5.
@@ -445,16 +462,21 @@ export class Tip {
         if (arguments[0] == 'none') {
             this.#options.boxShadow = '';
         } else {
-            parsedSize = parseSize(size);
-            parsedColor = parseColor(color);
+            if (typeof size == 'number') { size += 'px'; };
+            if (checkSize(size) && checkCSS(color, 'color') && checkCSS(opacity, 'opacity')) {
+                // parsedSize = parseSize(size);
+                parsedColor = parseColor(color);
 
-            if (opacity !== 0) { 
-                rgbCore = parsedColor.match(/\d+/g);
-                boxShadowString = 'rgba(' + parseInt(rgbCore[0]) + ',' + parseInt(rgbCore[1]) + ',' + parseInt(rgbCore[2]) + ',' + opacity + ')';
-            } else {
-                boxShadowString = parsedColor;
-            };
-            this.#options.boxShadow = parsedSize + 'px ' + parsedSize + 'px ' + parsedSize + 'px 0 ' + boxShadowString;
+                if (opacity !== 0) { 
+                    rgbCore = parsedColor.match(/\d+/g);
+                    // boxShadowString = 'rgba(' + parseInt(rgbCore[0]) + ',' + parseInt(rgbCore[1]) + ',' + parseInt(rgbCore[2]) + ',' + opacity + ')';
+                    boxShadowString = `rgba(${parseInt(rgbCore[0], 10)}, ${parseInt(rgbCore[1], 10)}, ${parseInt(rgbCore[2], 10)}, ${opacity})`;
+                } else {
+                    boxShadowString = parsedColor;
+                };
+                // this.#options.boxShadow = parsedSize + 'px ' + parsedSize + 'px ' + parsedSize + 'px 0 ' + boxShadowString;
+                this.#options.boxShadow = `${size} ${size} ${size} 0 ${boxShadowString}`;
+            }
         };
         return this;
     }
@@ -474,7 +496,12 @@ export class Tip {
      */
     transitionVisible(delay, duration) {
         if (arguments.length == 0) { return this.#options.transitionVisible; };
-        this.#options.transitionVisible = 'opacity ' + duration + 's ease-in ' + delay + 's';
+        if (typeof delay != 'number' && typeof duration != 'number') {
+            console.log(`Option setting error. Either ${delay} and/or ${duration} are not a valid arguments`)
+        } else {
+            // this.#options.transitionVisible = 'opacity ' + duration + 's ease-in ' + delay + 's';
+            this.#options.transitionVisible = `opacity ${duration}s ease-in ${delay}s`;
+        };
         return this;
     }
     
@@ -493,7 +520,12 @@ export class Tip {
      */
     transitionHidden (delay, duration) {
         if (arguments.length == 0) { return this.#options.transitionHidden; };
-        this.#options.transitionHidden = 'opacity ' + duration + 's ease-out ' + delay + 's';
+        if (typeof delay != 'number' && typeof duration != 'number') {
+            console.log(`Option setting error. Either ${delay} and/or ${duration} are not a valid arguments`)
+        } else {
+            // this.#options.transitionHidden = 'opacity ' + duration + 's ease-out ' + delay + 's';
+            this.#options.transitionHidden = `opacity ${duration}s ease-out ${delay}s`;
+        };
         return this;
     }
     
@@ -509,7 +541,11 @@ export class Tip {
      */
     arrowSize (arrowSize) {
         if (arrowSize == undefined) { return this.#options.arrowSize; };
-        this.#options.arrowSize = parseSize(arrowSize);
+        if (typeof arrowSize == 'number') { arrowSize += 'px'; };
+        if (checkSize(arrowSize)) {
+            // this.#options.arrowSize = parseSize(arrowSize); 
+            this.#options.arrowSize = arrowSize; 
+        };
         return this;
     }
 
@@ -517,7 +553,9 @@ export class Tip {
      * Setting the width via the *width* method, sets the width option contained within the  [Tip]{@link Tip}
      * object which is injected into the *.fxToolTip* style's ruleset upon hover over the target element. When the width
      * option is set to any value other than auto, auto-sizing is disabled. However, if the [autoSize]{@link Tip#autoSize}
-     * method is subsequently set to true, the width setting will be ignored.
+     * method is subsequently set to true, the width setting will be ignored. If the *width* is an absolute value
+     * (e.g., '200px' | '30em'), it will remain constant if the screen size changes. In this case, it may be more appropriate
+     * to use a realtive measure such as percentage
      * @param {(number | string)} width Any valid CSS size (e.g., '1em' | '16px').  If a number is passed, it is assumed
      * to be in pixels. **Default**: 'auto'.
      * @returns {(Tip | string)} If the width argument is passed, the *width* method returns the [Tip]{@link Tip}
@@ -528,8 +566,12 @@ export class Tip {
      */
     width (width) {
         if (width == undefined) { return this.#options.width; };
-        this.#options.width = width == 'auto' ? 'auto' : parseSize(width);
-        this.#options.autoSize = width == 'auto' ? options.autoSize : false;
+        if (typeof width == 'number') { width += 'px'; };
+        if (width == 'auto' || checkSize(width)) {
+            this.#options.width = width;
+        };
+        // this.#options.width = width == 'auto' ? 'auto' : parseSize(width);
+        this.#options.autoSize = width == 'auto' ? this.#options.autoSize : false;
         return this;
     }
     
@@ -537,7 +579,8 @@ export class Tip {
      * Setting the maximum width via the *maxWidth* method, sets the maxWidth option contained within the [Tip]{@link Tip}
      * object which is injected into the *.fxToolTip* style's ruleset upon hover over the target element.
      * The maxWidth option sets the maximum width of the tooltip upon hover over the target element.
-     * The *maxWidth* method is useful to ensure that tooltips don't grow too large when using [auto-sizing]{@link Tip#autoSize}.
+     * The *maxWidth* method is useful to ensure that tooltips don't grow too large when using [auto-sizing]{@link Tip#autoSize}
+     * or when their content is very large and may overflow smaller screens.
      * @param {(number | string)} maxWidth Any valid CSS size (e.g., '1em' | '16px').  If a number is passed, it is assumed to be in pixels.
      * **default**: 'none'.
      * @returns {(Tip | string)} If the maxWidth argument is passed, the *maxWidth* method returns the [Tip]{@link Tip}
@@ -548,7 +591,11 @@ export class Tip {
      */
     maxWidth(maxWidth) {
         if (maxWidth == undefined) { return this.#options.maxWidth; };
-        this.#options.maxWidth = maxWidth == 'none' ? 'none' : parseSize(maxWidth);
+        if (typeof maxWidth == 'number') { maxWidth += 'px'; };
+        if (maxWidth == 'none' || checkSize(maxWidth)) {
+            this.#options.maxWidth = maxWidth;
+        };
+        // this.#options.maxWidth = maxWidth == 'none' ? 'none' : parseSize(maxWidth);
         return this;
     }
 
@@ -567,7 +614,11 @@ export class Tip {
      */
     minWidth (minWidth) {
         if (minWidth == undefined) { return this.#options.minWidth; };
-        this.#options.minWidth = minWidth == 'none' ? 'none' : parseSize(minWidth);
+        if (typeof minWidth == 'number') { minWidth += 'px'; };
+        if (minWidth == 'auto' || checkSize(minWidth)) {
+            this.#options.minWidth = minWidth;
+        };
+        // this.#options.minWidth = minWidth == 'none' ? 'none' : parseSize(minWidth);
         return this;
     }
 
@@ -586,7 +637,11 @@ export class Tip {
      */
     height (height) {
         if (height == undefined) { return this.#options.height; };
-        this.#options.height = height == 'auto' ? 'auto': parseSize(height, 'height');
+        if (typeof height == 'number') { height += 'px'; };
+        if (height == 'auto' || checkSize(height)) {
+            this.#options.height = height;
+        };
+        // this.#options.height = height == 'auto' ? 'auto': parseSize(height, 'height');
         this.#options.autoSize = height == 'auto' ? options.autoSize : false;
         return this;
     }
@@ -594,7 +649,8 @@ export class Tip {
     /**
      * Setting the maximum height via the *maxHeight* method, sets the maxHeight option contained within the [Tip]{@link Tip}
      * object which is injected into the *.fxToolTip* style's ruleset upon hover over the target element. The *maxHeight* method is useful
-     * to ensure that tooltips don't grow too large when using [auto-sizing]{@link Tip#autoSize}.
+     * to ensure that tooltips don't grow too large when using [auto-sizing]{@link Tip#autoSize} or when their content is very large
+     * and may overflow smaller screens.
      * @param {(number | string)} maxHeight Any valid CSS size (e.g., '1em' | '16px').  If a number is passed, it is assumed to be in pixels.
      * **Default**: 'none'.
      * @returns {(Tip | string)} if the maxHeight argument is passed, the *maxHeight* method returns the [Tip]{@link Tip}
@@ -605,7 +661,11 @@ export class Tip {
      */
     maxHeight (maxHeight) {
         if (maxHeight == undefined) { return this.#options.maxHeight; };
-        this.#options.maxHeight = maxHeight == 'none' ? 'none' : parseSize(maxHeight, 'height');
+        if (typeof maxHeight == 'number') { maxHeight += 'px'; };
+        if (maxHeight == 'none' || checkSize(maxHeight)) {
+            this.#options.maxHeight = maxHeight;
+        };
+        // this.#options.maxHeight = maxHeight == 'none' ? 'none' : parseSize(maxHeight, 'height');
         return this;
     }
 
@@ -624,7 +684,11 @@ export class Tip {
      */
     minHeight (minHeight) {
         if (minHeight == undefined) { return this.#options.minHeight; };
-        this.#options.minHeight = minHeight == 'none' ? 'none' : parseSize(minHeight, 'height');
+        if (typeof minHeight == 'number') { minHeight += 'px'; };
+        if (minHeight == 'auto' || checkSize(minHeight)) {
+            this.#options.minHeight = minHeight;
+        };
+        // this.#options.minHeight = minHeight == 'none' ? 'none' : parseSize(minHeight, 'height');
         return this;
     }
 
@@ -643,10 +707,6 @@ export class Tip {
      * myToolTip.remove();
      */
     remove () {
-        //let targetTimer;
-        
-        //window.clearInterval(targetTimer);
-
         /** remove the fxTooltip class name */
         let targetElement = document.getElementById(this.#elementId);
         if (targetElement != undefined) {

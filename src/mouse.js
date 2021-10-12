@@ -5,8 +5,8 @@
  * [default]{@link module:index~default} object, which is exported in [index.js]{@link module:index}
  */
 
-import {optimumOrientation, orient} from './orient.js';
-import {applyOptions} from './options.js';
+import {getOrientation, optimumOrientation, position} from './orient.js';
+import {applyOptions, resetOptions} from './options.js';
 import {tips, tipsIndex, sizeTip} from './tips.js';
 import {beforeRule} from './init.js';
 import {checkBoolean} from './utils.js';
@@ -58,7 +58,7 @@ function getMouseCoordinates (event) {
 
 /**
  * @function mouseOver
- * @desc Fires when the cursor hovers over a DOM element that has a tooltip aassociated with it.
+ * @desc Fires when the cursor hovers over a DOM element that has a tooltip associated with it.
  * @param {Event} event - The firing event.
  * @event mouseover
  */
@@ -84,10 +84,9 @@ export function mouseOver (event) {
 
     applyOptions(target);
 
-    if (target.autoPosition()) {
-        target.orientation(optimumOrientation(targetElement, target), true);
-    };
-    orient(targetElement, target);
+    let orientation = getOrientation(targetElement, target);
+
+    position(targetElement, target, orientation);
     beforeRule.opacity = target.backgroundOpacity();
 }
 
@@ -111,11 +110,9 @@ export function mouseMove (event) {
 
     getMouseCoordinates(event);
 
-    if (target.autoPosition()) { 
-        target.orientation(optimumOrientation(targetElement, target), true);
-    };
+    let orientation = getOrientation(targetElement, target);
 
-    orient(targetElement, target);
+    position(targetElement, target, orientation);
 }
 
 /**
@@ -146,6 +143,7 @@ export function mouseOut (event) {
 
     timer = window.setTimeout(function() { // ensures the visibility isn't set to hidden until the transition completes
         beforeRule.visibility = 'hidden';
+        resetOptions(target);
         },
         (transitionDuration + transitionDelay) * 1000);
     beforeRule.opacity = 0;

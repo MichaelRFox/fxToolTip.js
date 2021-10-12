@@ -3,7 +3,7 @@
  * @desc The style module provides two helper functions that retrieve rules and rule indexes
  * from the global rules collection.
  */
-
+ 
 import {rules} from './init.js';
 
 /**

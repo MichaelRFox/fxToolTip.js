@@ -10,11 +10,22 @@
 
 :warning: - Breaking Change
 
+# v2.2.0
+### Oct 11, 2021
+- :bug: Fixed tooltip overflow into scrollbar
+- :bug: Addressed edge cases where tooltip is too large for the client viewport.
+- :hammer_and_wrench: Improved deconfliction of position, auto-positioning, and preferred-orientation options.
+- :hammer_and_wrench: Implimented new algorithm for auto-positioning.
+- :hammer_and_wrench: Added additional error checking for tooltip options.
+- :boom: Added the ability to set appropriate options to percentage values.
+- :hammer_and_wrench: Updated dev-dependancies.
+- :pencil: Updated docs.
+
 # v2.1.1
 ### Oct 6, 2021
 - :bug: Fixed broken docs link
 - :pencil: Docs updates
-- :hammer_and_wrench: Added new method to the fxToolTip object to suspend or enable checking the DOM for deleted DOM elements.
+- :boom: Added new method to the fxToolTip object to suspend or enable checking the DOM for deleted DOM elements.
 
 # v2.1.0
 ### Oct 5, 2021
@@ -55,7 +66,7 @@
 
 # v1.4.3
 ### Aug 18, 2020
-- :pencil: Updated readme,md
+- :pencil: Updated readme.md
 
 # v1.4.2
 ### Jul 16, 2020

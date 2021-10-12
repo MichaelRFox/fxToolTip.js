@@ -1,6 +1,6 @@
 {
   "name": "fx.tooltip.js",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "A tooltip library for javascript",
   "keywords": [
     "tooltip",
@@ -31,23 +31,24 @@
     "build": "npm run rollupBuild && npm run terserLite && npm run terser",
     "rollupBuild": "rollup -c rollup.config.js",
     "test": "cp src/*.js test/",
-    "docs": "find ../github.io/docs/ -type f -name '*.html' -delete && jsdoc src -r --package package.json -c jsDocConfig.json",
+    "docs": "jsdoc -P package.json -c jsDocConfig.json && git -C ../github.io add -A && git -C ../github.io commit -m \"updated fxToolTip docs\" && git -C ../github.io push",
     "terserLite": "terser ./dist/fxToolTip.js -o ./dist/fxToolTip.js --config-file terserLite.json",
     "terser": "terser ./dist/fxToolTip.js -o ./dist/fxToolTip.min.js --config-file terser.config",
-    "postversion": "npm run docs && git push && git push --tags"
+    "preversion": "npm run build && git add -A",
+    "postversion": "npm run docs && git push && git push --tags && npm publish"
   },
   "devDependencies": {
     "@babel/cli": "^7.15.7",
-    "@babel/core": "^7.15.5",
-    "@babel/preset-env": "^7.15.6",
+    "@babel/core": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
     "@rollup/plugin-babel": "^5.3.0",
-    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-commonjs": "^21.0.0",
     "@rollup/plugin-node-resolve": "^13.0.5",
-    "browserslist": "^4.17.1",
-    "core-js": "^3.18.0",
+    "browserslist": "^4.17.3",
+    "core-js": "^3.18.2",
     "docdash": "^1.2.0",
     "jsdoc": "^3.6.7",
-    "rollup": "^2.57.0",
+    "rollup": "^2.58.0",
     "terser": "^5.9.0"
   },
   "dependencies": {},

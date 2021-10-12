@@ -1,7 +1,14 @@
 var fxToolTip = function() {
     "use strict";
-    function orient(targetElement, target) {
+    function position(targetElement, target, orientation) {
         var targetCoordinates = getElementCoordinates(targetElement);
+        var divWidth = ttDiv.getBoundingClientRect()["width"];
+        var divHeight = ttDiv.getBoundingClientRect()["height"];
+        var halfDivHeight = divHeight / 2;
+        var halfDivWidth = divWidth / 2;
+        var borderRadius = parseSize(target.borderRadius(), "width", ttDiv);
+        var arrowSize = parseSize(target.arrowSize(), "width", ttDiv);
+        afterRule.borderWidth = arrowSize + "px";
         var top;
         var left;
         var verticalAdjust;
@@ -9,13 +16,13 @@ var fxToolTip = function() {
         var sizeAdjust;
         var adjustVertical = function adjustVertical(top) {
             var topAdjust = top;
-            var arrowAdjust = ttDiv.offsetHeight / 2;
+            var arrowAdjust = halfDivHeight;
             if (top < 0) {
                 topAdjust = 0;
-                arrowAdjust = Math.max(target.arrowSize() + target.borderRadius(), top + ttDiv.offsetHeight / 2);
-            } else if (top + ttDiv.offsetHeight > windowHeight) {
-                topAdjust = windowHeight - ttDiv.offsetHeight;
-                arrowAdjust = Math.min(ttDiv.offsetHeight - target.borderRadius() - target.arrowSize(), ttDiv.offsetHeight / 2 + top - topAdjust);
+                arrowAdjust = Math.max(arrowSize + borderRadius, top + halfDivHeight);
+            } else if (top + divHeight > windowHeight) {
+                topAdjust = windowHeight - divHeight;
+                arrowAdjust = Math.min(divHeight - borderRadius - arrowSize, halfDivHeight + top - topAdjust);
             }
             return {
                 topAdjust: Math.round(topAdjust),
@@ -24,28 +31,28 @@ var fxToolTip = function() {
         };
         var adjustHorizontal = function adjustHorizontal(left) {
             var leftAdjust = left;
-            var arrowAdjust = ttDiv.offsetWidth / 2;
+            var arrowAdjust = halfDivWidth;
             if (left < 0) {
                 leftAdjust = 0;
-                arrowAdjust = Math.max(target.arrowSize() + target.borderRadius(), left + ttDiv.offsetWidth / 2);
-            } else if (left + ttDiv.offsetWidth > windowWidth) {
-                leftAdjust = windowWidth - ttDiv.offsetWidth;
-                arrowAdjust = Math.min(ttDiv.offsetWidth - target.borderRadius() - target.arrowSize(), ttDiv.offsetWidth / 2 + left - leftAdjust);
+                arrowAdjust = Math.max(arrowSize + borderRadius, left + halfDivWidth);
+            } else if (left + divWidth > windowWidth) {
+                leftAdjust = windowWidth - divWidth;
+                arrowAdjust = Math.min(divWidth - borderRadius - arrowSize, halfDivWidth + left - leftAdjust);
             }
             return {
                 leftAdjust: Math.round(leftAdjust),
                 arrowAdjust: Math.round(arrowAdjust)
             };
         };
-        switch (target.orientation()) {
+        switch (orientation) {
           case "top":
             {
-                top = targetCoordinates.top - target.arrowSize() - ttDiv.offsetHeight;
+                top = targetCoordinates.top - arrowSize - divHeight;
                 if (top < 0) {
-                    beforeRule.height = Math.round(ttDiv.offsetHeight + top - target.arrowSize()) + "px";
+                    beforeRule.height = Math.round(divHeight + top) + "px";
                     top = 0;
                 }
-                left = targetCoordinates.width / 2 + targetCoordinates.left - ttDiv.offsetWidth / 2;
+                left = targetCoordinates.width / 2 + targetCoordinates.left - halfDivWidth;
                 horizontalAdjust = adjustHorizontal(left);
                 beforeRule.top = Math.round(top) + "px";
                 beforeRule.left = horizontalAdjust.leftAdjust + "px";
@@ -53,7 +60,7 @@ var fxToolTip = function() {
                 afterRule.left = horizontalAdjust.arrowAdjust + "px";
                 afterRule.bottom = "";
                 afterRule.right = "";
-                afterRule.marginLeft = -target.arrowSize() + "px";
+                afterRule.marginLeft = -arrowSize + "px";
                 afterRule.marginTop = "";
                 afterRule.borderColor = target.backgroundColor() + " transparent transparent transparent";
                 break;
@@ -61,10 +68,10 @@ var fxToolTip = function() {
 
           case "bottom":
             {
-                top = targetCoordinates.top + targetCoordinates.height + target.arrowSize();
-                sizeAdjust = windowHeight - (ttDiv.offsetHeight + top + target.arrowSize());
-                beforeRule.height = sizeAdjust < 0 ? ttDiv.offsetHeight + sizeAdjust + "px" : beforeRule.height;
-                left = targetCoordinates.width / 2 + targetCoordinates.left - ttDiv.offsetWidth / 2;
+                top = targetCoordinates.top + targetCoordinates.height + arrowSize;
+                sizeAdjust = windowHeight - divHeight + top + arrowSize;
+                beforeRule.height = sizeAdjust < 0 ? divHeight + sizeAdjust + "px" : beforeRule.height;
+                left = targetCoordinates.width / 2 + targetCoordinates.left - halfDivWidth;
                 horizontalAdjust = adjustHorizontal(left);
                 beforeRule.top = Math.round(top) + "px";
                 beforeRule.left = horizontalAdjust.leftAdjust + "px";
@@ -72,7 +79,7 @@ var fxToolTip = function() {
                 afterRule.left = horizontalAdjust.arrowAdjust + "px";
                 afterRule.bottom = "99.5%";
                 afterRule.right = "";
-                afterRule.marginLeft = -target.arrowSize() + "px";
+                afterRule.marginLeft = -arrowSize + "px";
                 afterRule.marginTop = "";
                 afterRule.borderColor = "transparent transparent " + target.backgroundColor() + " transparent";
                 break;
@@ -80,10 +87,10 @@ var fxToolTip = function() {
 
           case "left":
             {
-                top = targetCoordinates.height / 2 + targetCoordinates.top - ttDiv.offsetHeight / 2;
-                left = targetCoordinates.left - ttDiv.offsetWidth - target.arrowSize();
+                top = targetCoordinates.height / 2 + targetCoordinates.top - halfDivHeight;
+                left = targetCoordinates.left - divWidth - arrowSize;
                 if (left < 0) {
-                    beforeRule.width = ttDiv.offsetWidth + left + "px";
+                    beforeRule.width = Math.round(divWidth + left) + "px";
                     left = 0;
                 }
                 verticalAdjust = adjustVertical(top);
@@ -94,17 +101,17 @@ var fxToolTip = function() {
                 afterRule.bottom = "";
                 afterRule.right = "";
                 afterRule.marginLeft = "";
-                afterRule.marginTop = -target.arrowSize() + "px";
+                afterRule.marginTop = -arrowSize + "px";
                 afterRule.borderColor = "transparent transparent transparent " + target.backgroundColor();
                 break;
             }
 
           case "right":
             {
-                top = targetCoordinates.height / 2 + targetCoordinates.top - ttDiv.offsetHeight / 2;
-                left = targetCoordinates.left + targetCoordinates.width + target.arrowSize();
-                sizeAdjust = windowWidth - (ttDiv.offsetWidth + left + target.arrowSize());
-                beforeRule.width = sizeAdjust < 0 ? ttDiv.offsetWidth + sizeAdjust + "px" : beforeRule.width;
+                top = targetCoordinates.height / 2 + targetCoordinates.top - halfDivHeight;
+                left = targetCoordinates.left + targetCoordinates.width + arrowSize;
+                sizeAdjust = windowWidth - divWidth + left + arrowSize;
+                beforeRule.width = sizeAdjust < 0 ? divWidth + sizeAdjust + "px" : beforeRule.width;
                 verticalAdjust = adjustVertical(top);
                 beforeRule.top = verticalAdjust.topAdjust + "px";
                 beforeRule.left = Math.round(left) + "px";
@@ -113,7 +120,7 @@ var fxToolTip = function() {
                 afterRule.bottom = "";
                 afterRule.right = "99.5%";
                 afterRule.marginLeft = "";
-                afterRule.marginTop = -target.arrowSize() + "px";
+                afterRule.marginTop = -arrowSize + "px";
                 afterRule.borderColor = "transparent " + target.backgroundColor() + " transparent transparent";
                 break;
             }
@@ -121,69 +128,99 @@ var fxToolTip = function() {
     }
     function optimumOrientation(targetElement, target) {
         var elementCoordinates = getElementCoordinates(targetElement);
-        var elementCenterH = elementCoordinates.left + elementCoordinates.width / 2;
-        var elementCenterV = elementCoordinates.top + elementCoordinates.height / 2;
-        var leftSpacing = elementCenterH - ttDiv.offsetWidth / 2;
-        var rightSpacing = windowWidth - elementCenterH - ttDiv.offsetWidth / 2;
-        var topSpacing = elementCenterV - ttDiv.offsetHeight / 2;
-        var bottomSpacing = windowHeight - elementCenterV - ttDiv.offsetHeight / 2;
-        var leftMargin = elementCoordinates.left - target.arrowSize() - ttDiv.offsetWidth;
-        var rightMargin = windowWidth - ttDiv.offsetWidth - target.arrowSize() - elementCoordinates.left - elementCoordinates.width;
-        var topMargin = elementCoordinates.top - target.arrowSize() - ttDiv.offsetHeight;
-        var bottomMargin = windowHeight - ttDiv.offsetHeight - target.arrowSize() - elementCoordinates.top - elementCoordinates.height;
-        var leftValue = Math.min(topSpacing, bottomSpacing, leftMargin);
-        var rightValue = Math.min(topSpacing, bottomSpacing, rightMargin);
-        var topValue = Math.min(leftSpacing, rightSpacing, topMargin);
-        var bottomValue = Math.min(leftSpacing, rightSpacing, bottomMargin);
+        var arrowSize = parseSize(target.arrowSize(), "width", ttDiv);
+        var midX = elementCoordinates.left + elementCoordinates.width / 2;
+        var midY = elementCoordinates.top + elementCoordinates.height / 2;
+        var divWidth = ttDiv.getBoundingClientRect()["width"];
+        var divHeight = ttDiv.getBoundingClientRect()["height"];
+        var halfDivHeight = divHeight / 2;
+        var halfDivWidth = divWidth / 2;
+        var leftOverlap = overlap("left", {
+            x0: elementCoordinates.left - arrowSize - divWidth,
+            x1: elementCoordinates.left - arrowSize,
+            y0: midY - halfDivHeight,
+            y1: midY + halfDivHeight
+        });
+        var rightOverlap = overlap("right", {
+            x0: elementCoordinates.left + elementCoordinates.width + arrowSize,
+            x1: elementCoordinates.left + elementCoordinates.width + arrowSize + divWidth,
+            y0: midY - halfDivHeight,
+            y1: midY + halfDivHeight
+        });
+        var topOverlap = overlap("top", {
+            x0: midX - halfDivWidth,
+            x1: midX + halfDivWidth,
+            y0: elementCoordinates.top - arrowSize - divHeight,
+            y1: elementCoordinates.top - arrowSize
+        });
+        var bottomOverlap = overlap("bottom", {
+            x0: midX - halfDivWidth,
+            x1: midX + halfDivWidth,
+            y0: elementCoordinates.top + elementCoordinates.height + arrowSize,
+            y1: elementCoordinates.top + elementCoordinates.height + arrowSize + divHeight
+        });
         switch (target.preferredOrientation()) {
           case "left":
             {
-                if (leftValue >= 0) return "left";
+                if (leftOverlap.overlap == 1) return "left";
                 break;
             }
 
           case "right":
             {
-                if (rightValue >= 0) return "right";
+                if (rightOverlap.overlap == 1) return "right";
                 break;
             }
 
           case "top":
             {
-                if (topValue >= 0) return "top";
+                if (topOverlap.overlap == 1) return "top";
                 break;
             }
 
           case "bottom":
             {
-                if (bottomValue >= 0) return "bottom";
+                if (bottomOverlap.overlap == 1) return "bottom";
                 break;
             }
         }
-        if (leftValue < 0 && rightValue < 0 && topValue < 0 && bottomValue < 0) {
-            leftValue += elementCoordinates.height;
-            rightValue += elementCoordinates.height;
-            topValue += elementCoordinates.width;
-            bottomValue += elementCoordinates.width;
+        var overlaps = [ leftOverlap, rightOverlap, topOverlap, bottomOverlap ];
+        if (leftOverlap.overlap < 1 && rightOverlap.overlap < 1 && topOverlap.overlap < 1 && bottomOverlap.overlap < 1) {
+            return overlaps[overlaps.reduce((function(prev, current, index, array) {
+                if (current.overlap > array[prev].overlap) {
+                    return index;
+                } else {
+                    return prev;
+                }
+            }), 0)].side;
         }
-        var maxValue = Math.max(leftValue, rightValue, topValue, bottomValue);
-        switch (true) {
-          case leftValue == maxValue:
-            return "left";
-
-          case rightValue == maxValue:
-            return "right";
-
-          case topValue == maxValue:
-            return "top";
-
-          case bottomValue == maxValue:
-            return "bottom";
+        overlaps = overlaps.reduce((function(prev, current) {
+            if (current.overlap == 1) {
+                return prev.concat(current);
+            } else {
+                return prev;
+            }
+        }), []);
+        if (overlaps.length == 1) {
+            return overlaps[0].side;
         }
+        return overlaps[overlaps.reduce((function(prev, current, index, array) {
+            if (current.spacing[current.side] >= array[prev].spacing[prev.side]) {
+                return index;
+            } else {
+                return prev;
+            }
+        }), 0)].side;
+    }
+    function getOrientation(targetElement, target) {
+        if (target.orientation() != undefined) return target.orientation();
+        if (target.autoPosition()) return optimumOrientation(targetElement, target);
+        if (target.preferredOrientation() != "none") return target.preferredOrientation();
+        return "right";
     }
     var globalOptions$1 = {
         content: "",
-        orientation: "right",
+        orientation: undefined,
         preferredOrientation: "right",
         autoPosition: true,
         autoSize: true,
@@ -191,32 +228,31 @@ var fxToolTip = function() {
         trackMouse: false,
         cursor: "help",
         fontFamily: "verdana, sans-serif",
-        fontSize: "16",
+        fontSize: "1em",
         foregroundColor: "white",
         backgroundColor: "#333333",
         backgroundOpacity: 1,
         padding: "5px 10px",
-        borderRadius: 12,
+        borderRadius: "12px",
         boxShadow: "8px 8px 8px 0 rgba(0,0,0, 0.5)",
         transitionVisible: "opacity 0.4s ease-in 0s",
         transitionHidden: "opacity 0.4s ease-out 0s",
-        arrowSize: 12,
+        arrowSize: "12px",
         width: "auto",
         maxWidth: "none",
-        minWidth: 0,
+        minWidth: "auto",
         height: "auto",
         maxHeight: "none",
-        minHeight: 0
+        minHeight: "auto"
     };
     function applyOptions(target) {
         var transitionString;
         beforeRule.fontFamily = target.font().family;
-        beforeRule.fontSize = target.font().size + "px";
+        beforeRule.fontSize = target.font().size;
         beforeRule.color = target.foregroundColor();
         beforeRule.backgroundColor = target.backgroundColor();
         beforeRule.padding = target.padding();
-        beforeRule.borderRadius = target.borderRadius() + "px";
-        afterRule.borderWidth = target.arrowSize() + "px";
+        beforeRule.borderRadius = target.borderRadius();
         targetRule.cursor = target.cursor();
         beforeRule.boxShadow = target.boxShadow();
         beforeRule["-moz-boxShadow"] = target.boxShadow();
@@ -226,17 +262,28 @@ var fxToolTip = function() {
         beforeRule["-moz-transition"] = transitionString;
         beforeRule["-webkit-transiton"] = transitionString;
         beforeRule["-o-transition"] = transitionString;
-        beforeRule.maxWidth = target.maxWidth() == "none" ? "none" : target.maxWidth() + "px";
-        beforeRule.minWidth = target.minWidth() == 0 ? 0 : target.minWidth() + "px";
-        beforeRule.maxHeight = target.maxHeight() == "none" ? "none" : target.maxHeight() + "px";
-        beforeRule.minHeight = target.minHeight() == 0 ? 0 : target.minHeight() + "px";
+        beforeRule.maxWidth = target.maxWidth();
+        beforeRule.minWidth = target.minWidth();
+        beforeRule.maxHeight = target.maxHeight();
+        beforeRule.minHeight = target.minHeight();
         ttContainer.innerHTML = target.content();
         if (target.autoSize()) {
             sizeTip();
         } else {
-            beforeRule.width = target.width() == "auto" ? "auto" : target.width() + "px";
-            beforeRule.height = target.height() == "auto" ? "auto" : target.height() + "px";
+            beforeRule.width = target.width();
+            beforeRule.height = target.height();
         }
+    }
+    function resetOptions(target) {
+        ttContainer.innerHTML = "";
+        beforeRule.width = 0;
+        beforeRule.height = 0;
+        beforeRule.width = globalOptions$1.width;
+        beforeRule.height = globalOptions$1.height;
+        beforeRule.maxHeight = globalOptions$1.maxHeight;
+        beforeRule.minHeight = globalOptions$1.minHeight;
+        beforeRule.maxWidth = globalOptions$1.maxWidth;
+        beforeRule.minWidth = globalOptions$1.minWidth;
     }
     var mouseX;
     var mouseY;
@@ -262,10 +309,8 @@ var fxToolTip = function() {
         getMouseCoordinates(event);
         target = tips[tipsIndex.indexOf(targetElement.id)];
         applyOptions(target);
-        if (target.autoPosition()) {
-            target.orientation(optimumOrientation(targetElement, target), true);
-        }
-        orient(targetElement, target);
+        var orientation = getOrientation(targetElement, target);
+        position(targetElement, target, orientation);
         beforeRule.opacity = target.backgroundOpacity();
     }
     function mouseMove(event) {
@@ -280,10 +325,8 @@ var fxToolTip = function() {
             return;
         }
         getMouseCoordinates(event);
-        if (target.autoPosition()) {
-            target.orientation(optimumOrientation(targetElement, target), true);
-        }
-        orient(targetElement, target);
+        var orientation = getOrientation(targetElement, target);
+        position(targetElement, target, orientation);
     }
     function mouseOut(event) {
         var targetElement = this;
@@ -300,6 +343,7 @@ var fxToolTip = function() {
         beforeRule["-o-transition"] = transitionString;
         timer = window.setTimeout((function() {
             beforeRule.visibility = "hidden";
+            resetOptions();
         }), (transitionDuration + transitionDelay) * 1e3);
         beforeRule.opacity = 0;
     }
@@ -315,8 +359,8 @@ var fxToolTip = function() {
     var windowHeight;
     var aspectRatio;
     function windowResized() {
-        windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-        windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+        windowWidth = document.documentElement.clientWidth || document.body.clientWidth || window.innerWidth;
+        windowHeight = document.documentElement.clientHeight || document.body.clientHeight || window.innerHeight;
         aspectRatio = windowWidth / windowHeight;
     }
     function getElementCoordinates(element) {
@@ -345,30 +389,82 @@ var fxToolTip = function() {
             width: width
         };
     }
+    function overlap(side, coords) {
+        var precision = 7;
+        var divArea = (coords.x1 - coords.x0) * (coords.y1 - coords.y0);
+        var xDist = Math.min(coords.x1, windowWidth) - Math.max(coords.x0, 0);
+        var yDist = Math.min(coords.y1, windowHeight) - Math.max(coords.y0, 0);
+        var overlapArea = xDist > 0 && yDist > 0 ? xDist * yDist : 0;
+        var overlap = parseFloat((overlapArea / divArea).toFixed(precision));
+        var spacing = {
+            left: coords.x0,
+            right: windowWidth - coords.x1,
+            top: coords.y0,
+            bottom: windowHeight - coords.y0
+        };
+        return {
+            side: side,
+            overlap: overlap,
+            spacing: spacing
+        };
+    }
     function hexToRgb(hex) {
         var rgb = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
         return [ parseInt(rgb[1], 16), parseInt(rgb[2], 16), parseInt(rgb[3], 16) ];
     }
+    function createPseudoDiv(template) {
+        var pseudoDiv = document.createElement("div");
+        if (template != undefined) {
+            var font = window.getComputedStyle(template, null).getPropertyValue("font");
+            pseudoDiv.style.font = font;
+            pseudoDiv.style.width = template.getBoundingClientRect()["width"] + "px";
+            pseudoDiv.style.height = template.getBoundingClientRect()["height"] + "px";
+        }
+        pseudoDiv.style.visibility = "hidden";
+        pseudoDiv.style.position = "absolute";
+        pseudoDiv.style.display = "inline-block";
+        pseudoDiv.id = "pseudoDiv";
+        document.body.insertBefore(pseudoDiv, document.body.firstChild);
+        return pseudoDiv;
+    }
     function parseColor(input) {
+        var pseudoDiv = createPseudoDiv();
         pseudoDiv.style.color = input;
         var rgb = getComputedStyle(pseudoDiv, null).color;
         if (rgb.indexOf("#") !== -1) {
             rgb = hexToRgb(rgb);
         } else rgb = rgb.match(/\d+/g);
-        return "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")";
+        pseudoDiv.remove();
+        return "rgb(".concat(rgb[0], ", ").concat(rgb[1], ", ").concat(rgb[2], ")");
     }
-    function parseSize(size, dimension) {
+    function parseSize(size) {
+        var dimension = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "width";
+        var template = arguments.length > 2 ? arguments[2] : undefined;
         if (typeof size == "number") {
             return size;
         }
-        dimension = dimension == undefined ? "width" : dimension;
-        if (dimension == "width") {
-            pseudoDiv.style.width = size;
-            return parseInt(window.getComputedStyle(pseudoDiv, null).getPropertyValue("width"), 10);
+        var result;
+        var pseudoDiv = createPseudoDiv(template);
+        if (size.indexOf("%") != -1) {
+            var percent = parseInt(size, 10) / 100;
+            result = pseudoDiv.getBoundingClientRect()[dimension] * percent;
         } else {
-            pseudoDiv.style.height = size;
-            return parseInt(window.getComputedStyle(pseudoDiv, null).getPropertyValue("height"), 10);
+            pseudoDiv.style[dimension] = size;
+            result = pseudoDiv.getBoundingClientRect()[dimension];
         }
+        pseudoDiv.remove();
+        return result;
+    }
+    function checkSize(size) {
+        if (typeof size == "string") {
+            var regex = /^(\d*\.)?\d+(?:(cm)|(mm)|(in)|(px)|(pt)|(pc)|(em)|(ex)|(ch)|(rem)|(vw)|(vh)|(vmin)|(vmax)|(%))/;
+            var match = size.match(regex);
+            if (match != null && match[0].length == size.length) {
+                return true;
+            }
+        }
+        console.log("Option setting error. ".concat(size, " is an invalid CSS size"));
+        return false;
     }
     function checkBoolean(argument, argumentName) {
         if ([ true, false ].indexOf(argument) == -1) {
@@ -384,15 +480,22 @@ var fxToolTip = function() {
         console.log("Option setting error. ".concat(fontFamily, " is not a valid font family for this browser"));
         return false;
     }
-    function checkCSS(variable, style) {
-        pseudoDiv.style[variable] = "initial";
-        pseudoDiv.style[variable] = style;
-        if (pseudoDiv.style[variable] == "initial") {
-            console.log("Option setting error. ".concat(style, " is not a valid style for ").concat(variable));
-            return false;
-        } else {
+    function checkCSS(rule, style) {
+        if (style == "initial") {
             return true;
         }
+        var result;
+        var pseudoDiv = createPseudoDiv();
+        pseudoDiv.style[rule] = "initial";
+        pseudoDiv.style[rule] = style;
+        if (pseudoDiv.style[rule] == "initial") {
+            console.log("Option setting error. ".concat(style, " is not a valid style for ").concat(rule));
+            result = false;
+        } else {
+            result = true;
+        }
+        pseudoDiv.remove();
+        return result;
     }
     function _wrapRegExp() {
         _wrapRegExp = function(re, groups) {
@@ -547,7 +650,6 @@ var fxToolTip = function() {
     var afterRule;
     var targetRule;
     var set = false;
-    var pseudoDiv;
     function setUp() {
         if (set) {
             return;
@@ -571,15 +673,18 @@ var fxToolTip = function() {
         }
         sheet = document.styleSheets[0];
         rules = sheet.cssRules ? sheet.cssRules : sheet.rules;
+        var fxToolTipRule = ".fxToolTip {\n        opacity: 0;\n        -moz-opacity: 0;\n        -khtml-opacity: 0;\n        position: fixed;\n        visibility: hidden;\n        z-index: 100;\n        pointer-events: none;\n        display: inline-block;\n        box-sizing: border-box;\n        -moz-box-sizing: border-box;\n        -webkit-box-sizing: border-box}";
+        var fxContainerRule = ".fxContainer {\n        width: 100%;\n        height: 100%;\n        overflow: hidden;\n        text-overflow: ellipsis;\n        -ms-text-overflow: ellipsis;\n        -o-text-overflow: ellipsis}";
+        var fxToolTipAfterRule = '.fxToolTip::after{\n        content: "";\n        position: absolute;\n        border-style: solid;\n        pointer-events: none;}';
         if (sheet.insertRule) {
-            sheet.insertRule(".fxToolTip {opacity: 0;position: fixed;visibility: hidden;z-index: 100;pointer-events: none;display: inline-block}", rules.length);
-            sheet.insertRule(".fxContainer {width:100%;height:100%;overflow:hidden;text-overflow:ellipsis}", rules.length);
-            sheet.insertRule('.fxToolTip::after{content: "";position: absolute;border-style: solid;pointer-events: none;}', rules.length);
+            sheet.insertRule(fxToolTipRule, rules.length);
+            sheet.insertRule(fxContainerRule, rules.length);
+            sheet.insertRule(fxToolTipAfterRule, rules.length);
             sheet.insertRule(".fxToolTipTarget {cursor: help;}", rules.length);
         } else {
-            sheet.addRule(".fxToolTip", "{opacity: 0;position: fixed;visibility: hidden;z-index: 100;pointer-events: none;display: inline-block}", rules.length);
-            sheet.addRule(".fxContainer", "{width:100%;height:100%;overflow:hidden;text-overflow:ellipsis}", rules.length);
-            sheet.addRule(".fxToolTip::after", '{content: "";position: absolute;border-style: solid;pointer-events: none;}', rules.length);
+            sheet.addRule(fxToolTipRule, rules.length);
+            sheet.addRule(fxContainerRule, rules.length);
+            sheet.addRule(fxToolTipAfterRule, rules.length);
             sheet.addRule(".fxToolTipTarget", "{cursor: help;}", rules.length);
         }
         beforeRule = getRule(".fxToolTip").style;
@@ -591,11 +696,6 @@ var fxToolTip = function() {
         ttContainer = document.createElement("div");
         ttContainer.className = "fxContainer";
         ttDiv.appendChild(ttContainer);
-        pseudoDiv = document.createElement("div");
-        pseudoDiv.style.visibility = "hidden";
-        pseudoDiv.style.position = "absolute";
-        pseudoDiv.style.display = "inline-block";
-        document.body.insertBefore(pseudoDiv, document.body.firstChild);
         set = true;
     }
     function closeDown() {
@@ -632,23 +732,29 @@ var fxToolTip = function() {
             return undefined;
         }
     }
-    function sizeTip(target) {
+    function sizeTip() {
+        function getAspect() {
+            return ttDiv.getBoundingClientRect()["width"] / ttDiv.getBoundingClientRect()["height"];
+        }
+        function getPerimeter() {
+            return ttDiv.getBoundingClientRect()["width"] + ttDiv.getBoundingClientRect()["height"];
+        }
         beforeRule.width = "auto";
         beforeRule.height = "auto";
         var perimeter;
         var height;
         var width;
-        var oldWidth = ttDiv.offsetWidth;
-        var newAspect = ttDiv.offsetWidth / ttDiv.offsetHeight;
+        var oldWidth = ttDiv.getBoundingClientRect()["width"];
+        var newAspect = getAspect();
         var oldDelta = Math.abs(newAspect - aspectRatio);
         var itterations = 0;
         var newDelta = oldDelta;
         while (newDelta > .1 && itterations < 10) {
-            perimeter = ttDiv.offsetWidth + ttDiv.offsetHeight;
+            perimeter = getPerimeter();
             height = 1 / ((aspectRatio + 1) / perimeter);
             width = perimeter - height;
             beforeRule.width = Math.round(width) + "px";
-            newAspect = ttDiv.offsetWidth / ttDiv.offsetHeight;
+            newAspect = getAspect();
             newDelta = Math.abs(newAspect - aspectRatio);
             if (Math.abs(newDelta - oldDelta) < .1) {
                 if (oldDelta < newDelta) {
@@ -661,6 +767,8 @@ var fxToolTip = function() {
                 itterations++;
             }
         }
+        beforeRule.width = ttDiv.getBoundingClientRect()["width"] + "px";
+        beforeRule.height = ttDiv.getBoundingClientRect()["height"] + "px";
     }
     var _options = new WeakMap;
     var _elementId = new WeakMap;
@@ -722,7 +830,6 @@ var fxToolTip = function() {
                     console.log("Option setting error. Orientation must be one of ['left' | 'right' | 'top' | 'bottom']");
                 } else {
                     _classPrivateFieldGet(this, _options).orientation = _orientation;
-                    _classPrivateFieldGet(this, _options).autoPosition = false;
                 }
                 return this;
             }
@@ -813,9 +920,12 @@ var fxToolTip = function() {
                 if (arguments.length == 1) {
                     size = "1em";
                 }
-                if (checkFontFamily(family)) {
+                if (typeof size == "number") {
+                    size += "px";
+                }
+                if (checkFontFamily(family) && checkSize(size)) {
                     _classPrivateFieldGet(this, _options).fontFamily = family;
-                    _classPrivateFieldGet(this, _options).fontSize = parseSize(size);
+                    _classPrivateFieldGet(this, _options).fontSize = size;
                 }
                 return this;
             }
@@ -855,13 +965,18 @@ var fxToolTip = function() {
         }, {
             key: "padding",
             value: function padding(_padding) {
+                var _this = this;
                 if (_padding == undefined) {
                     return _classPrivateFieldGet(this, _options).padding;
                 }
-                var size0;
-                var size1;
                 var tmpPadding;
                 _padding = _padding.split(" ", 4);
+                _padding.forEach((function(d) {
+                    if (typeof d == "number") {
+                        d += "px";
+                    }
+                    if (!checkSize(d)) return _this;
+                }));
                 switch (_padding.length) {
                   case 0:
                     {
@@ -870,29 +985,25 @@ var fxToolTip = function() {
 
                   case 1:
                     {
-                        size0 = parseSize(_padding[0]);
-                        tmpPadding = size0 + "px " + size0 + "px " + size0 + "px " + size0 + "px";
+                        tmpPadding = "".concat(_padding[0], " ").concat(_padding[0], " ").concat(_padding[0], " ").concat(_padding[0]);
                         break;
                     }
 
                   case 2:
                     {
-                        size0 = parseSize(_padding[0]);
-                        size1 = parseSize(_padding[1]);
-                        tmpPadding = size0 + "px " + size1 + "px " + size0 + "px " + size1 + "px";
+                        tmpPadding = "".concat(_padding[0], " ").concat(_padding[1], " ").concat(_padding[0], " ").concat(_padding[1]);
                         break;
                     }
 
                   case 3:
                     {
-                        size0 = parseSize(_padding[1]);
-                        tmpPadding = parseSize(_padding[0]) + "px " + size0 + "px " + parseSize(_padding[2]) + "px " + size0 + "px";
+                        tmpPadding = "".concat(_padding[0], " ").concat(_padding[1], " ").concat(_padding[2], " ").concat(_padding[1]);
                         break;
                     }
 
                   case 4:
                     {
-                        tmpPadding = parseSize(_padding[0]) + "px " + parseSize(_padding[1]) + "px " + parseSize(_padding[2]) + "px " + parseSize(_padding[3]) + "px";
+                        tmpPadding = "".concat(_padding[0], " ").concat(_padding[1], " ").concat(_padding[2], " ").concat(_padding[3]);
                         break;
                     }
                 }
@@ -907,7 +1018,12 @@ var fxToolTip = function() {
                 if (_borderRadius == undefined) {
                     return _classPrivateFieldGet(this, _options).borderRadius;
                 }
-                _classPrivateFieldGet(this, _options).borderRadius = parseSize(_borderRadius);
+                if (typeof _borderRadius == "number") {
+                    _borderRadius += "px";
+                }
+                if (checkSize(_borderRadius)) {
+                    _classPrivateFieldGet(this, _options).borderRadius = _borderRadius;
+                }
                 return this;
             }
         }, {
@@ -917,21 +1033,24 @@ var fxToolTip = function() {
                     return _classPrivateFieldGet(this, _options).boxShadow;
                 }
                 var parsedColor;
-                var parsedSize;
                 var boxShadowString;
                 var rgbCore;
                 if (arguments[0] == "none") {
                     _classPrivateFieldGet(this, _options).boxShadow = "";
                 } else {
-                    parsedSize = parseSize(size);
-                    parsedColor = parseColor(color);
-                    if (opacity !== 0) {
-                        rgbCore = parsedColor.match(/\d+/g);
-                        boxShadowString = "rgba(" + parseInt(rgbCore[0]) + "," + parseInt(rgbCore[1]) + "," + parseInt(rgbCore[2]) + "," + opacity + ")";
-                    } else {
-                        boxShadowString = parsedColor;
+                    if (typeof size == "number") {
+                        size += "px";
                     }
-                    _classPrivateFieldGet(this, _options).boxShadow = parsedSize + "px " + parsedSize + "px " + parsedSize + "px 0 " + boxShadowString;
+                    if (checkSize(size) && checkCSS(color, "color") && checkCSS(opacity, "opacity")) {
+                        parsedColor = parseColor(color);
+                        if (opacity !== 0) {
+                            rgbCore = parsedColor.match(/\d+/g);
+                            boxShadowString = "rgba(".concat(parseInt(rgbCore[0], 10), ", ").concat(parseInt(rgbCore[1], 10), ", ").concat(parseInt(rgbCore[2], 10), ", ").concat(opacity, ")");
+                        } else {
+                            boxShadowString = parsedColor;
+                        }
+                        _classPrivateFieldGet(this, _options).boxShadow = "".concat(size, " ").concat(size, " ").concat(size, " 0 ").concat(boxShadowString);
+                    }
                 }
                 return this;
             }
@@ -941,7 +1060,11 @@ var fxToolTip = function() {
                 if (arguments.length == 0) {
                     return _classPrivateFieldGet(this, _options).transitionVisible;
                 }
-                _classPrivateFieldGet(this, _options).transitionVisible = "opacity " + duration + "s ease-in " + delay + "s";
+                if (typeof delay != "number" && typeof duration != "number") {
+                    console.log("Option setting error. Either ".concat(delay, " and/or ").concat(duration, " are not a valid arguments"));
+                } else {
+                    _classPrivateFieldGet(this, _options).transitionVisible = "opacity ".concat(duration, "s ease-in ").concat(delay, "s");
+                }
                 return this;
             }
         }, {
@@ -950,7 +1073,11 @@ var fxToolTip = function() {
                 if (arguments.length == 0) {
                     return _classPrivateFieldGet(this, _options).transitionHidden;
                 }
-                _classPrivateFieldGet(this, _options).transitionHidden = "opacity " + duration + "s ease-out " + delay + "s";
+                if (typeof delay != "number" && typeof duration != "number") {
+                    console.log("Option setting error. Either ".concat(delay, " and/or ").concat(duration, " are not a valid arguments"));
+                } else {
+                    _classPrivateFieldGet(this, _options).transitionHidden = "opacity ".concat(duration, "s ease-out ").concat(delay, "s");
+                }
                 return this;
             }
         }, {
@@ -959,7 +1086,12 @@ var fxToolTip = function() {
                 if (_arrowSize == undefined) {
                     return _classPrivateFieldGet(this, _options).arrowSize;
                 }
-                _classPrivateFieldGet(this, _options).arrowSize = parseSize(_arrowSize);
+                if (typeof _arrowSize == "number") {
+                    _arrowSize += "px";
+                }
+                if (checkSize(_arrowSize)) {
+                    _classPrivateFieldGet(this, _options).arrowSize = _arrowSize;
+                }
                 return this;
             }
         }, {
@@ -968,8 +1100,13 @@ var fxToolTip = function() {
                 if (_width == undefined) {
                     return _classPrivateFieldGet(this, _options).width;
                 }
-                _classPrivateFieldGet(this, _options).width = _width == "auto" ? "auto" : parseSize(_width);
-                _classPrivateFieldGet(this, _options).autoSize = _width == "auto" ? options.autoSize : false;
+                if (typeof _width == "number") {
+                    _width += "px";
+                }
+                if (_width == "auto" || checkSize(_width)) {
+                    _classPrivateFieldGet(this, _options).width = _width;
+                }
+                _classPrivateFieldGet(this, _options).autoSize = _width == "auto" ? _classPrivateFieldGet(this, _options).autoSize : false;
                 return this;
             }
         }, {
@@ -978,7 +1115,12 @@ var fxToolTip = function() {
                 if (_maxWidth == undefined) {
                     return _classPrivateFieldGet(this, _options).maxWidth;
                 }
-                _classPrivateFieldGet(this, _options).maxWidth = _maxWidth == "none" ? "none" : parseSize(_maxWidth);
+                if (typeof _maxWidth == "number") {
+                    _maxWidth += "px";
+                }
+                if (_maxWidth == "none" || checkSize(_maxWidth)) {
+                    _classPrivateFieldGet(this, _options).maxWidth = _maxWidth;
+                }
                 return this;
             }
         }, {
@@ -987,7 +1129,12 @@ var fxToolTip = function() {
                 if (_minWidth == undefined) {
                     return _classPrivateFieldGet(this, _options).minWidth;
                 }
-                _classPrivateFieldGet(this, _options).minWidth = _minWidth == "none" ? "none" : parseSize(_minWidth);
+                if (typeof _minWidth == "number") {
+                    _minWidth += "px";
+                }
+                if (_minWidth == "auto" || checkSize(_minWidth)) {
+                    _classPrivateFieldGet(this, _options).minWidth = _minWidth;
+                }
                 return this;
             }
         }, {
@@ -996,7 +1143,12 @@ var fxToolTip = function() {
                 if (_height == undefined) {
                     return _classPrivateFieldGet(this, _options).height;
                 }
-                _classPrivateFieldGet(this, _options).height = _height == "auto" ? "auto" : parseSize(_height, "height");
+                if (typeof _height == "number") {
+                    _height += "px";
+                }
+                if (_height == "auto" || checkSize(_height)) {
+                    _classPrivateFieldGet(this, _options).height = _height;
+                }
                 _classPrivateFieldGet(this, _options).autoSize = _height == "auto" ? options.autoSize : false;
                 return this;
             }
@@ -1006,7 +1158,12 @@ var fxToolTip = function() {
                 if (_maxHeight == undefined) {
                     return _classPrivateFieldGet(this, _options).maxHeight;
                 }
-                _classPrivateFieldGet(this, _options).maxHeight = _maxHeight == "none" ? "none" : parseSize(_maxHeight, "height");
+                if (typeof _maxHeight == "number") {
+                    _maxHeight += "px";
+                }
+                if (_maxHeight == "none" || checkSize(_maxHeight)) {
+                    _classPrivateFieldGet(this, _options).maxHeight = _maxHeight;
+                }
                 return this;
             }
         }, {
@@ -1015,7 +1172,12 @@ var fxToolTip = function() {
                 if (_minHeight == undefined) {
                     return _classPrivateFieldGet(this, _options).minHeight;
                 }
-                _classPrivateFieldGet(this, _options).minHeight = _minHeight == "none" ? "none" : parseSize(_minHeight, "height");
+                if (typeof _minHeight == "number") {
+                    _minHeight += "px";
+                }
+                if (_minHeight == "auto" || checkSize(_minHeight)) {
+                    _classPrivateFieldGet(this, _options).minHeight = _minHeight;
+                }
                 return this;
             }
         }, {

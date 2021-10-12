@@ -44,9 +44,16 @@ export function getTipByElementId(elementId) {
  * @function sizeTip
  * @desc Automatically sizes the tooltip to roughly correspond to the viewport's aspect ratio.
  * This function is only called if the [autoSize]{@link Tip#autoSize} option is true.
- * @param {Tip} target The [Tip]{@link Tip} class object associated with the tooltip being shown.
  */
-export function sizeTip (target) {
+export function sizeTip () {
+
+    function getAspect () {
+        return ttDiv.getBoundingClientRect()['width'] / ttDiv.getBoundingClientRect()['height'];
+    }
+
+    function getPerimeter() {
+        return ttDiv.getBoundingClientRect()['width'] + ttDiv.getBoundingClientRect()['height'];
+    }
 
     beforeRule.width = 'auto';
     beforeRule.height = 'auto';
@@ -54,18 +61,19 @@ export function sizeTip (target) {
     let perimeter;
     let height;
     let width;
-    let oldWidth = ttDiv.offsetWidth;
-    let newAspect = ttDiv.offsetWidth / ttDiv.offsetHeight;;
+
+    let oldWidth = ttDiv.getBoundingClientRect()['width'];
+    let newAspect = getAspect();
     let oldDelta = Math.abs(newAspect - aspectRatio);
     let itterations = 0;
     let newDelta = oldDelta;
-    
+
     while (newDelta > 0.1 && itterations < 10) {
-        perimeter = ttDiv.offsetWidth + ttDiv.offsetHeight;
+        perimeter = getPerimeter();
         height = 1 / ((aspectRatio + 1) / perimeter);
         width = perimeter - height;
         beforeRule.width = Math.round(width) + 'px';
-        newAspect = ttDiv.offsetWidth / ttDiv.offsetHeight;
+        newAspect =getAspect();
         newDelta = Math.abs(newAspect - aspectRatio);
         if (Math.abs(newDelta - oldDelta) < 0.1) {
             if (oldDelta < newDelta) { beforeRule.width = Math.round(oldWidth) + 'px' };
@@ -76,5 +84,8 @@ export function sizeTip (target) {
             itterations++;
         };
     };
+
+    beforeRule.width = ttDiv.getBoundingClientRect()['width'] + 'px';
+    beforeRule.height = ttDiv.getBoundingClientRect()['height'] + 'px';
      
 }

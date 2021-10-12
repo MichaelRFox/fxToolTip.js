@@ -39,14 +39,14 @@ export let ttDiv;
 export let ttContainer;
 
 /**
- * CSS rule associated with the *fxToolTip* class.
+ * CSS rule associated with the *.fxToolTip* class.
  * @type CSSRule
  * @global
  */
 export let beforeRule;
 
 /**
- * CSS rule associated with the *fxToolTip::after* pseudo class.
+ * CSS rule associated with the *.fxToolTip::after* pseudo class.
  * Used to style the tooltip arrow.
  * @type CSSRule
  * @global
@@ -70,28 +70,17 @@ export let targetRule;
 export let set = false;
 
 /**
- * An invisible HTML div element inserted into the DOM to facilitate
- * error checking and parsing of colors and sizes. See the [utils module]{@link module:utils}.
- * @type DOM.Element
- * @global
- */
-export let pseudoDiv;
-
-/**
  * @function setup
  * @desc The setup function is called upon initialization of the fxToolTip environment.
  * First, it sets a listener for the window *resize* event which invokes the
  * [windowResized]{@link module:utils~windowResized} function. Second, it determines if there
  * is a current stylesheet associated with the document, and if not inserts one. Next, it
- * inserts four class styles (*.fxToolTip*, *.fxContainer*, *fxToolTip::after*, and *.fxTooltipTarget*).
+ * inserts four class styles (*.fxToolTip*, *.fxContainer*, *.fxToolTip::after*, and *.fxTooltipTarget*).
  * *.fxToolTip* contains all of the rules that style the tooltip. *.fxToolTip::after* contains all of
  * the rules that style the tooltip arrow. *.fxContainer* contains rules that style the tooltip content.
  * *.fxToolTipTarget* contains one rule that styles the cursor of the target element on hover.
- * The setup function also appends two div elements to the document body element:
- * The first div element is created with the class name 'fxToolTip' and is the container for
- * all tooltips in the document. The second div element is permanently hidden and is used internally
- * to size objects (see the [parseSize]{@link module:utils~parseSize},
- * [parseColor]{@link module:utils~parseColor}, and [checkCSS]{@link module:utils~checkCSS} functions.
+ * The setup function also appends one div element to the document body element created with the class
+ * name '.fxToolTip' and styles all tooltips in the document.
  *
  * *note*:  The classes and div elements are created only once and shared by all of the tooltips.
  */
@@ -120,16 +109,43 @@ export function setUp() {
     
     sheet = document.styleSheets[0];
     rules = sheet.cssRules ? sheet.cssRules: sheet.rules;
-            
+    
+    const fxToolTipRule = `.fxToolTip {
+        opacity: 0;
+        -moz-opacity: 0;
+        -khtml-opacity: 0;
+        position: fixed;
+        visibility: hidden;
+        z-index: 100;
+        pointer-events: none;
+        display: inline-block;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box}`
+
+    const fxContainerRule = `.fxContainer {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -ms-text-overflow: ellipsis;
+        -o-text-overflow: ellipsis}`
+
+    const fxToolTipAfterRule = `.fxToolTip::after{
+        content: "";
+        position: absolute;
+        border-style: solid;
+        pointer-events: none;}`
+
     if (sheet.insertRule) {
-        sheet.insertRule('.fxToolTip {opacity: 0;position: fixed;visibility: hidden;z-index: 100;pointer-events: none;display: inline-block}', rules.length);
-        sheet.insertRule('.fxContainer {width:100%;height:100%;overflow:hidden;text-overflow:ellipsis}', rules.length);
-        sheet.insertRule('.fxToolTip::after{content: "";position: absolute;border-style: solid;pointer-events: none;}', rules.length);
+        sheet.insertRule(fxToolTipRule, rules.length);
+        sheet.insertRule(fxContainerRule, rules.length);
+        sheet.insertRule(fxToolTipAfterRule, rules.length);
         sheet.insertRule('.fxToolTipTarget {cursor: help;}', rules.length);
     } else {
-        sheet.addRule('.fxToolTip', '{opacity: 0;position: fixed;visibility: hidden;z-index: 100;pointer-events: none;display: inline-block}', rules.length);
-        sheet.addRule('.fxContainer', '{width:100%;height:100%;overflow:hidden;text-overflow:ellipsis}', rules.length);
-        sheet.addRule('.fxToolTip::after', '{content: "";position: absolute;border-style: solid;pointer-events: none;}', rules.length);
+        sheet.addRule(fxToolTipRule, rules.length);
+        sheet.addRule(fxContainerRule, rules.length);
+        sheet.addRule(fxToolTipAfterRule, rules.length);
         sheet.addRule('.fxToolTipTarget', '{cursor: help;}', rules.length);
     };
     
@@ -144,12 +160,6 @@ export function setUp() {
     ttContainer = document.createElement('div');
     ttContainer.className = 'fxContainer';
     ttDiv.appendChild(ttContainer);
-
-    pseudoDiv = document.createElement('div');
-    pseudoDiv.style.visibility = 'hidden';
-    pseudoDiv.style.position = 'absolute';
-    pseudoDiv.style.display = 'inline-block';
-    document.body.insertBefore(pseudoDiv, document.body.firstChild);
     
     set = true;
 }

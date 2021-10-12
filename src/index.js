@@ -22,12 +22,12 @@
  * ![GitHub top language](https://img.shields.io/github/languages/top/MichaelRFox/fxTooltip.js)
  * ![NPM](https://img.shields.io/npm/l/fx.tooltip.js)
  * 
- * fxToolTips is a small, simple library designed to show tooltips on hover over any DOM element.
+ * fxToolTip is a small, simple library designed to show tooltips on hover over any DOM element.
  * It uses a combination of JavaScript and CSS styles to provide flexibility and ease of implementation.
  * It has no dependencies and should work on any modern browser (i.e., not Internet Explorer 8.0 and earlier).
  * fxToolTip will automatically size and position tooltips (default behavior) to ensure they are displayed
  * in the viewport. Tooltips can be positioned relative to their target DOM element (default behavior) or track the cursor.
- * fxToolTip supports method chaining and integrate nicely with [d3.js]{@link https://d3js.org/}. Tooltips can be styled
+ * fxToolTip supports method chaining and integrates nicely with [d3.js]{@link https://d3js.org/}. Tooltips can be styled
  * in a wide variety of ways, and can contain any valid HTML (text, tables, images, svg, etc.).
  * 
  * # Installation
@@ -168,7 +168,10 @@
 
 /** 
  * @module index 
- * @desc The entry point for fxToolTip.  
+ * @desc The entry point for fxToolTip. fxToolTip exports a single object which contains methods to create and remove tooltips,
+ * retrieve a [Tip]{@link Tip} class object from the unique id of its associated DOM element, A special Tip class object with
+ * which one can alter the defaults globally, a method to suspend or resume showing tooltips, and a method to suspend or
+ * resume polling of the DOM for removed elements.
  */
 import {create, remove, checkDOM} from './fxTip.js';
 import {getTipByElementId} from './tips.js';

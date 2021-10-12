@@ -5,6 +5,7 @@
 terser*
 *.sublime*
 rollup.config.js
+jsDocConfig.json
 out
 test
 node_modules

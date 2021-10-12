@@ -30,4 +30,4 @@ fxToolTip supports method chaining and integrates seamlessly with [d3.js](https:
 ## API Documentation
 See the API documentation at:
 
-https://michaelrfox.github.io/docs/fx.tooltip.js/2.1.1/
+https://michaelrfox.github.io/docs/fx.tooltip.js/2.2.0/

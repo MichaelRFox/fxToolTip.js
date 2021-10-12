@@ -5,7 +5,6 @@
  */
 
 import {tips, tipsIndex} from './tips.js';
-import {pseudoDiv} from './init.js';
 import {mouseX, mouseY} from './mouse.js';
 
 /**
@@ -39,26 +38,26 @@ export let aspectRatio;
  * @event
  */
 export function windowResized() {
-    windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    windowWidth =  document.documentElement.clientWidth || document.body.clientWidth || window.innerWidth;
+    windowHeight = document.documentElement.clientHeight || document.body.clientHeight || window.innerHeight ;
     aspectRatio = windowWidth / windowHeight;
 }
 
 /**
  * @function getElementCoordinates
  * @desc Gets the width, height, top, and left coordinate in the client space
- * for any DOM element.
+ * for any DOM element. Used to retrieve the dimensions of the tooltip target.
  * @param {DOM.element} element The DOM element whose tooltip is being queried.
- * @returns {Object} The width, height, top, and left coordinate in the client space
+ * @returns {Object} The width, height, top, and left coordinate in the client space.
  */
 export function getElementCoordinates (element) {
-    let cursorBuffer = 0;
+    const cursorBuffer = 0;
     let clientRect = {};
     let boundingClientRect = {};
 
     let target = tips[tipsIndex.indexOf(element.id)];
     
-    if (target.mousePoint()) {// == true) {
+    if (target.mousePoint()) {
         clientRect.left = mouseX - cursorBuffer;
         clientRect.top = mouseY - cursorBuffer;
         clientRect.right = mouseX + cursorBuffer;
@@ -77,6 +76,35 @@ export function getElementCoordinates (element) {
 }
 
 /**
+ * @function overlap
+ * @desc Computes the percent of a div element that is within the bounds of the viewport.
+ * Used to support [optimum-orientaton]{@link module:orient~optimumOrientation}.
+ * @param {Object} coords The absolute coordinates {x0, x1, y0, y1} of the div element of interest.
+ * @returns {Object} An object containing the side, overlap, and the spacing around each side.
+ * @since v2.2.0
+ */
+export function overlap (side, coords) {
+    const precision = 7;
+
+    const divArea = (coords.x1 - coords.x0) * (coords.y1 - coords.y0);
+
+    const xDist = (Math.min(coords.x1, windowWidth) - Math.max(coords.x0, 0));
+    const yDist = (Math.min(coords.y1, windowHeight) - Math.max(coords.y0, 0));
+
+    const overlapArea = xDist > 0 && yDist > 0 ? xDist * yDist : 0;
+
+    const overlap = parseFloat((overlapArea / divArea).toFixed(precision));
+    const spacing = {
+        left: coords.x0,
+        right: windowWidth - coords.x1,
+        top: coords.y0,
+        bottom: windowHeight - coords.y0
+    };
+
+    return {side: side, overlap: overlap, spacing: spacing};
+}
+
+/**
  * @function hexToRgb
  * @desc Converts a CSS string formatted as hex to rgb format.
  * @param {string} hex The hex representation of the CSS color
@@ -87,40 +115,92 @@ function hexToRgb(hex) {
     return [parseInt(rgb[1], 16), parseInt(rgb[2], 16), parseInt(rgb[3], 16)];
 }
 
+/** 
+ * @function createPseudoDiv
+ * @desc Creates a hidden div element to facillitate parsing of [colors]{@link module:utils~parseColor}
+ * and [sizes]{@link module:utils~parseSize}. If the template argument is passed clones the div properties from it.
+ * @param {HTML.div} template An existing div element.
+ * @returns {HTML.div} A hidden div element.
+ * @since v2.2.0
+ */
+function createPseudoDiv (template) {
+
+    let pseudoDiv = document.createElement('div');
+
+    if (template != undefined) {
+        const font = window.getComputedStyle(template, null).getPropertyValue('font');
+        pseudoDiv.style.font = font;
+        pseudoDiv.style.width = template.getBoundingClientRect()['width'] + 'px';
+        pseudoDiv.style.height = template.getBoundingClientRect()['height'] + 'px';
+    };
+    pseudoDiv.style.visibility = 'hidden';
+    pseudoDiv.style.position = 'absolute';
+    pseudoDiv.style.display = 'inline-block';
+    pseudoDiv.id = 'pseudoDiv';
+    document.body.insertBefore(pseudoDiv, document.body.firstChild);
+
+    return pseudoDiv;
+}
+
 /**
  * @function parseColor
  * @desc Parses any valid CSS color
  * @param {string} input Any valid CSS color.
- * @returns {string} The CSS color formatted as an rgb string
+ * @returns {string} The CSS color formatted as an rgb string.
  */
 export function parseColor(input) {
+    let pseudoDiv = createPseudoDiv();
     pseudoDiv.style.color = input;
     let rgb = getComputedStyle(pseudoDiv, null).color;
     if (rgb.indexOf('#') !== -1) { 
         rgb = hexToRgb(rgb);
     } else rgb = rgb.match(/\d+/g);
-    return 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
+    pseudoDiv.remove()
+    return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
 }
 
 /**
  * @function parseSize
- * @desc Parses any valid CSS size, except for percentage.
- * @param {(number | string)} size Any valid CSS size (e.g. 12px, 3em)
+ * @desc Parses any valid CSS size.
+ * @param {(number | string)} size Any valid CSS size (e.g. 12px, 3em).
  * @param {string} dimension The dimension ['width' | 'height'] to return.
  * **Default**: 'width'.
- * @returns {number} The size in pixels.
- * 
+ * @param {HTML.div} template A div element containing the style options of a tooltip.
+ * If the size to be computed, this argument must be passed.
+ * @returns {number} The size in pixels (without the 'px' suffix).
  */
-export function parseSize (size, dimension) {
+export function parseSize (size, dimension = 'width', template) {
     if (typeof size == 'number') { return size; };
-    dimension = (dimension == undefined) ? 'width' : dimension;
-    if (dimension == 'width') { 
-        pseudoDiv.style.width = size;
-        return parseInt(window.getComputedStyle(pseudoDiv, null).getPropertyValue('width'), 10);
+    let result;
+    let pseudoDiv = createPseudoDiv (template);
+    if (size.indexOf('%') != -1) {
+        let percent = parseInt(size, 10) / 100;
+        result = pseudoDiv.getBoundingClientRect()[dimension] * percent;
     } else {
-        pseudoDiv.style.height = size;
-        return parseInt(window.getComputedStyle(pseudoDiv, null).getPropertyValue('height'), 10);
+        pseudoDiv.style[dimension] = size;
+        result = pseudoDiv.getBoundingClientRect()[dimension];       
     };
+
+    pseudoDiv.remove();
+    return result;
+}
+
+/**
+ * @function checkSize
+ * @desc Validates that the size is a valid CSS size.
+ * @param {string} size Any valid CSS size (e.g. 12px, 3em).
+ * @returns {boolean} True if the size argument is a valid size, false
+ * otherwise - logs an error to the console.
+ * @since v2.2.0
+ */
+export function checkSize (size) {
+    if (typeof size == 'string') {
+        const regex = /^(\d*\.)?\d+(?:(cm)|(mm)|(in)|(px)|(pt)|(pc)|(em)|(ex)|(ch)|(rem)|(vw)|(vh)|(vmin)|(vmax)|(%))/;
+        let match = size.match(regex);
+        if (match != null && match[0].length == size.length) { return true; }; 
+    };
+    console.log(`Option setting error. ${size} is an invalid CSS size`);
+    return false;
 }
 
 /**
@@ -129,7 +209,7 @@ export function parseSize (size, dimension) {
  * @since v2.1.0
  * @param {(any | boolean)} argument The argument to be checked.
  * @param {string} argumentName A string representation of the calling function.
- * @returns {boolean} True if the argument is boolean, false otherwise - logs an error to the console
+ * @returns {boolean} True if the argument is boolean, false otherwise - logs an error to the console.
  */
 export function checkBoolean (argument, argumentName) {
     if ([true, false].indexOf(argument) == -1) {
@@ -143,11 +223,11 @@ export function checkBoolean (argument, argumentName) {
 /**
  * @function checkFontFamily
  * @desc Validates whether a font family is available on the browser. Note not all
- * browsers support the document.font interface (esp. all versions of Internet Explorer - 
+ * browsers support the FontFaceSet interface (esp. all versions of Internet Explorer - 
  * if you are still using IE, I'm coming to your house and setting your computer on fire).
  * @since v2.1.0
  * @param {string} argument The font family being checked.
- * @returns {boolean} True if the font is available or the document.font interface is unsupported,
+ * @returns {boolean} True if the font is available or the FontFaceSet interface is unsupported,
  * false otherwise - logs an error to the console
  */
 export function checkFontFamily (fontFamily) {
@@ -160,20 +240,26 @@ export function checkFontFamily (fontFamily) {
 
 /**
  * @function checkCSS
- * @desc Validates whether a CSS value is valid. It does this by setting the value in a div
- * and the checking to see if the style has indeed changed.
- * @since v2.1.0
- * @param {string} variable The CSS rule (e.g., padding, border-radius, etc.) being checked.
+ * @desc Validates whether a CSS value is valid. It does this by setting the value in a
+ * temporary div element and the checking to see if the style has indeed changed.
+ * @param {string} rule The CSS rule (e.g., padding, border-radius, etc.) being checked.
  * @param {string} style The style to validate.
  * @returns {boolean} True if the CSS is valid, false otherwise - logs an error to the console
+ * @since v2.1.0
  */
-export function checkCSS (variable, style) {
-    pseudoDiv.style[variable] = 'initial';
-    pseudoDiv.style[variable] = style;
-    if (pseudoDiv.style[variable] == 'initial') {
-        console.log(`Option setting error. ${style} is not a valid style for ${variable}`);
-        return false;
+export function checkCSS (rule, style) {
+    if (style == 'initial') { return true; }; //always valid
+    let result;
+    let pseudoDiv = createPseudoDiv();
+    pseudoDiv.style[rule] = 'initial';
+    pseudoDiv.style[rule] = style;
+    if (pseudoDiv.style[rule] == 'initial') {
+        console.log(`Option setting error. ${style} is not a valid style for ${rule}`);
+        result = false;
     } else {
-        return true;
+        result = true;
     };
+
+    pseudoDiv.remove()
+    return result;
 }
