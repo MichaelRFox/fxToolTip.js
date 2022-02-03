@@ -9,11 +9,16 @@
 > - :pencil:       		 [Documentation]
 > - :house:      		 [Internal]
 > - :hammer_and_wrench:  [Improvement]
-# v2.2.2
+
+# v2.4.1
+### 3 Feb. 2022
+- :pencil: Fixed link to demos.
+
+# v2.4.0
 ### 3 Feb, 2022
 - :hammer_and_wrench: Updated all dev dependencies.
 
-# v2.2.1
+# v2.3.0
 ### 3 Feb, 2022
 - :eyeglasses: Renamed .babelrc to babel.config.json.
 - :hammer_and_wrench: Added some unit tests using jest.
