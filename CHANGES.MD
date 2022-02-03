@@ -9,6 +9,9 @@
 > - :pencil:       		 [Documentation]
 > - :house:      		 [Internal]
 > - :hammer_and_wrench:  [Improvement]
+# v2.2.2
+### 3 Feb, 2022
+- :hammer_and_wrench: Updated all dev dependencies.
 
 # v2.2.1
 ### 3 Feb, 2022
