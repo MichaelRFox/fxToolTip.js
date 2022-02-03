@@ -1,9 +1,0 @@
-{
-    "parse": false,
-    "compress": false,
-    "mangle": false,
-    "format": {
-        "beautify": true,
-        "comments": false
-    }
-}

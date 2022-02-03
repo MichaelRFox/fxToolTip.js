@@ -13,7 +13,7 @@ import {mouseX, mouseY} from './mouse.js';
  * @type number
  * @global
  */
-export let windowWidth;
+export let windowWidth = 1024;
 
 /**
  * Global variable containing the height of the current viewport. Updated by the
@@ -21,7 +21,7 @@ export let windowWidth;
  * @type number
  * @global
  */
-export let windowHeight;
+export let windowHeight = 768;
 
 /**
  * Global variable containing the aspect ratio of the current viewport. Updated by the
@@ -98,7 +98,7 @@ export function overlap (side, coords) {
         left: coords.x0,
         right: windowWidth - coords.x1,
         top: coords.y0,
-        bottom: windowHeight - coords.y0
+        bottom: windowHeight - coords.y1
     };
 
     return {side: side, overlap: overlap, spacing: spacing};
@@ -112,6 +112,7 @@ export function overlap (side, coords) {
  */
 function hexToRgb(hex) {
     let rgb = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+    // return `rgb(${parseInt(rgb[1], 16)}, ${parseInt(rgb[2], 16)}, ${parseInt(rgb[3], 16)})`;
     return [parseInt(rgb[1], 16), parseInt(rgb[2], 16), parseInt(rgb[3], 16)];
 }
 
@@ -145,13 +146,15 @@ function createPseudoDiv (template) {
 /**
  * @function parseColor
  * @desc Parses any valid CSS color
- * @param {string} input Any valid CSS color.
+ * @param {string} color Any valid CSS color.
  * @returns {string} The CSS color formatted as an rgb string.
+ * If opacity values (e.g., rgba) are passed, the opacity is
+ * stripped out and simple rgb is returned.
  */
-export function parseColor(input) {
+export function parseColor(color) {
     let pseudoDiv = createPseudoDiv();
-    pseudoDiv.style.color = input;
-    let rgb = getComputedStyle(pseudoDiv, null).color;
+    pseudoDiv.style.color = color;
+    let rgb = window.getComputedStyle(pseudoDiv, null).getPropertyValue('color');
     if (rgb.indexOf('#') !== -1) { 
         rgb = hexToRgb(rgb);
     } else rgb = rgb.match(/\d+/g);
@@ -180,7 +183,6 @@ export function parseSize (size, dimension = 'width', template) {
         pseudoDiv.style[dimension] = size;
         result = pseudoDiv.getBoundingClientRect()[dimension];       
     };
-
     pseudoDiv.remove();
     return result;
 }
@@ -235,7 +237,6 @@ export function checkFontFamily (fontFamily) {
     if (document.fonts.check(`16px ${fontFamily}`)) return true;
     console.log (`Option setting error. ${fontFamily} is not a valid font family for this browser`);
     return false;
-
 }
 
 /**

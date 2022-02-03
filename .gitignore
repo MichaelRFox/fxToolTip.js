@@ -16,10 +16,9 @@ node_modules
 fxToolTip.sublime-workspace
 fxToolTip.sublime-project
 
-# JSdoc files
-out
-
-test
+integrationTest
 
 # misc
 *OLD
+
+coverage

@@ -1,11 +1,12 @@
 {
   "name": "fx.tooltip.js",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "A tooltip library for javascript",
   "keywords": [
     "tooltip",
     "d3.js"
   ],
+  "type": "module",
   "homepage": "https://github.com/MichaelRFox/fxToolTip.js/blob/master/README.md",
   "bugs": {
     "url": "https://github.com/MichaelRFox/fxToolTip.js/issues",
@@ -28,12 +29,12 @@
     "url": "git+https://github.com/MichaelRFox/fxToolTip.js.git"
   },
   "scripts": {
-    "build": "npm run rollupBuild && npm run terserLite && npm run terser",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "build": "npm run rollupBuild && fxstripjsdoc dist/fxToolTip.js && npm run terser",
     "rollupBuild": "rollup -c rollup.config.js",
-    "test": "cp src/*.js test/",
-    "docs": "jsdoc -P package.json -c jsDocConfig.json && git -C ../github.io add -A && git -C ../github.io commit -m \"updated fxToolTip docs\" && git -C ../github.io push",
-    "terserLite": "terser ./dist/fxToolTip.js -o ./dist/fxToolTip.js --config-file terserLite.json",
     "terser": "terser ./dist/fxToolTip.js -o ./dist/fxToolTip.min.js --config-file terser.config",
+    "integrationTest": "cp src/*.js integrationTest/",
+    "docs": "jsdoc -P package.json -c jsDocConfig.json && git -C ../github.io add -A && git -C ../github.io commit -m \"updated fxToolTip docs\" && git -C ../github.io push",
     "preversion": "npm run build && git add -A",
     "postversion": "npm run docs && git push && git push --tags && npm publish"
   },
@@ -47,6 +48,8 @@
     "browserslist": "^4.17.3",
     "core-js": "^3.18.2",
     "docdash": "^1.2.0",
+    "fxstripjsdoc": "^1.0.3",
+    "jest": "^27.2.5",
     "jsdoc": "^3.6.7",
     "rollup": "^2.58.0",
     "terser": "^5.9.0"

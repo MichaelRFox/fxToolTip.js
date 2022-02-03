@@ -103,7 +103,7 @@ export class Tip {
      * @returns {(Tip | boolean)} If the orientation argument is passed, the *preferredOrientation* method returns the [Tip]{@link Tip} object.
      * If the *preferredOrientation* method is called with no arguments, the *preferredOrientation* method returns the current preferredOrientation setting.
      * @example <caption>Tip.preferredOrientation() method</caption>
-     * let myTooltip = fxToolTip.create('myElement', 'Loreiem Ipsum')
+     * fxToolTip.create('myElement', 'Loreiem Ipsum')
      *      .preferredOrientation('left');
      */
     preferredOrientation (preferredOrientation) {
@@ -297,7 +297,7 @@ export class Tip {
      * the *foregroundColor* method returns the current foregroundColor setting.
      * @example <caption>Tip.foregroundColor() method</caption>
      * fxToolTip.create('myElement', 'Loreiem Ipsum')
-     *      .foregroundColor('rgb(20, 40,128)');
+     *      .foregroundColor('rgb(20, 40, 128)');
      */
     foregroundColor (foregroundColor) {
         if (foregroundColor == undefined) { return this.#options.foregroundColor; };
@@ -317,7 +317,7 @@ export class Tip {
      * the *backgroundColor* method returns the current backgroundColor setting.
      * @example <caption>Tip.backgroundColor() method</caption>
      * fxToolTip.create('myElement', 'Loreiem Ipsum')
-     *      backgroundColor('rgb(20, 40,128)');
+     *      backgroundColor('rgb(20, 40, 128)');
      */
     backgroundColor  (backgroundColor) {
         if (backgroundColor == undefined) { return this.#options.backgroundColor; };

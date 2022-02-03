@@ -1,12 +1,14 @@
-.babelrc
+babel*
 .browserslistrc
 .gitignore
 .npmignore
 terser*
 *.sublime*
 rollup.config.js
+jest.config.js
 jsDocConfig.json
-out
-test
+integrationTest
 node_modules
 *OLD
+coverage
+test

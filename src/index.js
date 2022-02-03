@@ -21,6 +21,7 @@
  * ![GitHub last commit](https://img.shields.io/github/last-commit/MichaelRFox/fxTooltip.js)
  * ![GitHub top language](https://img.shields.io/github/languages/top/MichaelRFox/fxTooltip.js)
  * ![NPM](https://img.shields.io/npm/l/fx.tooltip.js)
+ * [![jest](https://jestjs.io/img/jest-badge.svg)](https://github.com/facebook/jest)
  * 
  * fxToolTip is a small, simple library designed to show tooltips on hover over any DOM element.
  * It uses a combination of JavaScript and CSS styles to provide flexibility and ease of implementation.
@@ -55,7 +56,7 @@
  *               .
  *               <!--   or   -->
  *               .
- *               <script type= 'text/javascript' src = 'https://cdn.jsdelivr.net/npm/fx.tooltip.js@latest/dist/fxToolTip.js'></script>
+ *               <script type = 'text/javascript' src = 'https://cdn.jsdelivr.net/npm/fx.tooltip.js@latest/dist/fxToolTip.js'></script>
  *               .
  *           </body>
  *       </head>
@@ -75,6 +76,28 @@
  * }
  * ```
  *
+ * # Minimal Example
+ * The following example creates a tooltip that will show when the mouse hovers over the div element with the id of *myDiv*.
+ * The tooltip will display with all of the default properties. The create method returns a [Tip]{@link Tip} class
+ * object whose methods may be invoked to customize its properties.
+ * 
+ * ```html
+ * <!DOCTYPE Html>
+ *   <html>
+ *       <head>
+ *           <body>
+ *               <div id = 'myDiv'>This is a sample DOM element</div>
+ *               <script type = 'module'>
+ *                   import {default as fxToolTip} from './node_modules/fx.tooltip.js';
+ *                   const tooltipText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+ *                   fxToolTip.create('myDiv', tooltipText);
+ *               </script>
+ *           </body>
+ *       </head>
+ *   </html>
+ * 
+ * ```
+ * 
  * # Tooltip Content
  * 
  * Content for tooltips in fxToolTip.js can contain any valid HTML, not just text.  The content can be styled using

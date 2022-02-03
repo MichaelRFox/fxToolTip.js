@@ -2,7 +2,7 @@
  * @module mouse
  * @desc The mouse module provides three event listener functions for mouseover, mouseout, and mousemove 
  * events. Additionally, it provides a suspend function which is exposed by the
- * [default]{@link module:index~default} object, which is exported in [index.js]{@link module:index}
+ * [default]{@link module:index~default} object, which is exported in [index.js]{@link module:index}.
  */
 
 import {getOrientation, optimumOrientation, position} from './orient.js';
@@ -129,7 +129,7 @@ export function mouseOut (event) {
 
     if (window.getComputedStyle(targetElement, null).getPropertyValue('opacity') == 0 && suspend()) {
         return;
-    }
+    };
 
     let target = tips[tipsIndex.indexOf(targetElement.id)];
     let transitionString = target.transitionHidden();

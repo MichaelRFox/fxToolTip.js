@@ -1,24 +1,34 @@
 # fxToolTip Change Log
 
-:boom: - Feature
+>  **Tags:**
+> 
+> - :boom:       		 [Breaking Change]
+> - :eyeglasses: 		 [Spec Compliance]
+> - :rocket:     		 [New Feature]
+> - :bug:        		 [Bug Fix]
+> - :pencil:       		 [Documentation]
+> - :house:      		 [Internal]
+> - :hammer_and_wrench:  [Improvement]
 
-:hammer_and_wrench: - Improvement
-
-:bug: - Bug
-
-:pencil: - Documentation
-
-:warning: - Breaking Change
+# v2.2.1
+### 3 Feb, 2022
+- :eyeglasses: Renamed .babelrc to babel.config.json.
+- :hammer_and_wrench: Added some unit tests using jest.
+- :hammer_and_wrench: Improvements to *parseColor* and *hexToRgb* utilities.
+- :bug: Fixed bug in *getElementCoordiates* overlap bottom.
+- :hammer_and_wrench: Added dev-dependency for *fxStripJsDoc* since terser has depreciated the *beautify* option.
+- :pencil: Improvement to docs.
+- :bug: Updated dev dependencies to resolve vulnerability in jsdoc.
 
 # v2.2.0
 ### Oct 11, 2021
 - :bug: Fixed tooltip overflow into scrollbar
 - :bug: Addressed edge cases where tooltip is too large for the client viewport.
 - :hammer_and_wrench: Improved deconfliction of position, auto-positioning, and preferred-orientation options.
-- :hammer_and_wrench: Implimented new algorithm for auto-positioning.
+- :hammer_and_wrench: Implemented new algorithm for auto-positioning.
 - :hammer_and_wrench: Added additional error checking for tooltip options.
 - :boom: Added the ability to set appropriate options to percentage values.
-- :hammer_and_wrench: Updated dev-dependancies.
+- :hammer_and_wrench: Updated dev-dependencies.
 - :pencil: Updated docs.
 
 # v2.1.1
@@ -34,7 +44,7 @@
 - :hammer_and_wrench: Added error checking code to several options
 - :hammer_and_wrench: Converted the fxTooltip code to and ES6 class and incorporated tip.js
 - :bug: Improved mouseout delay
-- :bug: Corrected bug in code that automatically shuts dowm the fxToolTip environment
+- :bug: Corrected bug in code that automatically shuts down the fxToolTip environment
 - :pencil: Added jsDoc annotations throughout - created new documentation github.io
 
 #  v2.0.1
@@ -51,7 +61,7 @@
 
 #  v1.4.6
 ### Sep 17, 2021
-- :hammer_and_wrench: updated babel to resolve dependancy vulnerability
+- :hammer_and_wrench: updated babel to resolve dependency vulnerability
 - :hammer_and_wrench: Bump path-parse from 1.0.6 to 1.0.7
 - :hammer_and_wrench: Bump browserslist from 4.13.0 to 4.16.5
 - :hammer_and_wrench: Bump lodash from 4.17.19 to 4.17.21
@@ -70,29 +80,29 @@
 
 # v1.4.2
 ### Jul 16, 2020
-- :bug: updated babel to remove dependancy vulnerability
+- :bug: updated babel to remove dependency vulnerability
 
 # v1.4.1
 ### Mar 17, 2020
-- :bug: updated babel to resolve dependancy vulnerability
+- :bug: updated babel to resolve dependency vulnerability
 
 # v1.4.0
 ### Dec 24, 2019
-- :boom: added method to temporarily suspend or reenable tooltip function
+- :boom: added method to temporarily suspend or re-enable tooltip function
 
 # v1.3.0
 ### Dec 22, 2019
 - :bug: minor bug fix to style regexes
 - :bug: updated eslint to address dev vulnerability
-- :bug: fixed lodash dev dependancy vulnerability
+- :bug: fixed lodash dev dependency vulnerability
 
 # v1.2.4
 ### Jul 13 10:35:07 2019
-- :bug: fixed dev dependancy vulnerability in babel
+- :bug: fixed dev dependency vulnerability in babel
 
 # v1.2.3
 ### Jun 27, 2019    
-- :bug: fixed vulnerability in dependancy yaml
+- :bug: fixed vulnerability in dependency yaml
 
 # v1.2.2
 ### Jun 27, 2019
@@ -116,7 +126,7 @@
     
 # v1.0.13
 ### Oct 14, 2016
-- :bug: Reorganized disto and fixed a few bugs
+- :bug: Reorganized distro and fixed a few bugs
 
 # v1.0.12
 ### Sep 23, 2016
@@ -125,7 +135,7 @@
 - :pencil:Fixed a typo
 - :pencil:Clean up code example
 - :hammer_and_wrench: Clean up of the repository    
-- :hammer_and_wrench: Updated dev dependancies
+- :hammer_and_wrench: Updated dev dependencies
 - :hammer_and_wrench: reorganized repository, aded package.json and rollup.config.js
 
 # v1.0.11
@@ -164,7 +174,7 @@
 
 # v1.0.4
 ### Jun 22, 2016    
-- :hammer_and_wrench: Aded tiger image file for index.html
+- :hammer_and_wrench: Added tiger image file for index.html
 - :hammer_and_wrench: Added d3 demo
 
 # v1.0.3
@@ -175,7 +185,7 @@
 # v1.0.2
 ### Jun 20, 2016
 - :hammer_and_wrench: Just neatened things up a bit
-- :bug: fixed issue with Opera getComputedStyle() inconsistancy
+- :bug: fixed issue with Opera getComputedStyle() inconsistency
 
 # v1.0.0
 ### Jun 20, 2016    
