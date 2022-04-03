@@ -10,9 +10,13 @@
 > - :house:      		 [Internal]
 > - :hammer_and_wrench:  [Improvement]
 
+# v2.4.3
+### 3 Apr, 2022
+- :bug: Updated babel-core to resolve vulnerability in minimist.
+
 # v2.4.2
 ### 3 Feb, 2022
-:pencil: FIxed documentation link.
+- :pencil: FIxed documentation link.
 
 # v2.4.1
 ### 3 Feb. 2022

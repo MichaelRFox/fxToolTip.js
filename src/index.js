@@ -1,6 +1,6 @@
 /**
  * @author Michael.R.Fox, Ph.D. <fox.michael.r@gmail.com>
- * @copyright Michael R. Fox, Ph.D., 2021
+ * @copyright Michael R. Fox, Ph.D., 2021, 2022
  * @license MIT
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the 'Software'), to deal in the Software without restriction,
