@@ -10,6 +10,10 @@
 > - :house:      		 [Internal]
 > - :hammer_and_wrench:  [Improvement]
 
+# v2.4.6
+### 4 Apr, 2022
+- :house: Fixes to package.json.
+
 # v2.4.5
 ### 4 Apr, 2022
 - :house: Updated license.md.

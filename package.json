@@ -1,13 +1,13 @@
 {
   "name": "fx.tooltip.js",
-  "version": "2.4.5",
+  "version": "2.4.6",
   "description": "A tooltip library for javascript",
   "keywords": [
     "tooltip",
     "d3.js"
   ],
   "type": "module",
-  "homepage": "https://github.com/MichaelRFox/fxToolTip.js/blob/master/README.md",
+  "homepage": "https://github.com/MichaelRFox/fxToolTip.js#README",
   "bugs": {
     "url": "https://github.com/MichaelRFox/fxToolTip.js/issues",
     "email": "fox.michael.r@gmail.com"
@@ -26,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MichaelRFox/fxToolTip.js.git"
+    "url": "https://github.com/MichaelRFox/fxToolTip.js"
   },
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
