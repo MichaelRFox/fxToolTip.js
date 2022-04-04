@@ -27,7 +27,7 @@
  * It uses a combination of JavaScript and CSS styles to provide flexibility and ease of implementation.
  * It has no dependencies and should work on any modern browser (i.e., not Internet Explorer 8.0 and earlier).
  * fxToolTip will automatically size and position tooltips (default behavior) to ensure they are displayed
- * in the viewport. Tooltips can be positioned relative to their target DOM element (default behavior) or track the cursor.
+ * in the viewport. Tooltips can be positioned relative to their target DOM element (default behavior) or track the mouse.
  * fxToolTip supports method chaining and integrates nicely with [d3.js]{@link https://d3js.org/}. Tooltips can be styled
  * in a wide variety of ways, and can contain any valid HTML (text, tables, images, svg, etc.).
  * 
@@ -144,7 +144,7 @@
  * 
  * # Integrating with d3.js
  * 
- * [d3.js]{@link https://d3js.org/} has a few peculiarities (especially with respect to d3 selectors,
+ * [d3.js]{@link https://d3js.org/} has a few peculiarities (especially with respect to d3 selectors),
  * that fxToolTip.js accommodates.  In typical d3 coding, one generally won't save a unique variable
  * for each tooltip, as d3's chaining methods are generally used to create svg and other objects.
  * This is easily accommodated by using the d3.js each method to create tooltips.  Note that each

@@ -13,7 +13,7 @@ export class Tip {
     /**
      * Instantiates a new tooltip with all of the default options, and provides methods to customize each option.
      * @param {string} elementId The unique id of the DOM element that will be associated with the tooltip.
-     * If their is no element in the DOM with this id, throws and error.
+     * If there is no element in the DOM with this id, throws and error.
      * @param {string} content Any valid HTML which will be displayed in the tooltip.
      * @param {boolean} global If this is set to true, the changes to the returned tooltip will affect all subsequently
      * instantiated tooltips. This parameter is only used internally when the globalOptions object is created.
@@ -154,7 +154,7 @@ export class Tip {
      * If autoSize is set to true, both the [width]{@link Tip#width} and
      * [height]{@link Tip#height} options are set to 'auto'.
      * @param {boolean} autoSize One of [true | false]. **Default**: true.
-     * @returns {(Tip | boolean)} if the autoSize argument is passed, the *autoSize* method returns the
+     * @returns {(Tip | boolean)} If the autoSize argument is passed, the *autoSize* method returns the
      * [Tip]{@link Tip} object.  If the *autoSize* method is called with no arguments,
      * the *autoSize* method returns the current autoSize setting.
      * @example <caption>Tip.autoSize() method</caption>
@@ -203,7 +203,7 @@ export class Tip {
      * centered relative to the cursor. When true is passed to the *trackMouse* method, the [mousePoint]{@link Tip#mousePoint}
      * option to will automatically be set to true as well.
      * @param {boolean} mousePoint  One of [true | false]. **Default**: false.
-     * @returns {(Tip | boolean)} if the trackMouse argument is passed, the *trackMouse* method returns the
+     * @returns {(Tip | boolean)} If the trackMouse argument is passed, the *trackMouse* method returns the
      * [Tip]{@link Tip} object. If the *trackMouse* method is called with no arguments,
      * the *trackMouse* method returns the current trackMouse setting.
      * @example <caption>Tip.trackMouse() method</caption>
@@ -226,7 +226,7 @@ export class Tip {
      * 'crosshair' | 'text' | 'vertical-text' | 'alias' | 'copy' | 'move' | 'no-drop' | 'not-allowed' | 'e-resize' | 'n-resize' |
      * 'ne-resize' | 'nw-resize' | 's-resize' | 'se-resize' | 'sw-resize' | 'w-resize' | 'ew-resize' | 'ns-resize' | 'nesw-resize' |
      * 'nwse-resize' | 'col-resize' | 'row-resize' | 'all-scroll' | 'zoom-in' | 'zoom-out' | 'grab' | 'grabbing']. **Default**: 'help'.
-     * @returns {(Tip | string)} if the cursor argument is passed, the *cursor* method returns the
+     * @returns {(Tip | string)} If the cursor argument is passed, the *cursor* method returns the
      * [Tip]{@link Tip} object.  If the *cursor* method is called with no arguments, the *cursor*
      * method returns the current cursor setting.
      * @example <caption>Tip.cursor() method</caption>

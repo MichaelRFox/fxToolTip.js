@@ -37,7 +37,7 @@ export let targetTimer;
 /** 
  * @function create
  * @desc Creates a new [Tip]{@link Tip} class object with all of the default parameters. If a tooltip
- * is already associated with DOM element represented by the *elementId* parameter, that tolltip is
+ * is already associated with DOM element represented by the *elementId* parameter, that tooltip is
  * deleted and replaced by a new one.
  * @param {string} elementId The unique id of the DOM element that be associated with the tooltip.
  * @param {string} content Any valid HTML content that will be displayed in the tooltip when shown.
