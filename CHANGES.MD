@@ -12,6 +12,10 @@
 
 # Version 2
 
+### v2.4.9
+_Jul 19 2024
+- :bug: Updated dev dependencies to resolve vulnerabilities in @babel/traverse
+
 ### v2.4.8
 _Jan 12, 2023_
 - :bug: Updated dev dependencies to resolve vulnerabilities in json5 and terser.

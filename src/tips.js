@@ -47,6 +47,19 @@ export function getTipByElementId(elementId) {
  */
 export function sizeTip () {
 
+    // beforeRule.aspectRatio = aspectRatio;
+    // beforeRule.maxWidth = 'min-content';
+
+    // let minWidth = ttDiv.getBoundingClientRect()['width'];
+    // let maxHeight = ttDiv.getBoundingClientRect()['height'];
+    // let area = minWidth * maxHeight;
+    // let width = Math.ceil(Math.sqrt(area * aspectRatio));
+
+    // beforeRule.width = width + 'px';
+    // beforeRule.maxWidth = 'none';
+
+    // return;
+
     function getAspect () {
         return ttDiv.getBoundingClientRect()['width'] / ttDiv.getBoundingClientRect()['height'];
     }
